@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notification</ion-title>
+    <ion-icon slot="end" name="search-outline" class="search_icon ion-padding-end" (click)="toggleSearchBar()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-searchbar #searchBar placeholder="Search Here..." [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar> 
+  <ng-container *ngFor="let ui of filterData; let i = index;" >
+    <ion-row>
+      <ion-col size="1">
+        <ion-icon (click)="view_details(ui)" class="dot_icon" name="{{ ui.is_viewed === 0 ? 'ellipse' : '' }}"></ion-icon> 
+      </ion-col>
+      <ion-col size="2">
+        <ion-avatar>
+          <ng-container *ngIf="ui?.images !== null; else noImage">
+            <ion-img [src]="ui.images" style="height: 100%;width: 100%;"></ion-img>
+          </ng-container>
+          <ng-template #noImage>
+            <ion-img style="height: 100%;width: 100%;" alt="img" src="https://ionicframework.com/docs/img/demos/avatar.svg"></ion-img>
+          </ng-template>
+        </ion-avatar>
+      </ion-col>
+      <ion-col size="8">
+        <p (click)="view_details(ui)">{{ui.notification_msg}}</p> 
+      </ion-col>
+      <ion-col size="1">
+        <ion-icon name="ellipsis-vertical" class="more_icon" id="click-trigger{{i}}"></ion-icon> 
+      </ion-col>
+    </ion-row>
+    <ion-popover trigger="click-trigger{{i}}" triggerAction="click">
+      <ng-template>
+        <div style="padding: 10px;" (click)="deleteNotification(ui.id)"><ion-icon name="trash"></ion-icon> Delete</div>
+      </ng-template>
+    </ion-popover>
+  </ng-container> 
+</ion-content>

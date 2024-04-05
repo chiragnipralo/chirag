@@ -1,0 +1,63 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Digital Cards</ion-title>
+     <ion-icon [routerLink]="['/qrcode']" [queryParams]="{ scanActive: true,is_event_or_community:'false' }" name="qr-code-outline" slot="end" class="ion-padding-end"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" style="display: flex; flex-direction: column; align-items: center;">
+  <div class="container">
+
+    <ion-row>
+      <ion-col (ionViewDidEnter)="pageWillEnter(1)" class="card-1">
+        <div class="main_section">
+          <div class="col-5">
+            <ion-img *ngIf="!modalData1" [class.card-not-created]="!modalData1" src="assets/images/qr.png"></ion-img>
+            <ion-img *ngIf="modalData1 && modalData1.id" src="{{modalData1.qrimg}}" (click)="openModal(modalData1.qrimg)"></ion-img>
+            <div *ngIf="modalData1 && modalData1.id">
+              <ion-button (click)="openModal(modalData1.qrimg)" size="small" shape="round" color="secondary" ><ion-icon slot="start" name="qr-code" style="font-size: 20px; color: white;"></ion-icon> Show</ion-button>
+            </div>
+          </div>
+          <div class="col-7">
+            <ion-label class="main_header">Personal Card</ion-label>
+            <p>{{modalData1?.user_name}}</p>
+            <ng-container *ngIf="!modalData1">
+              <ion-button color="medium" shape="round" size="small" (click)="navigateToCreatePage(1)">Create new</ion-button>
+            </ng-container>
+            <ion-button *ngIf="modalData1 && modalData1.id" color="medium" shape="round" size="small" (click)="cardOpen()">View card</ion-button>
+          </div>
+          <ion-icon *ngIf="modalData1 && modalData1.id" slot="end" class="edit_icon" name="create-outline" (click)="navigateToEditPage(1)"></ion-icon>
+          <ion-icon *ngIf="modalData1 && modalData1.id" slot="end" class="share_icon" name="share-social-outline" (click)="share_pers_card(modalData1?.card_url,'personal-card.php')"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col (ionViewDidEnter)="pageWillEnter(2)" class="card-2">
+        <div class="main_section">
+          <div class="col-5">
+            <ion-img *ngIf="!modalData2" [class.card-not-created]="!modalData2" src="assets/images/qr.png"></ion-img>
+            <ion-img *ngIf="modalData2 && modalData2.id" src="{{modalData2.qrimg}}" (click)="openModal(modalData2.qrimg)"></ion-img>
+            <div *ngIf="modalData2 && modalData2.id">
+              <ion-button (click)="openModal(modalData2.qrimg)" size="small" shape="round" color="secondary"><ion-icon slot="start" name="qr-code" style="font-size: 20px; color: white;"></ion-icon> Show</ion-button>
+            </div>
+          </div>
+          <div class="col-7">
+            <ion-label class="main_header">Business Card</ion-label>
+            <p>{{modalData2?.user_name}}</p>
+            <ng-container *ngIf="!modalData2">
+              <ion-button color="medium" shape="round" size="small" (click)="navigateToCreatePage(2)">Create new</ion-button>
+            </ng-container>
+            <ion-button *ngIf="modalData2 && modalData2.id" color="medium" shape="round" size="small" (click)="busiOpen()">View card</ion-button>
+          </div>
+          <ion-icon *ngIf="modalData2 && modalData2.id" slot="end" class="edit_icon" name="create-outline" (click)="navigateToEditPage(2)"></ion-icon>
+          <ion-icon *ngIf="modalData2 && modalData2.id" slot="end" class="share_icon" name="share-social-outline" (click)="share_biz_card(modalData2?.card_url,'card1.php')"></ion-icon>
+        </div>
+      </ion-col>
+    </ion-row>
+
+  </div>
+</ion-content>

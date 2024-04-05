@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Delete Community</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="submit()" [formGroup]="ionicForm">
+    <div class="container">
+      <h2> Are you sure?</h2>
+      <h5>You are about to delete your Community</h5>
+      <ion-textarea formControlName="reason" placeholder="Reason to delete"></ion-textarea>
+    </div>
+
+    <ion-footer class="ion-no-border">
+      <ion-button expand="block" type="submit" color="secondary">Delete Community</ion-button>
+    </ion-footer>
+  </form>  
+</ion-content>

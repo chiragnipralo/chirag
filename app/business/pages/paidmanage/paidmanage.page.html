@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Manage Events</ion-title>
+        <ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
+      </div>
+   </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-start ion-padding-end">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      pullingIcon="arrow-down"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+	</ion-refresher>
+
+  <ion-searchbar placeholder="Search Events" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+
+  <div class="container">
+    <h2>Events to Manage</h2>
+
+    <ng-container  *ngFor="let ui of filterData; let i = index;" >
+      <ion-card (click)="view_details(ui)">
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="6" class="eventcol">
+              <ion-img [src]="ui.event_images"></ion-img>
+            </ion-col>
+            <ion-col size="6">
+              <div class="head">
+                <h2>{{ui.title}}</h2>    
+              </div>
+              <div>
+                <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
+                <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                <ng-container *ngIf="ui.user_joined_event">
+                  <ion-list><ion-icon name="checkmark-done"></ion-icon><p>Joined</p></ion-list>
+                </ng-container>  
+              </div>
+            </ion-col>
+            <ion-button size="small" color="primary" shape="round" fill="outline" (click)="manage_event(ui)">Manage Event</ion-button>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </div>
+</ion-content>

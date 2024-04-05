@@ -1,0 +1,107 @@
+.top{
+    display: flex;
+    align-items: center;
+    ion-title{
+        text-align: center;
+    }
+    ion-icon{
+        padding-right: 10px;
+    }
+}
+
+// .header-md::after {
+//     background:none;
+// }
+ion-searchbar{
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.container{
+    h3{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 170px;
+        text-transform: uppercase;
+    }
+
+    ion-card{
+        background: rgb(248, 248, 248);
+        margin: 15px 0;
+        padding: 0;
+        box-shadow: 0px 5px 4px -1px rgb(202, 202, 202);
+        border-radius: 10px;
+    
+        ion-card-content{
+            margin: 0;
+            padding: 0;
+     
+            ion-row{
+                ion-col:nth-child(1){
+                    cursor: pointer;
+                    height: 160px;
+    
+                    ion-img{
+                        height: 100%;
+                    }
+                }
+    
+                ion-img::part(image){
+                    border-radius: 10px;
+                    object-fit: cover;
+                }
+            } 
+    
+            .head{
+                display: flex;
+                justify-content:space-between;
+                align-items: center;
+                margin-bottom: 10px;
+                color: black;
+    
+                h2{
+                    --color: black;
+                    font-size: 13px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    // max-width: 170px;
+                    text-transform: uppercase;
+                }
+            }
+    
+            ion-icon{
+                font-size: 20px;
+            }
+        }
+    
+        ion-list{
+            background: transparent;
+            padding: 0;
+            display: flex;
+            align-items: center;
+    
+            ion-icon{
+                color: black;
+                margin-right: 5px;
+            }
+    
+            p{
+                font-size: 13px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 140px;
+                font-weight: 600;
+            }
+        }
+    }
+    ion-button{
+        position: absolute;
+        right: 0;
+        bottom: 1px;
+        font-size: 12px;
+    }
+}

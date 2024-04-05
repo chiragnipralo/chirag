@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-img src="assets/images/logo.png"></ion-img>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <h3>OTP</h3>
+
+    <ion-img src="assets/images/otp.png"></ion-img>
+    <div class="otpsec">
+      <h3>Verification Code</h3>
+      <h6>We have sent the Verification code to your mobile.</h6>
+      <p>+91 {{dataservice.set_user_signup.mobile_number}}</p>
+      <form #form="ngForm">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-input class="otp" type="tel" #otp1 ngModel name="otp1" required [(ngModel)]="otpInput1" maxLength="1" (input)="otpController($event, otp2, '')"></ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-input class="otp" type="tel" #otp2 ngModel name="otp2" required [(ngModel)]="otpInput2" maxLength="1" (input)="otpController($event, otp3, otp1)"></ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-input class="otp" type="tel" #otp3 ngModel name="otp3" required [(ngModel)]="otpInput3" maxLength="1" (input)="otpController($event, otp4, otp2)"></ion-input>
+            </ion-col>
+            <ion-col>
+              <ion-input class="otp" type="tel" #otp4 ngModel name="otp4" required [(ngModel)]="otpInput4" maxLength="1" (input)="otpController($event, null, otp3)"></ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </div>
+  </div>
+  <ng-container *ngIf="requestType === 'user_signup'">
+    <ion-button fill="none" class="ion-no-border" (click)="signResend()">Resend OTP ?</ion-button>
+  </ng-container>
+  <ng-container *ngIf="requestType === 'user_login'">
+    <ion-button fill="none" class="ion-no-border" (click)="Resend()">Resend OTP ?</ion-button>
+  </ng-container>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <ion-button expand="block" color="secondary" shape="round" (click)="signup_password(form)">Submit</ion-button>
+</ion-footer>

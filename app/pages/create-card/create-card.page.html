@@ -1,0 +1,218 @@
+<ion-header>
+   <ion-toolbar>
+      <div class="header">
+         <ion-buttons slot="start">
+            <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+         </ion-buttons>
+         <div *ngIf="requestType == 1 || requestType == 2" class="ion-title">
+            <div *ngIf="requestType == 1">
+               <ion-title>Create Personal Card</ion-title>
+            </div>
+            <div *ngIf="requestType == 2">
+               <ion-title>Create Business Card</ion-title>
+            </div>
+         </div>  
+      </div>
+   </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+   <form (ngSubmit)="submit()" [formGroup]="ionicForm">
+      <ion-row>
+         <ion-col class="user-profile">
+            <ng-template ngFor let-imageUrl [ngForOf]="imageUrls">
+               <ion-avatar class="ion-align-items-center">
+                  <img [src]="imageUrl" class="image"/>
+                  <ion-icon name="add-circle" (click)="fileInput.click()" style="font-size: 45px; color: var(--ion-color-primary)"></ion-icon>
+                  <input type="file" style="display: none" #fileInput (change)="loadImageFromDevice($event,'event')" accept="image/png, image/jpg, image/jpeg">
+               </ion-avatar>
+            </ng-template>
+            <ng-container *ngIf="!imageUrls.length">
+               <ion-avatar class="ion-align-items-center">
+                  <img [src]="'assets/images/prof.jfif'" alt="Profile Image">
+                  <ion-icon name="add-circle" (click)="fileInput.click()" style="font-size: 45px; color: var(--ion-color-primary)"></ion-icon>
+                  <input type="file" style="display: none" #fileInput (change)="loadImageFromDevice($event,'event')" accept="image/png, image/jpg, image/jpeg">
+               </ion-avatar>
+            </ng-container>
+         </ion-col>
+      </ion-row>
+
+      <div *ngIf="requestType == 1 || requestType == 2">
+         <ion-item fill="outline">
+            <ion-label position="floating">Name</ion-label>
+            <ion-icon name="person-circle" slot="start"></ion-icon>
+            <ion-input formControlName="full_name" label-placement="floating" placeholder="Enter your name" #firstNameInput (input)="capitalizeName(firstNameInput)"></ion-input>
+         </ion-item>
+
+         <ion-item fill="outline">
+            <ion-label position="floating">Designation</ion-label>
+            <ion-icon name="newspaper" slot="start"></ion-icon>
+            <ion-input formControlName="designation" label-placement="floating" placeholder="Enter your designation"></ion-input>
+         </ion-item>
+
+         <div *ngIf="requestType == 2">
+            <ion-item fill="outline">
+               <ion-label position="floating">Profession</ion-label>
+               <ion-icon name="briefcase" slot="start"></ion-icon>
+               <ion-input formControlName="profession" label-placement="floating" placeholder="Profession"></ion-input>
+            </ion-item>
+         </div>
+
+         <ion-item fill="outline">
+            <ion-label position="floating">Mobile Number</ion-label>
+            <ion-icon name="call" slot="start"></ion-icon>
+            <ion-input formControlName="mobile_number" pattern="[0-9]*" maxlength="10" type="tel" label-placement="floating" placeholder="Phone number"></ion-input>
+         </ion-item>
+
+         <ion-item fill="outline">
+            <ion-label position="floating">Whats App Number</ion-label>
+            <ion-icon name="logo-whatsapp" slot="start"></ion-icon>
+            <ion-input formControlName="whatsapp_number" pattern="[0-9]*" maxlength="10" type="tel" label-placement="floating" placeholder="WhatsApp number"></ion-input>
+         </ion-item>
+
+         <ion-item fill="outline">
+            <ion-label position="floating">Landline Number</ion-label>
+            <ion-icon name="call" slot="start"></ion-icon>
+            <ion-input formControlName="landline" pattern="[0-9]*" maxlength="10" type="tel" label-placement="floating" placeholder="Landline number"></ion-input>
+         </ion-item>
+
+         <ion-item fill="outline">
+            <ion-label position="floating">Email</ion-label>
+            <ion-icon name="mail" slot="start"></ion-icon>
+            <ion-input formControlName="email" type="email" label-placement="floating" placeholder="Enter your email 1"></ion-input>
+         </ion-item>
+
+         <div *ngIf="requestType === 2">
+            <ion-item fill="outline">
+               <ion-label position="floating">Email</ion-label>
+               <ion-icon name="mail" slot="start"></ion-icon>
+               <ion-input formControlName="email1" type="email" label-placement="floating" placeholder="Enter your email 2"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <ion-label position="floating">Email</ion-label>
+               <ion-icon name="mail" slot="start"></ion-icon>
+               <ion-input formControlName="email2" type="email" label-placement="floating" placeholder="Enter your email 3"></ion-input>
+            </ion-item>
+         </div>
+
+         <ion-item fill="outline">
+            <ion-label position="floating">Address</ion-label>
+            <ion-icon name="home" slot="start"></ion-icon>
+            <ion-input formControlName="user_address" label-placement="floating" placeholder="Enter your address"></ion-input>
+         </ion-item>
+
+         <div *ngIf="requestType == 2">
+            <ion-item fill="outline">
+               <ion-label position="floating">Company Name</ion-label>
+               <ion-icon name="business" slot="start"></ion-icon>
+               <ion-input formControlName="office_name" label-placement="floating" placeholder="Office name"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <ion-label position="floating">Company Address</ion-label>
+               <ion-icon name="home" slot="start"></ion-icon>
+               <ion-input formControlName="office_address" label-placement="floating" placeholder="Office address"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <ion-label position="floating">Head Company Address</ion-label>
+               <ion-icon name="home" slot="start"></ion-icon>
+               <ion-input formControlName="head_office_address" label-placement="floating" placeholder="Enter Head Office address"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <ion-label position="floating">Address</ion-label>
+               <ion-icon name="home" slot="start"></ion-icon>
+               <ion-input formControlName="address" label-placement="floating" placeholder="Enter address 1"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <ion-label position="floating">Address</ion-label>
+               <ion-icon name="home" slot="start"></ion-icon>
+               <ion-input formControlName="address1" label-placement="floating" placeholder="Enter address 2"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <ion-label position="floating">Address</ion-label>
+               <ion-icon name="home" slot="start"></ion-icon>
+               <ion-input formControlName="address2" label-placement="floating" placeholder="Enter address 3"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <ion-label position="floating">Website</ion-label>
+               <ion-icon name="globe" slot="start"></ion-icon>
+               <ion-input formControlName="website" label-placement="floating" placeholder="Enter your website link"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline" slot="start">
+               <ion-label position="floating">YouTube</ion-label>
+               <ion-icon name="logo-youtube" slot="start"></ion-icon>
+               <ion-input formControlName="youtube" label-placement="floating" placeholder="Enter your YouTube Link"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <ion-label position="floating">Linkedin</ion-label>
+               <ion-icon name="logo-linkedin" slot="start"></ion-icon>
+               <ion-input formControlName="linkedin" label-placement="floating" placeholder="Linkedin account"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <ion-label position="floating">Twitter</ion-label>
+               <ion-icon name="logo-twitter" slot="start"></ion-icon>
+               <ion-input formControlName="twitter" label-placement="floating" placeholder="Twitter account"></ion-input>
+            </ion-item>
+         </div>
+
+         <ion-item fill="outline">
+            <ion-label position="floating">Facebook</ion-label>
+            <ion-icon name="logo-facebook" slot="start"></ion-icon>
+            <ion-input formControlName="facebook" label-placement="floating" placeholder="Facebook account"></ion-input>
+         </ion-item>
+
+         <ion-item fill="outline">
+            <ion-label position="floating">Instagram</ion-label>
+            <ion-icon name="logo-instagram" slot="start"></ion-icon>
+            <ion-input formControlName="instagram" label-placement="floating" placeholder="Instagram account"></ion-input>
+         </ion-item>
+
+         <ion-item fill="outline">
+            <ion-label position="floating">Snapchat</ion-label>
+            <ion-icon name="logo-snapchat" slot="start"></ion-icon>
+            <ion-input formControlName="snapchat" label-placement="floating" placeholder="Snapchat account"></ion-input>
+         </ion-item>
+
+         <ion-item fill="outline" id="custom-item" counter="true" [counterFormatter]="customCounterFormatter">
+            <ion-label position="floating">About</ion-label>
+            <ion-icon name="create" slot="start"></ion-icon>
+            <ion-input formControlName="about_me" maxlength="150" label-placement="floating" placeholder="About us"></ion-input>
+         </ion-item>
+
+         <div *ngIf="requestType == 2">  
+            <ion-item fill="outline">
+               <ion-label position="floating">About Business</ion-label>
+               <ion-icon name="podium" slot="start"></ion-icon>
+               <ion-input formControlName="about_us" label-placement="floating" placeholder="About business"></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline">
+               <input type="file" multiple (change)="onImageSelected($event)" accept="image/*" class="input-inner" />
+            </ion-item>
+         </div>  
+
+         <ng-container *ngIf="cardImages.length > 0">
+            <ion-row class="img_container">
+              <ng-container *ngFor="let menuUrl of cardImages; let i = index">
+                <ion-col size="6">
+                  <img [src]="menuUrl" class="image" />
+                  <ion-icon class="remove_icon" name="close-circle" (click)="removeImage(i)"></ion-icon>
+                </ion-col>
+              </ng-container>
+            </ion-row>
+          </ng-container>
+
+         <ion-col class="user-profile">
+            <ion-button type="submit" color="secondary" shape="round">Save Card</ion-button>
+         </ion-col>
+      </div>
+   </form>  
+</ion-content>

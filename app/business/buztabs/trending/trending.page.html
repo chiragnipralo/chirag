@@ -1,0 +1,25 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-icon color="" slot="start" name="arrow-back-outline" routerLink="/tabs/home"></ion-icon>
+		</ion-buttons>
+		<ion-title>Explore</ion-title>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-item>
+		<ion-searchbar placeholder="Search Events" (ionChange)="filterItems($event)"></ion-searchbar>  
+	</ion-item>
+	<h4 class="ion-padding-start">Select Event Category</h4>
+	<div class="container">
+		<ion-row >
+			<ng-container *ngFor="let list of filterData; let i = index;">
+				<ion-col size="6" (click)="ExploreEv(list)">
+					<ion-img class="img" [src]="list.cat_img"></ion-img>
+					<h4>{{list.name}}</h4>
+				</ion-col>
+			</ng-container>
+		</ion-row>
+	</div>
+</ion-content>

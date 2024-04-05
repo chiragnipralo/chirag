@@ -1,0 +1,652 @@
+<ion-header class="top_header">
+   <!-- <ion-toolbar style="background-color: transparent !important;">
+      <ion-buttons slot="start">
+         <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+   </ion-toolbar> -->
+</ion-header>
+
+<ion-content scroll-y="false">
+   <!-- <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+      <ion-refresher-content pullingIcon="arrow-down" pullingText="Pull to refresh" refreshingSpinner="circles"></ion-refresher-content>
+   </ion-refresher> -->
+
+   <div class="left">
+      <ion-fab>
+         <ion-fab-button color="secondary" class="ionfab" (click)="goBack()">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+         </ion-fab-button>
+      </ion-fab>
+   </div>
+   
+   <div class="rights">
+      <ion-fab>
+         <ion-fab-button id="qr-open-modal" color="secondary" class="ionfab">
+            <ion-icon name="qr-code-outline"></ion-icon>
+         </ion-fab-button>
+      </ion-fab>
+      <ion-fab *ngIf="isEventDateValid()">
+         <ion-fab-button (click)='Share_Event()' color="secondary" class="ionfab">
+            <ion-icon name="share-social"></ion-icon>
+         </ion-fab-button>
+      </ion-fab>
+      <ng-container *ngIf="dataservice?.user_event_data?.user_joined_event || dataservice?.user_event_data?.is_user_manager">
+         <ion-fab>
+            <!-- id="click-event" -->
+            <ion-fab-button (click)="presentPopover($event)" color="secondary" class="ionfab">
+               <ion-icon name="ellipsis-vertical"></ion-icon>
+            </ion-fab-button>
+         </ion-fab>
+      </ng-container>
+   </div>
+
+   <!-- <ion-popover trigger="click-event" triggerAction="click"> -->
+   <ion-popover #popover [isOpen]="isPopOpen" (didDismiss)="isPopOpen = false">
+      <ng-template>
+        <ng-container *ngIf="dataservice?.user_event_data?.user_joined_event && !dataservice?.user_event_data?.same_user_created_event && dataservice?.user_event_data?.status == 0">
+          <ion-item (click)='ticket(); dismissPopover()'>
+            <ion-icon name="ticket"></ion-icon>
+            <ion-label>Ticket</ion-label>
+          </ion-item>
+        </ng-container>  
+         <ng-container *ngIf="(dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager) && isEventDateValid() && dataservice?.user_event_data?.status == 0">
+            <ion-item (click)='invite(); dismissPopover()'>
+               <ion-icon name="share-social"></ion-icon>
+               <ion-label>Invite</ion-label>
+            </ion-item>
+         </ng-container>
+         <ion-item *ngIf="!dataservice?.user_event_data?.same_user_created_event" (click)='report_block(); dismissPopover()'>
+            <ion-icon name="flag"></ion-icon>
+            <ion-label>Report</ion-label>
+         </ion-item>
+         <ng-container *ngIf="(dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager) && isEventDateValid() && dataservice?.user_event_data?.status == 0">
+            <ion-item (click)="edit_details(); dismissPopover()">
+               <ion-icon name="create"></ion-icon>
+               <ion-label>Edit Event</ion-label>
+            </ion-item>
+            <ion-item (click)="add_staff(); dismissPopover()">
+               <ion-icon name="person-add"></ion-icon>
+               <ion-label>Add admin</ion-label>
+            </ion-item>
+         </ng-container>
+         <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event">
+            <ng-container *ngIf="dataservice?.user_event_data?.status == 0">
+               <ion-item (click)="complete_event(); dismissPopover()">
+                  <ion-icon name="checkmark-done-circle"></ion-icon>
+                  <ion-label>Complete Event</ion-label>
+               </ion-item>
+            </ng-container>
+            <ion-item (click)="delete_event(); dismissPopover()">
+               <ion-icon name="trash"></ion-icon>
+               <ion-label>Delete Event</ion-label>
+            </ion-item>
+         </ng-container>
+      </ng-template>
+   </ion-popover>
+
+   <ion-slides class="img" #slides scroll-y="false">
+      <ion-slide class="step-one one">
+         <ion-img [src]="dataservice?.user_event_data?.event_images" (click)="openModal(dataservice?.user_event_data?.original_event_images || dataservice?.user_event_data?.event_images)"></ion-img>
+      </ion-slide>
+   </ion-slides>
+
+   <div class="category ion-padding-start ion-padding-end">
+      <ion-button color="dark" size="small">{{dataservice?.user_event_data?.event_category}}</ion-button>
+      <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event && dataservice?.user_event_data?.is_live == 0">
+         <ion-button shape="round" size="small" color="danger" (click)="live_event()" [disabled]="!isButtonEnabled">
+            <ion-icon slot="start" name="caret-forward-circle-outline"></ion-icon>
+            Start
+         </ion-button>
+      </ng-container>
+      <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event && dataservice?.user_event_data?.is_live == 1">
+         <ion-button shape="round" size="small" color="danger" (click)="stop_event()">
+            <ion-icon slot="start" name="stop-circle-outline"></ion-icon>
+            Stop
+         </ion-button>
+      </ng-container>
+   </div>
+   
+   <ion-list class="head">
+      <h3 class="ion-padding-start">{{dataservice?.user_event_data?.title}}</h3>
+   </ion-list>
+   
+   <div class="ion-padding-start ion-padding-end">
+      <div class="tab-container">
+         <ion-segment class="seg" (ionChange)="segmentChanged()" [(ngModel)]="segment" [scrollable]="true" scrollToTopOnSelect="false">
+            <ion-segment-button value="0">
+               <ion-label>About Event</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="1">
+               <ion-label>Admin Post</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="2">
+               <ion-label>Activities</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="3">
+               <ion-label>Information</ion-label>
+            </ion-segment-button>
+   
+            <ng-container *ngIf="dataservice?.user_event_data?.user_joined_event">
+               <ion-segment-button value="4">
+                  <ion-label>Event Photos</ion-label>
+               </ion-segment-button>    
+               <ion-segment-button value="5">
+                  <ion-label>Reviews</ion-label>
+               </ion-segment-button>
+            </ng-container>
+         </ion-segment>
+      </div>
+
+      <ion-slides #slider (ionSlideDidChange)="slideChanged()" scrollbar="true" class="segment_slide">
+
+         <ion-slide>
+            <div class="about">
+               <ion-list>
+                  <h4 style="float: left;">Organizer</h4>
+               </ion-list>
+               <ion-list class="prof">
+                   
+                  <ion-avatar style="text-transform: uppercase;">
+                     <ng-container *ngIf="dataservice?.user_event_data?.user_data?.profile_img !== null; else noImage">
+                        <img [src]="dataservice.user_event_data.user_data.profile_img" style="height: 100%;width: 100%;">
+                      </ng-container>
+                      <ng-template #noImage>
+                        {{dataservice?.user_event_data?.user_data?.user_name[0]}}
+                     </ng-template>
+                  </ion-avatar>
+
+                  <h4 style="text-transform: capitalize;">{{dataservice?.user_event_data?.user_data?.user_name}}</h4>
+                  <div style="position: absolute; right: 0">
+                     <ng-container *ngIf="dataservice?.user_event_data?.event_open_closed == 0; else Private">
+                        <ion-label>Open Event</ion-label>
+                     </ng-container>
+                     <ng-template #Private>
+                        <ion-label>Private Event</ion-label>
+                     </ng-template>
+                     <!-- <ion-label>{{dataservice?.user_event_data?.price}}</ion-label> -->
+                  </div>
+               </ion-list>
+               <ng-container>
+                  <ion-list class="date_pri" style="margin-top: 10px;">
+                     <div class="col-2">
+                        <ion-icon name="people-outline" slot="start"></ion-icon>
+                     </div>
+                     <div class="col-10">
+                        <ion-label *ngIf="dataservice?.user_event_data?.age_group !== 'Any age'"> Age group: {{dataservice?.user_event_data?.age_group}} years</ion-label>
+                        <ion-label *ngIf="dataservice?.user_event_data?.age_group === 'Any age'"> Age group: Any</ion-label>
+                     </div>
+                  </ion-list>
+               </ng-container>
+               <ng-container  *ngFor="let di of dataservice?.user_event_data?.event_dates let i = index;">
+                  <ion-list class="date_pri">
+                     <div style="display: flex; align-items: center;">
+                        <div class="col-2">
+                           <ion-icon name="calendar-outline"></ion-icon>
+                        </div>
+                        <div class="col-10">
+                           <ion-label>{{ getFormattedDate(di.event_date) }}</ion-label>
+                        </div>
+                     </div>
+                     <ion-label style="position: absolute;right: 0;font-weight: bold;">{{ getDayFromDate(di.event_date) }}</ion-label>
+                  </ion-list>
+                  <ion-list class="date_pri">
+                     <div class="col-2">
+                        <ion-icon name="time-outline"></ion-icon>
+                     </div>
+                     <div class="col-10">   
+                        <ion-label>{{formatTime(di.start_time)}} - {{formatTime(di.end_time)}}</ion-label>
+                     </div>   
+                  </ion-list>
+               </ng-container>
+               <ng-container>
+                  <ion-list class="date_pri">
+                     <div class="col-2">
+                        <ion-icon name="location-outline" slot="start"></ion-icon>
+                     </div>
+                     <div class="col-10">
+                        <ion-label>{{dataservice?.user_event_data?.event_venues}}</ion-label>
+                     </div>
+                  </ion-list>
+               </ng-container>
+               <!-- <ion-list class="created_by_section">
+                  <ion-label>
+                    Event Created by {{ dataservice?.user_event_data?.user_data?.user_name }}
+                    on {{ formatIndianDate(dataservice?.user_event_data?.create_at) }}
+                  </ion-label>
+               </ion-list> -->
+               <ion-list class="prof">
+                  <h4 style="color:var(--ion-color-secondary);" (click)="Viewguest()"> View Participants </h4>
+                  <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
+                     <ion-button (click)="Viewstats()" style="position: absolute;right: 0;">Stats</ion-button>
+                  </ng-container>
+               </ion-list>
+               <ion-list>
+                  <ion-list>
+                     <h4 style="float: left;">Description</h4>
+                  </ion-list>
+                  <p> {{dataservice?.user_event_data?.description}}</p>
+               </ion-list>
+               <ion-list style="height: 250px;">
+                  <div #map id="map" style="height: 100%;"></div>
+                </ion-list>
+               <ion-list>
+                  <br>
+                  <br>
+               </ion-list>
+               <div class="join_btn" *ngIf="isEventDateValid()">
+                  <ng-container *ngIf="!dataservice?.user_event_data?.user_joined_event">
+                     <ion-button expand="block" color="secondary" (click)="setOpen(true)" shape="round"> Join Event </ion-button>
+                  </ng-container>
+                  <!-- <ng-container *ngIf="dataservice?.user_event_data?.user_joined_event">
+                     <ion-button expand="block" color="secondary" (click)="setOpen(true)" shape="round">Add More Participant</ion-button>
+                  </ng-container> -->
+               </div>
+            </div>
+         </ion-slide>
+
+         <ion-slide>
+            <div class="mi" style="overflow: auto;">
+               <div class="message-wrap">
+                  <div class="message" style="max-width: 100%;">
+                     <!-- <ng-container *ngIf="!dataservice?.user_event_data?.user_joined_event">
+                        <div class="if_not_joined">
+                           <h3>Join Event to See Admin Post..</h3>
+                        </div>
+                     </ng-container>
+                     <ng-container *ngIf="dataservice?.user_event_data?.user_joined_event"> -->
+                        <ng-container *ngFor="let admin of dataservice?.user_event_data?.admin_post; let i = index;">
+                           <div class="msg-detail">
+                              <div *ngIf="admin.msg != null">
+                                 <div class="msg-content" style="color:#606060; background: #e0fcd6;">
+                                    <span class="triangle"></span>
+                                    <h5 class="cap_txt" style="margin: 0;font-weight: bold;">{{ admin.user_name }}</h5>
+                                    <p style="user-select: auto !important" class="line-breaker">{{ admin.msg }}</p>
+                                    <p style="user-select: auto !important; font-size: 11px;" class="line-breaker ion-text-right">{{ admin.date }}</p>
+                                    <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
+                                       <ion-icon name="close-circle" class="trash_icon" (click)="deleteMessage(admin.user_id,admin.id)"></ion-icon>
+                                    </ng-container>
+                                 </div>
+                              </div>
+                              <div *ngIf="admin.images != null" class="msg-content" style="color:#606060; background: #e0fcd6;">
+                                 <h5 class="cap_txt" style="margin: 0;font-weight: bold;">{{ admin.user_name }}</h5>
+                                 <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
+                                    <ion-icon name="close-circle" class="trash_icon" (click)="deleteMessage(admin.user_id,admin.id)"></ion-icon>
+                                 </ng-container>
+                                 <ion-card class="admin-post">
+                                 <img [src]="admin.images" class="postimg" (click)="openModal(admin.images)"/>
+                                 </ion-card>
+                              </div>
+                           </div>
+                        </ng-container>
+                     <!-- </ng-container> -->
+                  </div>
+               </div>
+            </div>
+            <div class="chat-container">
+               <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
+                  <div class="chat-input-container">
+                     <ng-container *ngIf="fileAdminName">
+                        <ion-input class="chat-input-box" readonly>
+                           <div class="chat-input-box-inner">{{ fileAdminName }}</div>
+                        </ion-input>
+                      </ng-container>
+                      <ion-input class="chat-input-box" *ngIf="!fileAdminName" #chat_input placeholder="Write your message here..." [(ngModel)]="message" (keyup.enter)="adminPost()"></ion-input>
+                     <ion-icon name="attach-outline" slot="end" (click)="AdminfileInput.click()" style="font-size: 25px;color:var(--ion-color-primary);position: absolute; right: 61px;z-index: 11;"></ion-icon>
+                     <input type="file" style="display: none" #AdminfileInput (change)="onFileSelectedAdminPost($event)">
+                     <ion-button class="chat-button" fill="clear" slot="end" (click)="adminPost()">
+                        <ion-icon name="send"></ion-icon>
+                     </ion-button>
+                     
+                  </div>
+               </ng-container>
+            </div>
+         </ion-slide>
+         
+         <ion-slide>
+            <div class="rev">
+               <ng-container *ngIf="dataservice?.user_event_data?.event_activities && dataservice.user_event_data.event_activities.length > 0 && dataservice.user_event_data.event_activities[0].activity_name === ''">
+                  <div class="if_not_joined">
+                      <h3>No Activities</h3>
+                  </div>
+               </ng-container>              
+               <ng-container *ngIf="dataservice?.user_event_data?.event_activities && dataservice?.user_event_data?.event_activities.length > 0 && dataservice?.user_event_data?.event_activities[0]?.activity_name !== ''">
+                  <ng-container *ngFor="let activity of dataservice?.user_event_data?.event_activities let i = index;">
+                     <ion-accordion-group color="tertiary" expand="inset">
+                        <ion-accordion value="first">
+                           <ion-item slot="header" color="tertiary">
+                           <ion-label>{{activity.activity_name}}</ion-label>
+                           </ion-item>
+                           <div class="ion-padding acti-desc" slot="content">
+                           <p style="margin:0;"> {{activity.activity_details}}</p>
+                           </div>
+                        </ion-accordion>
+                     </ion-accordion-group>
+                  </ng-container>
+               </ng-container>   
+            </div>
+         </ion-slide>
+
+         <ion-slide>
+            <div class="rev"> 
+               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type &&
+                    dataservice.user_event_data.event_food_type.length > 0 &&
+                    dataservice.user_event_data.event_food_type[0]?.food_type &&
+                    dataservice.user_event_data.event_food_type[0].food_type.length > 0 &&
+                    dataservice.user_event_data.event_food_type[0].food_type[0]?.name !== ''"> 
+                  <ion-accordion-group color="tertiary" expand="inset">
+                    <ion-accordion value="third">
+                      <ion-item slot="header" color="tertiary">
+                        <ion-label>Food</ion-label>
+                      </ion-item>
+                      <div class="ion-padding" slot="content">
+                        <ng-container *ngFor="let food of dataservice?.user_event_data?.event_food_type[0].food_type let i = index;">
+                          <div class="cate">
+                            <ion-label>{{i+1}} - {{food.name | titlecase}}</ion-label>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-accordion>
+                  </ion-accordion-group>
+               </ng-container>
+
+               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type &&
+               dataservice.user_event_data.event_food_type.length > 0 &&
+               this.dataservice.user_event_data.event_food_type[0]?.cusine_food.length > 0">
+
+                  <ion-accordion-group color="tertiary" expand="inset">
+                    <ion-accordion value="third">
+                      <ion-item slot="header" color="tertiary">
+                        <ion-label>Cuisine</ion-label>
+                      </ion-item>
+                      <div class="ion-padding" slot="content">
+                        <ng-container *ngFor="let food of dataservice?.user_event_data?.event_food_type[0].cusine_food let i = index;">
+                          <div class="cate">
+                            <ion-label>{{i+1}} - {{food.name | titlecase}}</ion-label>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-accordion>
+                  </ion-accordion-group>
+               </ng-container>
+      
+               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type &&
+               dataservice.user_event_data.event_food_type.length > 0 && dataservice?.user_event_data?.event_food_type[0]?.extra_food[0]?.extra_food_name !== ''">
+               <ion-accordion-group color="tertiary" expand="inset">
+                  <ion-accordion value="third">
+                    <ion-item slot="header" color="tertiary">
+                      <ion-label>Extra Food</ion-label>
+                    </ion-item>
+                    <div class="ion-padding" slot="content">
+                      <ng-container *ngFor="let food of dataservice?.user_event_data?.event_food_type[0].extra_food let i = index;">
+                        <div class="cate">
+                          <ion-label>{{i+1}} - {{food.extra_food_name | titlecase}}</ion-label>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </ion-accordion>
+                </ion-accordion-group>
+             </ng-container>
+
+                <ng-container *ngIf="MultiMenuImgs.length > 0">
+                  <ion-accordion-group color="tertiary" expand="inset">
+                    <ion-accordion value="third">
+                      <ion-item slot="header" color="tertiary">
+                        <ion-label>Menu</ion-label>
+                      </ion-item>
+                      <div class="ion-padding" slot="content">
+                        <ion-row>
+                           <ng-container *ngFor="let imgs of MultiMenuImgs let i = index">
+                              <ion-col class="" size="6">
+                                 <img (click)="openModal(imgs.img)" [src]="imgs.img"/>
+                              </ion-col>
+                           </ng-container>
+                        </ion-row>
+                      </div>
+                    </ion-accordion>
+                  </ion-accordion-group>
+                </ng-container>
+
+
+               <ng-container *ngIf="dataservice?.user_event_data?.emergency_contact?.length > 0 && dataservice?.user_event_data?.emergency_contact[0]?.contact_number !== ''">
+                  <ion-accordion-group color="tertiary" expand="inset">
+                     <ion-accordion value="fourth">
+                        <ion-item slot="header" color="tertiary">
+                           <ion-label>Emergency Contact</ion-label>
+                        </ion-item>
+                        <div class="ion-padding" slot="content">
+                           <ng-container *ngFor="let econtact of dataservice?.user_event_data?.emergency_contact let i = index;">
+                              <ion-row>
+                                 <ion-col size="10">
+                                    <ion-list><b>{{econtact.contact_name}}</b></ion-list>
+                                    <ion-list>{{econtact.contact_role}}</ion-list>
+                                 </ion-col>
+                                 <ion-col size="2">
+                                    <a [href]="'tel:+91'+econtact.contact_number">
+                                       <ion-button color="success">
+                                          <ion-icon name="call-outline"></ion-icon>
+                                       </ion-button>
+                                    </a>
+                                 </ion-col>
+                              </ion-row>
+                           </ng-container>
+                        </div>
+                     </ion-accordion>
+                  </ion-accordion-group>
+               </ng-container>
+
+               <ng-container *ngIf="dataservice?.user_event_data?.terms_condition != ''">
+                  <ion-accordion-group color="tertiary" expand="inset">
+                     <ion-accordion value="five">
+                        <ion-item slot="header" color="tertiary">
+                           <ion-label>Terms & Conditons</ion-label>
+                        </ion-item>
+                        <div class="terms" slot="content"> 
+                           <div [innerHTML]="dataservice?.user_event_data?.terms_condition"></div>
+                        </div>
+                     </ion-accordion>
+                  </ion-accordion-group>
+               </ng-container>
+            </div>
+         </ion-slide>
+
+         <ng-container *ngIf="dataservice?.user_event_data?.user_joined_event">
+            <ion-slide>
+               <div class="mi">
+                  <div class="message-wrap">
+                     <div class="message" style="max-width: 100%; display: flex; justify-content: space-between;">
+                        <div class="msg-detail">
+                           <ion-item>
+                              <ion-input type="text" [(ngModel)]="fileName" readonly></ion-input>
+                              <ion-icon name="add-circle" slot="end" (click)="fileInput.click()" style="font-size: 45px;color:var(--ion-color-primary)"></ion-icon>
+                              <input type="file" style="display:none" #fileInput (change)="onFileSelected($event)" accept="image/png, image/jpg, image/jpeg">
+                              <ion-icon name="send" slot="end" (click)="sendImage()" [hidden]="!selectedFile"></ion-icon>
+                           </ion-item>
+
+                           <ion-row>
+                           <ng-container *ngFor="let feedback of dataservice?.user_event_data?.feedback let i = index;">
+                              <ion-col size="6" *ngFor="let event_images of feedback.event_images.slice().reverse(); let j = index;" style="height: 200px;">
+                                 <ion-img (click)="openModal(event_images.img)" [src]="event_images.img"  class="event-photo"></ion-img>
+                              <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
+                                 <ion-icon name="close-circle" class="trash_photos_icon" (click)="deleteEventPhotos(j)"></ion-icon>
+                              </ng-container>
+                              </ion-col>
+                           </ng-container>
+                           </ion-row>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </ion-slide>
+
+
+            <ion-slide>
+               <div class="mi" style="overflow:auto;">
+               <div class="message-wrap">
+               <div class="message">
+               <ng-container *ngFor="let review of jData; let i = index;">
+               <div class="msg-detail">
+               <div class="msg-content" style="color:#606060; background: #e0fcd6;">
+               <p class="cap_txt"><b>{{review.user_name}}</b></p>
+               <span class="triangle"></span>
+               <p style="user-select: auto !important" class="line-breaker" [innerHTML]="sanitizer.bypassSecurityTrustHtml(review.review)" #content></p>
+               <p class="rdate">{{review.datetime}}</p>
+               <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
+               <ion-icon name="close-circle" class="trash_photos_icon" (click)="deleteEventReviews(i)"></ion-icon>
+               </ng-container>
+               </div>
+               </div>
+               </ng-container>
+               </div>
+               </div>
+               </div>
+               <div class="chat-container">
+               <div class="chat-input-container">
+               <ion-input #chat_input class="chat-input-box" placeholder="Write your review here..." [(ngModel)]="senderMsg" (keyup.enter)="sendMessage()"></ion-input>
+               <ion-button class="chat-button" fill="clear" slot="end" (click)="sendMessage()">
+               <ion-icon name="send"></ion-icon>
+               </ion-button>
+               </div>
+               </div>
+               </ion-slide>
+            <!-- <ion-slide>
+               <div class="mi">
+                  <div class="message-wrap">
+                     <div class="message">
+                        <ng-container *ngFor="let review of jData; let i = index;">
+                           <div class="msg-detail">
+                              <div class="msg-content" style="color:#606060; background: #e0fcd6;">
+                              <p class="cap_txt"><b>{{review.user_name}}</b></p>
+                              <span class="triangle"></span>
+                              <p style="user-select: auto !important" class="line-breaker" [innerHTML]="sanitizer.bypassSecurityTrustHtml(review.review)" #content></p>
+                              <p class="rdate">{{review.datetime}}</p>
+                              <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
+                                 <ion-icon name="close-circle" class="trash_photos_icon" (click)="deleteEventReviews(i)"></ion-icon>
+                              </ng-container>
+                              </div>
+                           </div>
+                        </ng-container>
+
+                        <ion-item class="chat-input">
+                           <ion-input #chat_input placeholder="Write your review here..." [(ngModel)]="senderMsg" (keyup.enter)="sendMessage()"></ion-input>
+                           <ion-button fill="clear" slot="end" (click)="sendMessage()">
+                              <ion-icon name="send" slot="end"></ion-icon>
+                           </ion-button>
+                        </ion-item>
+                     </div>
+                  </div>
+               </div>
+            </ion-slide> -->
+         </ng-container>
+      </ion-slides> 
+   </div>
+
+   <ion-modal [keepContentsMounted]="true" trigger="qr-open-modal" #modal class="qr_modal">
+      <ng-template>
+         <ion-header>
+            <ion-toolbar>
+               <ion-buttons slot="start">
+                  <ion-button (click)="modal.dismiss()"><ion-icon name="arrow-back-outline"></ion-icon></ion-button>
+               </ion-buttons>
+               <ion-title>Scan Event QR</ion-title>
+            </ion-toolbar>
+         </ion-header>
+         <ion-content class="ion-padding">
+            <ion-img [src]="dataservice?.user_event_data?.event_qr"></ion-img>
+         </ion-content>
+      </ng-template>
+   </ion-modal>
+   
+   <ion-modal [isOpen]="isModalOpen" (willDismiss)="onWillDismiss($event)">
+      <ng-template>
+         <ion-header class="ion-no-border">
+            <ion-toolbar>
+              <ion-title>Add Participant</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="setOpen(false)"><ion-icon name="close-outline"></ion-icon></ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+         </ion-header>
+         <ion-content>
+            <form (ngSubmit)="join_events()" [formGroup]="ionicForm">
+               <ion-list class="modalcss">
+                  <h4 style="padding-left: 19px">Number of Participants</h4>
+                  <div class="container">
+                     <div id="w30">
+                        <div class="counter__section">
+                           <ion-icon name="remove" (click)="decrement()"></ion-icon>
+                           <p>{{ count }}</p>
+                           <ion-icon name="add" (click)="increment()"></ion-icon>
+                        </div>
+                     </div>
+                     <div class="sub_container" formArrayName="user_details">
+                        <ng-container *ngFor="let participant of getParticipantsArray.controls; let i = index" [formGroupName]="i">
+                           <div class="self-or-other" *ngIf="i == 0">
+                           <!-- <ion-select formControlName="user_info" class="input_box" placeholder="Select Type">
+                              <ion-select-option value="self">Self</ion-select-option>
+                              <ion-select-option value="other">Other</ion-select-option>
+                           </ion-select> -->
+                           <ion-radio-group formControlName="user_info" class="input_box">
+                              <ion-item>
+                                <ion-label>Select Type</ion-label>
+                              </ion-item>
+                              <div style="display: flex;justify-content: space-around;">
+                                 <ion-item>
+                                    <ion-label>Self</ion-label>
+                                    <ion-radio slot="start" value="self"></ion-radio>
+                                  </ion-item>
+                                
+                                  <ion-item>
+                                    <ion-label>Other</ion-label>
+                                    <ion-radio slot="start" value="other"></ion-radio>
+                                  </ion-item>
+                              </div>
+                            </ion-radio-group>
+                           </div>
+                           <div>
+                           <div *ngIf="i > 0">
+                              <h4 style="padding-left: 19px">Participant {{ i + 1 }}</h4>
+                           </div>
+                           <ion-input class="input_box" type="text" formControlName="participent_name" *ngIf="participant.get('user_info').value === 'other' || i != 0" placeholder="Participant Name"></ion-input>
+                           <ion-input class="input_box" formControlName="participent_number" *ngIf="participant.get('user_info').value === 'other' || i != 0" type="tel" minLength="10" maxLength="10" pattern="[0-9]{10}" (keyup)="checkMobileNumber(participant)" placeholder="Mobile Number"></ion-input>
+                           <ion-select formControlName="participent_gender" class="input_box" placeholder="Select Gender" *ngIf="participant.get('user_info').value === 'other' || i != 0">
+                              <ion-select-option value="Male">Male</ion-select-option>
+                              <ion-select-option value="Female">Female</ion-select-option>
+                              <ion-select-option value="Other">Other</ion-select-option>
+                           </ion-select>
+                           </div>
+                           <ng-container *ngIf="this.dataservice?.user_event_data?.event_food_type[0].food_type?.length !== 0">
+                              <h4 style="padding-left: 19px">Select Food Type</h4>
+                              <div>
+                              <div class="ion-padding-start ion-padding-end">
+                                 <ng-container *ngFor="let food of dataservice?.user_event_data?.event_food_type[0].food_type; let j = index;">
+                                    <div style="display: flex;align-items: center;margin: 10px 0;">
+                                    <ion-checkbox [checked]="food.selected" (ionChange)="foodSelectionChanged(food.id, i)"></ion-checkbox>
+                                    <ion-label class="ion-padding-start">{{ food.name | titlecase }}</ion-label>
+                                    </div>
+                                 </ng-container>
+                              </div>
+                              </div>
+                           </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="dataservice?.user_event_data?.poll_section?.length !== 0">
+                           <ng-container *ngFor="let poll of dataservice?.user_event_data?.poll_section; let i = index;">
+                           <h4 style="padding-left: 19px">{{ poll.poll_question }}</h4>
+                           <div *ngFor="let option of [poll.poll_option1, poll.poll_option2, poll.poll_option3, poll.poll_option4]; let j = index;">
+                              <div class="ion-padding-start ion-padding-end">
+                                 <div style="display: flex; align-items: center; margin: 10px 0;">
+                                 <ion-checkbox [checked]="poll.selected" (ionChange)="pollSelectionChanged(poll.id,option)"></ion-checkbox>
+                                 <ion-label class="ion-padding-start">{{ option | titlecase }}</ion-label>
+                                 </div>
+                              </div>
+                           </div>
+                           </ng-container>
+                        </ng-container>
+                     </div>
+                  </div>
+               </ion-list>
+               <ion-button class="joined_btn" expand="block" color="secondary" type="submit" shape="round">Join Event</ion-button>
+            </form>
+         </ion-content>
+      </ng-template>
+   </ion-modal>
+</ion-content>

@@ -1,0 +1,28 @@
+<ion-header>
+   <ion-toolbar>
+      <div class="top">
+         <ion-buttons slot="start">
+            <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+         </ion-buttons>
+         <ion-title>Help & Support</ion-title>
+      </div>
+   </ion-toolbar>
+</ion-header>
+<ion-content>
+   <div class="support ion-padding">
+      <h3>Contact Us</h3>
+      <p>2, Chandra Prabha, 73, Nehru Road, Vile Parle (East), Mumbai – 400 057 India</p>
+      <p><b>Email Id : info.genesissmartnet@gmail.com</b></p>
+   </div>
+   <div class="ion-padding">
+      <form (ngSubmit)="submit()" [formGroup]="ionicForm">
+         <div class="form-input">
+           <h4><b>Ran into a problem?</b></h4>
+           <ion-textarea formControlName="help" class="sup-inp" placeholder="Help us know what went wrong?" rows="4"></ion-textarea>
+         </div>
+         <div class="btn">
+           <ion-button type="submit" color="secondary">Submit</ion-button>
+         </div>
+      </form>   
+   </div>
+</ion-content>

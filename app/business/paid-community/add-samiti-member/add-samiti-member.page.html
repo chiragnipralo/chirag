@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title style="text-align: center;">Add Member</ion-title>
+    <ion-icon slot="end" name="search-outline" class="search_icon ion-padding-end" (click)="toggleSearchBar()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+	</ion-refresher>
+
+  <ion-searchbar placeholder="Search.." [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+
+  <ion-card class="ion-padding" *ngFor="let ui of filterData">
+    <div class="member_list">
+      <ion-label class="ion-text-wrap">
+        <ion-text>
+          <h3>{{ui.full_name}}</h3>
+        </ion-text>
+      </ion-label>
+      <ion-checkbox slot="end" [(ngModel)]="ui.checked"></ion-checkbox>
+    </div>
+    <div class="input_box" *ngIf="ui.checked">
+      <ion-input [(ngModel)]="ui.role" placeholder="Enter role"></ion-input> 
+    </div>
+  </ion-card>
+</ion-content>
+
+<ion-footer class="ion-no-border">
+  <ion-button shape="round" color="secondary" (click)="add_member()">Add</ion-button>
+</ion-footer>

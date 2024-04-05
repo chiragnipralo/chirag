@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Member Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item>
+    <ion-icon name="person" slot="start"></ion-icon>
+    <ion-label> {{memberData?.user_name}} </ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="mail" slot="start"></ion-icon>
+    <ion-label> {{memberData?.email}} </ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="call" slot="start"></ion-icon>
+    <ion-label> {{memberData?.mobile}} </ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="calendar" slot="start"></ion-icon>
+    <ion-label> {{memberData?.dob}} </ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-icon name="male-female" slot="start"></ion-icon>
+    <ion-label> {{memberData?.gender}} </ion-label>
+  </ion-item>
+</ion-content>

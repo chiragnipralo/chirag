@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title style="text-align: center;">{{filterData?.samiti_name}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+	</ion-refresher>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{filterData?.samiti_name}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-row>
+        <ion-col size="6">
+          <ng-container *ngIf="filterData?.samiti_Image !== null; else noImage">
+            <img [src]="filterData.samiti_Image" style="height: 100%;width: 100%;">
+          </ng-container>
+          <ng-template #noImage>
+            <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+          </ng-template>       
+        </ion-col>
+        <ion-col size="6">
+          {{filterData?.samiti_description}}
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="add_more_btn">
+    <ion-button (click)="add_member()">Add More</ion-button>
+  </div>
+
+  <ion-grid>
+
+    <ion-row class="more_participant">
+      <ion-col size="1">sr</ion-col>
+      <ion-col size="7">Name</ion-col>
+      <ion-col size="3">Role</ion-col>
+      <ion-col size="1">#</ion-col>
+    </ion-row>
+
+    <ng-container *ngFor="let ui of samiti_member; let i = index;">
+      <ion-row>
+        <ion-col size="1">{{i+1}}</ion-col>
+        <ion-col size="7">{{ui.member_details.user_name}}</ion-col>
+        <ion-col size="3">{{ui.role}}</ion-col>
+        <ion-col size="1"><ion-icon name="trash" style="color: red;" (click)="deleteSamitiMember(ui.id)"></ion-icon></ion-col>
+      </ion-row>
+    </ng-container>
+    
+  </ion-grid> 
+</ion-content>

@@ -1,0 +1,460 @@
+<ion-header>
+	<ion-toolbar color="light">
+		<div class="top">
+			<ion-menu-toggle>
+				<ion-menu-button id="main-content"></ion-menu-button>
+			</ion-menu-toggle>
+			<ion-img src="assets/images/logo.png"></ion-img>
+			<ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()" style="display: none;"></ion-icon>
+			<div class="icon">
+				<ion-icon name="person-circle-outline" routerLink="/tabs/dashboard" class="toggle-icon"></ion-icon>
+				<ion-icon name="bag-outline"></ion-icon>
+				<!-- <ion-toggle [checked]="true"  (ionChange)="toggleChanged($event)"></ion-toggle> -->
+			</div>
+		</div>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content scroll-y="false">
+	<ion-menu contentId="main-content">
+		<ion-card>
+			<ion-card-content>
+			  <div class="profile_des">
+				<div class="profile_des"id="open-modal">
+				  <ion-avatar>
+					<ng-container *ngIf="community_data?.account_image !== null; else noImage">
+						<img [src]="community_data?.account_image" style="height: 100%;width: 100%;">
+					</ng-container>
+					<ng-template #noImage>
+						<ion-label class="avatar-label">{{community_data?.account_name[0]}}</ion-label>
+					</ng-template>
+				  </ion-avatar>
+				  <div>
+					<h2>{{community_data?.account_name}}</h2>
+					<p>{{community_data?.email}}</p>
+				  </div>
+				</div>
+				<div>
+				  <ion-icon name="arrow-forward-circle-outline" style="font-size: 32px;" routerLink="/about-community"></ion-icon>
+				</div>
+			  </div>
+			</ion-card-content>
+		</ion-card>
+	
+		<ion-content>
+
+			<ion-list class="m-i" line="full" style="height: 100%;">
+				<ion-item>
+					<ion-accordion  toggleIcon="none">
+						<ion-item slot="header" color="light"  routerLink="/edit-paid-community">
+							<ion-icon name="reader-outline"></ion-icon> 
+							<ion-label>Edit Community</ion-label>  
+						</ion-item>
+					</ion-accordion>
+				</ion-item>
+
+				<ion-item>
+					<ion-accordion value="event" toggleIcon="none">
+						<ion-item slot="header" color="light" routerLink="/curr-plan">
+							<ion-icon name="checkmark-done-circle-outline"></ion-icon>
+							<ion-label>Current Plan</ion-label>
+						</ion-item>
+					</ion-accordion>
+				</ion-item>
+
+				<ion-accordion-group>
+					<ion-item>
+						<ion-accordion value="member">
+							<ion-item slot="header" color="light">
+								<ion-icon name="people-outline"></ion-icon>
+								<ion-label>Members</ion-label>
+							</ion-item>
+							<div class="ion-padding" slot="content">
+								<ion-item routerLink="/member-request">
+									<ion-label>Request</ion-label>
+								</ion-item>
+								<ion-item (click)='add_member()'>
+									<ion-label>Add Member</ion-label>
+								</ion-item>
+								<ion-item routerLink="/allmember">
+									<ion-label>All Members</ion-label>
+								</ion-item>
+							</div>
+						</ion-accordion>
+			  		</ion-item>
+	
+					<ion-item>
+						<ion-accordion value="event">
+							<ion-item slot="header" color="light">
+								<ion-icon name="calendar-number-outline"></ion-icon>
+								<ion-label>Event</ion-label>
+							</ion-item>
+							<div class="ion-padding" slot="content">
+								<ion-item (click) = "create_event()">
+									<ion-icon slot="end" name="add"></ion-icon>
+									<ion-label>Add Event</ion-label>
+								</ion-item>
+								<ion-item routerLink="/all-community-event">
+									<ion-label>All Event</ion-label>
+								</ion-item>
+							</div>
+						</ion-accordion>
+					</ion-item>
+	
+					<ion-item>
+						<ion-accordion value="samiti">
+							<ion-item slot="header" color="light">
+								<ion-icon name="people-outline"></ion-icon>
+								<ion-label>committee</ion-label>
+							</ion-item>
+							<div class="ion-padding" slot="content">
+								<ion-item routerLink="/add-samiti">
+									<ion-icon slot="end" name="add"></ion-icon>
+									<ion-label>Add committee</ion-label>
+								</ion-item>
+								<ion-item routerLink="/all-samiti">
+									<ion-label>All committees</ion-label>
+								</ion-item>
+							</div>
+						</ion-accordion>
+					</ion-item>
+
+					<ion-item>
+						<ion-accordion  toggleIcon="none">
+							<ion-item slot="header" color="light"  routerLink="/post">
+								<ion-icon name="reader-outline"></ion-icon> 
+								<ion-label>Post</ion-label>  
+							</ion-item>
+						</ion-accordion>
+					</ion-item>
+
+					<ion-item>
+						<ion-accordion value="obituary">
+							<ion-item slot="header" color="light">
+								<ion-icon name="person-outline"></ion-icon>
+								<ion-label>Obituary</ion-label>
+							</ion-item>
+							<div class="ion-padding" slot="content">
+								<ion-item routerLink="/add-obituary">
+									<ion-icon slot="end" name="add"></ion-icon>
+									<ion-label>Add Obituary</ion-label>
+								</ion-item>
+								<ion-item routerLink="/all-obituary">
+									<ion-label>All Obituary</ion-label>
+								</ion-item>
+							</div>
+						</ion-accordion>
+					</ion-item>
+
+					<!-- <ion-item>
+						<ion-accordion value="donation">
+							<ion-item slot="header" color="light">
+								<ion-icon name="card-outline"></ion-icon>
+								<ion-label>Donation</ion-label>
+							</ion-item>
+							<div class="ion-padding" slot="content">
+								<ion-item routerLink="/raise-fund">
+									<ion-icon slot="end" name="add"></ion-icon>
+									<ion-label>Raise Fund</ion-label>
+								</ion-item>
+								<ion-item routerLink="/all-donation">
+									<ion-label>All Donation</ion-label>
+								</ion-item>
+							</div>
+						</ion-accordion>
+					</ion-item> -->
+
+					<ion-item>
+						<ion-accordion  toggleIcon="none">
+							<ion-item slot="header" color="light"  routerLink="/delete-community">
+								<ion-icon name="log-out-outline"></ion-icon> 
+								<ion-label>Delete Community</ion-label>  
+							</ion-item>
+						</ion-accordion>
+					</ion-item>
+				</ion-accordion-group>
+		  	</ion-list>
+		</ion-content>
+	</ion-menu>
+
+	<ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+			pullingIcon="arrow-down"
+      		pullingText="Pull to refresh"
+      		refreshingSpinner="circles">
+		</ion-refresher-content>
+	</ion-refresher>
+
+	<ion-searchbar placeholder="Search Here" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" id="search-input"></ion-searchbar>
+				  
+	<!-- </ion-menu-toggle> -->
+
+	<ion-item class="seg">
+		<ion-segment color="primary" [(ngModel)]="segment" (ionChange)="segmentChanged()" [scrollable]="true">
+			<ion-segment-button class="Social" value="0">
+				<ion-label>About Community</ion-label>
+			</ion-segment-button>
+			<ion-segment-button class="Popular" value="1">
+				<ion-label>Trending</ion-label>
+			</ion-segment-button>
+			<ion-segment-button class="Music" value="2">
+				<ion-label>Admin Post</ion-label>
+			</ion-segment-button>
+		</ion-segment>
+	</ion-item>
+	
+	<ion-list style="background: none;">
+		<ion-slides #slider (ionSlideDidChange)="slideChanged()">
+			<!-- segment for about company -->
+			<ion-slide>
+				<div>
+					<div class="main_page">
+						<ion-list class="about">
+							<ion-row class="about_header">
+								<div class="avatar_icon">
+									{{ community_data?.account_name[0] }}
+								</div>
+								<h5>{{community_data?.account_name}}</h5>
+							</ion-row>
+					
+							<ion-row>
+								<h5>About Community</h5><br>
+								<p>{{community_data?.description}}</p>
+								<ion-list class="created_by_section">
+	            				    <ion-label>
+	              				    Community Created on {{ formatIndianDate(community_data?.date) }}
+	            				    </ion-label>
+	          				    </ion-list>
+							</ion-row>
+				
+							<ion-row>
+								<h5>Community Members</h5>
+								<ion-segment color="primary" [(ngModel)]="segment_one" [scrollable]="true" style="width: 100%">
+									<ion-segment-button class="Popular" value="members">
+										<ion-label>All Members</ion-label>
+									</ion-segment-button>
+									<ion-segment-button class="Music" value="admin">
+										<ion-label>Admins</ion-label>
+									</ion-segment-button>
+								</ion-segment> 
+							</ion-row>
+						
+							<!-- segment for all members  -->
+							<ion-list [ngSwitch]="segment_one" class="member_admin">
+								<div *ngSwitchCase="'members'" class="msg_row">
+									<ng-container  *ngFor="let ui of member; let i = index;" >
+										<ng-container *ngIf="ui.request == 0">
+											<ion-row>
+												<ion-col size="2" routerLink="/memberdetails">
+													<div class="avatar_icon txt_tranf">
+														{{ ui.full_name[0] }}
+													</div>
+												</ion-col>
+												<ion-col class="msg_label">
+													<ion-label class="txt_tranf">{{ui.full_name}}</ion-label>
+												</ion-col>
+												<!-- <ion-col>
+													<ion-button fill="outline" routerLink="/userchat" class="msg_btn">
+													Message
+													</ion-button>
+												</ion-col> -->
+											</ion-row>
+										</ng-container>
+									</ng-container>
+								</div>
+	
+								<div *ngSwitchCase="'admin'"  class="msg_row">
+									<ng-container  *ngFor="let ui of member; let i = index;" >
+										<ng-container *ngIf="ui.is_admin == 1">
+											<ion-row>
+												<ion-col size="2" routerLink="/memberdetails">
+													<div class="avatar_icon">
+														{{ ui.full_name[0] }}
+													</div>
+												</ion-col>
+												<ion-col class="msg_label">
+													<ion-label>{{ui.full_name}}</ion-label>
+												</ion-col>
+												<!-- <ion-col>
+													<ion-button fill="outline" routerLink="/userchat" class="msg_btn">
+													Message
+													</ion-button>
+												</ion-col> -->
+											</ion-row>
+										</ng-container>
+									</ng-container>
+								</div>
+							</ion-list>
+						</ion-list>
+					</div>
+				</div>
+			</ion-slide>
+			
+			<!-- segment for trending segment -->
+			<ion-slide>
+				<div>
+					<div class="main_page">
+						<ng-container  *ngFor="let ui of timeline; let i = index;" >
+							<ng-container *ngIf="ui.status == 0">
+								<ion-card color="dark" class="show_commu">
+									<ion-card-header>
+										<ion-row>
+											<ion-col size="2">
+												<ion-avatar class="avatar_icon">
+													<ion-label class="txt_tranf">{{ui.user_name[0]}}</ion-label>
+												</ion-avatar>
+											</ion-col>
+											<ion-col>
+												<div>
+													<h3 class="txt_tranf">{{ui.user_name}}</h3>
+													<!-- <h5>Location</h5> -->
+												</div>
+												<ion-icon name="trash-outline" (click)="delete_post(ui.user_id, ui.id)"></ion-icon>
+												<!-- <ion-icon [id]="'click-eventt-' + i" name="ellipsis-vertical-outline"></ion-icon>
+												<ion-popover [trigger]="'click-eventt-' + i" triggerAction="click">
+													<ng-template>
+														<ion-item (click)="delete_post(ui.user_id, ui.id)">
+															<ion-icon name="trash-outline"></ion-icon>
+															<ion-label>Delete</ion-label>
+														</ion-item>
+													</ng-template>
+													</ion-popover> -->
+											</ion-col>
+										</ion-row>
+									</ion-card-header>
+									<ion-card-content>
+										<ion-row>
+											<ion-col>
+												<p *ngIf="ui.message !=''">{{ ui.message }}</p>
+												<div *ngIf="ui.image" class="msg-content">
+													<ion-card class="admin-post">
+														<img [src]="ui.image" class="postimg" />
+													</ion-card>
+												</div>
+												<!-- <div class="see">
+													<p>40</p>
+													<ion-icon name="eye"></ion-icon>
+												</div> -->
+											</ion-col>
+										</ion-row>
+										<!-- <ion-row>
+											<div>
+												<ion-icon name="thumbs-up-outline"></ion-icon>
+												<p>45435</p>
+											</div> 
+											<div>
+												<ion-icon name="chatbox-ellipses-outline"></ion-icon>
+												<p>45</p>
+											</div> -->
+											<!-- <ion-icon name="share-social"></ion-icon> -->
+										<!-- </ion-row>
+										<ion-row> -->
+											<!-- <ion-avatar>
+												<img src="assets/images/prof.jfif">
+											</ion-avatar> -->
+											<!-- <ion-input type="text" placeholder="Say something"></ion-input>
+										</ion-row> -->
+									</ion-card-content>
+								</ion-card>
+							</ng-container>
+						</ng-container>
+					</div>
+				</div>
+			</ion-slide>
+		
+			<!-- segement for admin -->
+			<ion-slide>
+				<div>
+					<div class="main_page">
+						<ng-container  *ngFor="let ui of adminpost; let i = index;" >
+							<ng-container *ngIf="ui.status == 0">
+								<ion-card color="dark" class="show_commu admin_post_card">
+									<ion-card-header>
+										<ion-row>
+											<ion-col size="2">
+												<ion-avatar class="avatar_icon">
+													<ion-label class="txt_tranf">{{ui.user_name[0]}}</ion-label>
+													<ion-icon name="checkmark-circle"></ion-icon>
+												</ion-avatar>
+											</ion-col>
+											<ion-col>
+												<div>
+													<h3 class="txt_tranf">{{ui.user_name}}</h3>
+													<!-- <h5>Location</h5> -->
+												</div>
+												<ion-icon name="trash-outline" (click)="delete_admin_post(ui.user_id, ui.id)"></ion-icon>
+											</ion-col>
+										</ion-row>
+									</ion-card-header>
+									<ion-card-content>
+										<ion-row>
+											<ion-col>
+												<div *ngIf="ui.message !=''">
+													<p>{{ui.message}}</p>
+												</div>
+												<div *ngIf="ui.images">
+													<img [src]="ui.images" width="100%" />
+												</div>
+												<!-- <div class="see">
+													<p>40</p>
+													<ion-icon name="eye"></ion-icon>
+												</div> -->
+											</ion-col>
+										</ion-row>
+										<!-- <ion-row>
+											<div>
+												<ion-icon name="thumbs-up-outline"></ion-icon>
+												<p>45435</p>
+											</div> 
+											<div>
+												<ion-icon name="chatbox-ellipses-outline"></ion-icon>
+												<p>45</p>
+											</div>
+										</ion-row>
+										<ion-row>
+											<ion-input type="text" placeholder="Comment Here"></ion-input>
+										</ion-row> -->
+									</ion-card-content>
+								</ion-card>
+							</ng-container>
+						</ng-container>
+						
+						<!-- <div style="position: absolute;bottom: 10px;left: 0;right: 0; z-index: 10;">
+							<ion-item style="border: 1px solid grey;border-radius: 4px;width: 96%;margin: auto;">
+								<ng-container *ngIf="selectedFileName">
+	                        		<ion-input class="chat-input-box" readonly>
+	                           			<div class="chat-input-box-inner">{{ selectedFileName }}</div>
+	                        		</ion-input>
+	                      		</ng-container>
+								<ion-input #chat_input *ngIf="!selectedFileName" placeholder="Write your message here..." [(ngModel)]="message" (keyup.enter)="adminPost()"></ion-input>
+								<ion-icon name="attach-outline" slot="end" (click)="fileInput.click()" style="font-size: 25px;color: var(--ion-color-primary);position: absolute;right: 61px;"
+								></ion-icon>
+								<input type="file" style="display: none" #fileInput (change)="onFileSelected($event)"/>
+								<ion-button fill="clear" slot="end" (click)="adminPost()">
+								<ion-icon name="send" slot="end"></ion-icon>
+								</ion-button>
+							</ion-item>
+						</div> -->
+					</div>
+
+				</div>
+				<div class="chat-container">
+				                <div class="chat-input-container">
+				                   <ng-container *ngIf="selectedFileName">
+				                      <ion-input class="chat-input-box" readonly>
+				                         <div class="chat-input-box-inner">{{ selectedFileName }}</div>
+				                      </ion-input>
+				                    </ng-container>
+				                    <ion-input class="chat-input-box" *ngIf="!selectedFileName" #chat_input placeholder="Write your message here..." [(ngModel)]="message" (keyup.enter)="adminPost()"></ion-input>
+				                   <ion-icon name="attach-outline" slot="end" (click)="fileInput.click()" style="font-size: 25px;color:var(--ion-color-primary);position: absolute; right: 61px;z-index: 11;"></ion-icon>
+				                   <input type="file" style="display: none" #fileInput (change)="onFileSelected($event)"/>
+				                   <ion-button class="chat-button" fill="clear" slot="end" (click)="adminPost()">
+				                      <ion-icon name="send"></ion-icon>
+				                   </ion-button>
+				                </div>
+				        </div>
+			</ion-slide>
+
+		</ion-slides>
+	</ion-list>
+</ion-content>

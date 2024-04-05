@@ -1,0 +1,98 @@
+<ion-tabs #tabs (ionTabsDidChange)="setCurrentTab()">
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="dashboard" color="secondary">
+      <ion-icon [name]="selectedTab == 'dashboard' ? 'home' : 'home-outline'"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="trending" color="secondary">
+      <ion-icon [name]="selectedTab == 'trending' ? 'globe' : 'globe-outline'"></ion-icon>
+      <ion-label>Explore</ion-label>
+    </ion-tab-button>
+    <!-- <ion-tab-button class="scan">
+      <img src="/assets/images/favicon.png" class="favi" id="open-modal">
+    </ion-tab-button> -->
+    <ion-tab-button></ion-tab-button>
+    <ion-tab-button tab="chat" color="secondary">
+      <ion-icon [name]="selectedTab == 'chat' ? 'chatbubbles' : 'chatbubbles-outline'"></ion-icon>
+      <ion-label>Chat</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="about" color="secondary">
+      <ion-icon [name]="selectedTab == 'about' ? 'person-circle' : 'person-circle-outline'"></ion-icon>
+      <ion-label>Account</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
+ 
+<ion-fab vertical="bottom" horizontal="center" slot="fixed">
+  <ion-fab-button>
+    <img src="/assets/images/favicon.png" class="favi" id="open-modal">
+  </ion-fab-button>
+</ion-fab>
+ 
+<ion-modal #modal trigger="open-modal">
+  <ng-template>
+    <div class="topbar_tab">
+      <div class="dash_line">
+        <ion-icon name="remove-outline"></ion-icon>
+      </div>
+      <div class="second_tab">
+        <div class="section_one">
+          <div (click)="qrcode()">
+            <ion-icon name="qr-code-outline"></ion-icon>
+          </div>
+          <h6 class="mt-10" style="font-size: 12px; font-weight: bold;">Scanner</h6>
+        </div>
+        <div class="section_one">
+          <div (click)="create_event()">
+            <ion-icon name="create-outline"></ion-icon>
+          </div>
+          <h6 class="mt-10" style="font-size: 12px; font-weight: bold;"> Create Event</h6>
+        </div>
+        <div class="section_one">
+          <div (click)="my_events()">
+            <ion-icon name="calendar-outline"></ion-icon>
+          </div>
+          <h6 class="mt-10" style="font-size: 12px; font-weight: bold;">My Event</h6>
+        </div>
+        <div class="section_one">
+          <div (click)="manageevent()">
+            <ion-icon name="settings-outline"></ion-icon>
+          </div>
+          <h6 class="mt-10" style="font-size: 12px; font-weight: bold;">Manage Event</h6>
+        </div>
+      </div>
+      <div class="second_tab">
+        <div class="section_one">
+          <div (click)="digital_card()">
+            <ion-icon name="card-outline"></ion-icon>
+          </div>
+          <h6 class="mt-10" style="font-size: 12px; font-weight: bold;">Digital Card</h6>
+        </div>
+        <div class="section_one">
+          <div (click)="create_community()">
+            <ion-icon name="person-add-outline"></ion-icon>
+          </div>
+          <h6 class="mt-10" style="font-size: 12px; font-weight: bold;">Create Community</h6>
+        </div>
+        <div class="section_one">
+          <div (click)="my_community()">
+            <ion-icon name="people-outline"></ion-icon>
+          </div>
+          <h6 class="mt-10" style="font-size: 12px; font-weight: bold;">My Community</h6>
+        </div>
+        <div class="section_one">
+          <div (click)="manage_community()">
+            <ion-icon name="people-circle-outline"></ion-icon>
+          </div>
+          <h6 class="mt-10" style="font-size: 12px; font-weight: bold;">Manage Community</h6>
+        </div>
+        <!-- <div class="section_one">
+          <div (click)="coming()">
+            <ion-icon name="car-sport-outline"></ion-icon>
+          </div>
+          <h6 class="mt-10" style="font-size: 12px; font-weight: bold;">Valet Parking</h6>
+        </div> -->
+      </div>
+    </div>
+  </ng-template>
+</ion-modal>

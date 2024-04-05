@@ -1,0 +1,34 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title style="text-align: center;">Add Guest</ion-title>
+    <ng-container *ngIf="is_modal_open">
+      <ion-icon class="ion-padding-end" slot="end" name="close-outline" (click)="closeModal()"></ion-icon>
+    </ng-container>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form (ngSubmit)="submit()" [formGroup]="ionicForm">
+    <div class="container">
+      <ion-item fill="outline">
+        <ion-label position="floating">Name</ion-label>
+        <ion-input formControlName="person_name" class="input_box" type="text" placeholder="Participant Name"></ion-input>
+      </ion-item>
+      <ion-item fill="outline">
+        <ion-label position="floating">Mobile Number</ion-label>
+        <ion-input formControlName="person_number" class="input_box" type="tel" maxLength="10" placeholder="Mobile Number"></ion-input>
+      </ion-item>
+      <ion-item fill="outline">
+        <ion-label position="floating">Gender</ion-label>
+        <ion-select formControlName="person_gender" class="input_box" placeholder="Select Gender">
+          <ion-select-option value="Male">Male</ion-select-option>
+          <ion-select-option value="Female">Female</ion-select-option>
+          <ion-select-option value="Other">Other</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div class="submit_btn">
+        <ion-button shape="round" type="submit" color="secondary">Add Guest</ion-button>
+      </div>
+    </div>
+  </form>
+</ion-content>

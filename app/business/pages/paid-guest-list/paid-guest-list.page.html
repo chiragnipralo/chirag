@@ -1,0 +1,154 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+   </ion-buttons>
+    <!-- <ng-container *ngIf="is_modal_open"> -->
+    <ion-icon class="ion-padding-end" slot="end" name="close-outline" (click)="closeModal()"></ion-icon>
+    <!-- </ng-container> -->
+    <!-- <ion-img src="assets/images/logo.png"></ion-img> -->
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content [fullscreen]="true">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      refreshingSpinner="circles">
+		</ion-refresher-content>
+	</ion-refresher>
+  <div class="container">
+    <div class="guest-header">
+      <ion-item>
+        <ion-searchbar class="ion-no-padding" (ionChange)="filterItems($event)"></ion-searchbar>
+      </ion-item>
+      <ion-item>
+        <h3 style="font-size: 17px">Guest List</h3>
+        <ng-container *ngIf="dataservice?.events_guests?.is_user_manager">
+          <ion-icon name="scan" slot="end" (click)="Manageqr(dataservice?.events_guests?.id)"></ion-icon>
+        </ng-container>
+      </ion-item>
+    </div>
+      <ion-item class="seg">
+        <ion-segment [(ngModel)]="segment" [scrollable]="true" (ionChange)="segmentChanged($event)">
+          <ng-container *ngIf="dataservice?.events_guests?.same_user_created_event">
+            <ion-segment-button class="Popular" value="invited">
+              <ion-label>Invited <span *ngIf="invited_guests && invited_guests.length != 0">({{ invited_guests.length }})</span></ion-label>
+            </ion-segment-button>
+            <ion-segment-button class="Music" value="coming">
+              <ion-label>Coming <span *ngIf="coming_guests && coming_guests.length != 0">({{ coming_guests.length }})</span></ion-label>
+            </ion-segment-button>
+            <ion-segment-button class="Technology" value="attendees">
+              <ion-label>Attendees <span *ngIf="attendees_guests && attendees_guests.length != 0">({{ attendees_guests.length }})</span></ion-label>
+            </ion-segment-button>
+            <!-- <ion-segment-button class="Social" value="invite_acceptance_pending">
+              <ion-label>Invite Acceptance Pending</ion-label>
+            </ion-segment-button>  -->
+          </ng-container>
+          <ng-container *ngIf="!dataservice?.events_guests?.same_user_created_event">
+            <ion-segment-button class="Music" value="coming">
+              <ion-label>Coming <span *ngIf="coming_guests && coming_guests.length != 0">({{ coming_guests.length }})</span></ion-label>
+            </ion-segment-button>
+            <ion-segment-button class="Technology" value="attendees">
+              <ion-label>Attendees <span *ngIf="attendees_guests && attendees_guests.length != 0">({{ attendees_guests.length }})</span></ion-label>
+            </ion-segment-button>
+          </ng-container>
+        </ion-segment>
+      </ion-item>
+    <ion-list [ngSwitch]="segment">
+      <!-- invited section-->
+      <div *ngSwitchCase="'invited'">
+        <ion-list>
+          <ng-container *ngFor="let ui of invited_guests let i = index;">
+            <ion-item>
+              <ng-container *ngIf="!is_modal_open">
+                <ion-icon [ngClass]="ui.is_event_checked ? 'joined' : ''" name="checkmark-circle"></ion-icon>
+              </ng-container>
+              <ng-container *ngIf="is_modal_open">
+                <ion-icon></ion-icon>
+              </ng-container>
+              <ion-label class="ion-text-wrap">
+                <h2>{{ui.user_name}}</h2>
+                <p class="blur-text">{{ui.mobile}}</p>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </div>
+ 
+      <!-- end all section-->
+
+      <!-- joined section-->
+       <div *ngSwitchCase="'coming'">
+        <ion-list>
+          <ng-container *ngFor="let ui of coming_guests let i = index;">
+            <ion-item>
+              <!-- <ng-container
+                *ngIf="dataservice?.events_guests?.same_user_created_event || dataservice?.events_guests?.is_user_manager || dataservice?.events_guests?.is_user_entry_manager"
+              >
+                <ion-checkbox
+                  [checked]="ui.is_event_checked"
+                  [disabled]="ui.is_event_checked"
+                  (ionChange)="JoinEvent($event, ui)"
+                  slot="start"
+                ></ion-checkbox>
+              </ng-container>
+              <ng-container
+                *ngIf="!dataservice?.events_guests?.same_user_created_event && !dataservice?.events_guests?.is_user_manager && !dataservice?.events_guests?.is_user_entry_manager"
+              > -->
+              <ion-icon [ngClass]="ui.is_event_checked ? 'joined' : ''" name="checkmark-circle"></ion-icon>
+              <!-- </ng-container> -->
+              <ion-label class="ion-text-wrap">
+                <h2 style="display: flex;align-items: center;justify-content: space-between;">
+                  <span>{{ ui.user_name }}</span>
+                </h2>
+                <p class="blur-text">{{ ui.mobile }}</p>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </div>
+ 
+      <!-- end joined section-->
+ 
+      <!-- Invited section-->
+      <div *ngSwitchCase="'attendees'">
+        <ion-list>
+          <ng-container *ngFor="let ui of attendees_guests let i = index;">
+            <ion-item>
+              <ion-icon class="joined" name="checkmark-circle"></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <h2>{{ui.user_name}}</h2>
+                <p class="blur-text">{{ui.user_number}}</p>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </div>
+
+      <!-- end Invited section-->
+ 
+      <!-- pending section--> 
+      <div *ngSwitchCase="'invite_acceptance_pending'">
+        <ion-list>
+          <ng-container *ngFor="let ui of invite_acceptance_pending_guests let i = index;">
+            <ion-item>
+              <ion-icon class="pending" name="checkmark-circle"></ion-icon>
+              <ion-label class="ion-text-wrap">
+                <h2>{{ui.user_name}}</h2>
+                <p class="blur-text">{{ui.user_number}}</p>
+              </ion-label>
+            </ion-item>
+          </ng-container>
+        </ion-list>
+      </div>
+    <!-- end pending section-->
+
+    </ion-list>
+    <!-- <ion-button color="secondary" routerLink="/add">New Guest</ion-button> -->
+  </div>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <ng-container *ngIf="dataservice?.events_guests?.is_user_manager">
+    <ion-button (click)="add_more_guest()" color="secondary" shape="round">Add Guest</ion-button>
+  </ng-container>
+</ion-footer>

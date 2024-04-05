@@ -1,0 +1,28 @@
+<ion-buttons slot="start">
+  <ion-button (click)="closeModal()">
+	  <ion-icon slot="end" name="close"></ion-icon>        
+  </ion-button>
+</ion-buttons>
+
+<ion-content class="ion-padding">
+  <div class="contianer">
+    <ion-img src="assets/images/congratulation.png"></ion-img>
+
+    <div class="text">
+      <p>Event creation complete!</p>
+    </div>
+
+    <div class="foot">
+      <!-- <h3>Share Event</h3> -->
+      <!-- <ion-icon name="copy-outline"></ion-icon>
+      <ion-icon name="logo-whatsapp"></ion-icon> -->
+      <!--<ion-icon name="logo-instagram"></ion-icon>
+       <ion-icon name="logo-facebook"></ion-icon> -->
+
+       <ion-button expand="block" color="secondary" (click)="closeModal()">Close</ion-button>
+
+     </div>
+
+   </div>
+
+ </ion-content>

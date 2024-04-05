@@ -1,0 +1,238 @@
+<ion-content>
+  <ion-header>
+    <ion-img src="assets/images/logo.png"></ion-img>
+  </ion-header>
+  <div class="container ion-padding">
+    <h3>Create Account</h3>
+    <h6>Create account and find fun events and communities with your friends and families.</h6>
+    
+    <form (ngSubmit)="submit()" [formGroup]="ionicForm">
+
+      <div class="register">
+        <div class="main_flex">
+          <div class="form-input">
+            <h4>First Name</h4>
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <ion-input formControlName="full_name" class="ion-padding-start" type="text" placeholder="First Name" #firstNameInput (input)="capitalizeName(firstNameInput)"></ion-input>
+          </div>
+          &nbsp;&nbsp;&nbsp;
+          <div class="form-input">
+            <h4>Last Name</h4>
+            <ion-icon name="person-circle-outline"></ion-icon>
+            <ion-input formControlName="last_name" class="ion-padding-start" type="text" placeholder="Last Name" #lastNameInput (input)="capitalizeName(lastNameInput)"></ion-input>
+          </div>
+        </div>
+        
+
+        <ng-container *ngFor="let error of error_messages.your_name">
+          <div class="error-message" *ngIf="ionicForm?.get('full_name')?.hasError(error.type) && (ionicForm?.get('full_name')?.dirty || ionicForm?.get('full_name')?.touched)">
+            {{ error.message }}
+          </div>
+        </ng-container>
+
+        <ng-container *ngFor="let error of error_messages.last_name">
+          <div class="error-message" *ngIf="ionicForm?.get('last_name')?.hasError(error.type) && (ionicForm?.get('last_name')?.dirty || ionicForm?.get('last_name')?.touched)">
+            {{ error.message }}
+          </div>
+        </ng-container>
+        
+        <div class="form-input">
+          <h4 style="margin-top: 0;">Email id</h4>
+          <ion-icon name="mail-outline"></ion-icon>
+          <ion-input formControlName="email_id" class="ion-padding-start" type="mail" placeholder="Email ID"></ion-input>
+        </div>
+
+        <ng-container *ngFor="let error of error_messages.email">
+          <div class="error-message" *ngIf="ionicForm?.get('email_id')?.hasError(error.type) && (ionicForm?.get('email_id')?.dirty || ionicForm?.get('email_id')?.touched)">
+            {{ error.message }}
+          </div>
+        </ng-container>
+
+        <div class="form-input">
+          <h4>Mobile number</h4>
+          <ion-icon name="call-outline"></ion-icon>
+          <ion-input formControlName="mobile_number" pattern="[0-9]*" maxlength="10" class="ion-padding-start" type="tel" placeholder="Mobile Number"></ion-input>
+        </div>
+
+        <ng-container *ngFor="let error of error_messages.mobile_number">
+          <div class="error-message" *ngIf="ionicForm?.get('mobile_number')?.hasError(error.type) && (ionicForm?.get('mobile_number')?.dirty || ionicForm?.get('mobile_number')?.touched)">
+            {{ error.message }}
+          </div>
+        </ng-container>
+
+        <div class="form-input">
+          <h4>Date of birth</h4>
+          <ion-icon name="calendar-outline"></ion-icon>
+          <ion-input formControlName="date_birth" class="ion-padding-start" type="date" placeholder="Enter DOB"></ion-input>
+        </div>
+
+        <!-- <ng-container *ngFor="let error of error_messages.mobile_number">
+          <div class="error-message" *ngIf="ionicForm.get('mobile_number').hasError(error.type) && (ionicForm.get('mobile_number').dirty || ionicForm.get('mobile_number').touched)">
+            {{ error.message }}
+          </div>
+        </ng-container> -->
+
+        <!-- <div class="form-input">
+          <ion-icon name="eye-outline"></ion-icon>
+          <ion-input formControlName="password" class="ion-padding-start" type="password" placeholder="Password"></ion-input>
+        </div>
+
+        <ng-container *ngFor="let error of error_messages.password">
+          <div class="error-message" *ngIf="ionicForm.get('password').hasError(error.type) && (ionicForm.get('password').dirty || ionicForm.get('password').touched)">
+            {{ error.message }}
+          </div>
+        </ng-container> -->
+
+        <div class="form-input">
+          <h4>Gender</h4>
+          <ion-icon name="man-outline"></ion-icon>
+          <ion-select formControlName="gender" placeholder="Select Gender" style="padding-left: 43px !important">
+            <ion-select-option value="Male">Male</ion-select-option>
+            <ion-select-option value="Female">Female</ion-select-option>
+            <ion-select-option value="Other">Other</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+
+      <div class="condition">
+        <ion-checkbox formControlName="is_terms_checked" slot="start" ></ion-checkbox>
+        <p class="ion-padding-start">By submitting my information,I acknowledge and accept the <b (click)="setOpen(true)">Privacy Policy</b> and <b (click)="settOpen(true)"> Terms and Conditions </b> of the SoEasy Application.</p>
+      </div>
+
+      <div class="error-message" *ngIf="(isSubmitted || ionicForm?.get('is_terms_checked')?.touched) && ionicForm?.get('is_terms_checked')?.hasError('required')">
+      Please agree to terms of use and privacy policy.
+    </div>
+
+    <ion-button expand="block" shape="round" color="secondary" type="submit">Sign Up</ion-button>
+    <ion-label style="display: flex;justify-content: center;">Already have an account ?
+      <h3 style="padding-left: 12px;font-weight: bold;color: #506e50;" (click)="GoToSignIn()">Sign In</h3>
+    </ion-label>
+    <!-- <ion-button expand="block" shape="round" fill="outline" color="secondary" routerLink="/login">Login</ion-button> -->
+
+  </form>
+
+</div>
+<!-- modal for Privacy point -->
+
+<ion-modal [isOpen]="isModalOpen">
+  <ng-template>
+  <ion-header>
+  <ion-toolbar class="modal">
+  <ion-title>Privacy Policy</ion-title>
+  <ion-buttons slot="end">
+  <ion-button (click)="setOpen(false)"><ion-icon name="close"></ion-icon></ion-button>
+  </ion-buttons>
+  </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+  <div class="ion-padding privacy">
+  <p>This Privacy Policy details the manner in which Genesis SmartNet Solutions (“Genesis
+             SmartNet Solutions/Us/Our/We”) collects, restores, deals and handles the end users’
+             (“You/Your/User”) information made available by the User as a result of such User’s access
+             to and use services provided by Genesis SmartNet Solutions through SoEasy Platform
+             (which term shall be deemed to include the internet and mobile website
+  https://soeasyapp.com/ as well as its mobile application)
+  </p>
+  <p>Genesis SmartNet Solutions values the trust You place in it. That's why Genesis SmartNet
+             Solutions insists upon the highest standards for secure transactions and customer
+             information privacy on the SoEasy Platform. Please read the following statement to learn
+             about Genesis SmartNet Solutionss's information gathering and dissemination practices
+  </p>
+  <p>The provisions of this Privacy Policy shall be deemed to be an integral part of and shall be
+             read in conjunction with the T&C document (available here) and shall govern Your use of
+             the services provided through SoEasy Platform. This Privacy Policy has been published by
+             Genesis SmartNet Solutions pursuant to the applicable provisions of the Information
+             Technology Act, 2000 as amended and the relevant rules made thereunder as applicable,
+             and the amended provisions pertaining to electronic records in various statutes under
+             applicable Indian laws.
+  </p>
+  <p>Your use of the SoEasy Platform and the services provided thereunder shall be governed
+             by this Privacy Policy as well as any other applicable policies published on this SoEasy
+             Platform, including but not limited to the Privacy Policy. Your use of the SoEasy Platform
+             whether for the purpose of transacting through SoEasy Platform or otherwise, implies Your
+             specific consent to the provisions of this Privacy Policy as well as other applicable policies,
+             including but not limited to Genesis SmartNet Solutions’s use of the information provided by
+             You for the purpose of Your use of this SoEasy Platform. Genesis SmartNet Solutions
+             hereby reserves the right to modify, add or delete any part of this Privacy Policy without
+             prior written notice/ intimation to You. It shall be Your sole responsibility to periodically
+             review this Privacy Policy and all other applicable policies published on the SoEasy
+             Platform for any revisions thereto. If You do not agree to the revisions made to this Privacy
+             Policy by Genesis SmartNet Solutions, You must discontinue further access and use of the
+             SoEasy Platform and the services provided thereunder. You agree and acknowledge that
+             such discontinuance of access to and use of the SoEasy Platform and the services
+             provided thereunder will render the Privacy Policy inapplicable from such date of
+             discontinuance only; however this Privacy Policy will remain applicable to all instances of use by You of SoEasy Platform and the services provided thereunder prior to such date of discontinuance by You.
+  </p>
+  <p>It is clarified that terms and conditions specific to an event shall be published on the event
+             page accessible on the SoEasy Platform. In the event of any conflict between the
+             event-related terms and conditions, and this Privacy Policy, User agrees that the terms of
+             this Privacy Policy shall prevail and be binding on the User at all times.
+             By mere use of the SoEasy Platform, You expressly consent to Our use and disclosure of
+             Your personal information in accordance with this Privacy Policy. This Privacy Policy is
+             incorporated into and subject to the T&C.
+  </p>
+  </div>
+  </ion-content>
+  </ng-template>
+  </ion-modal>
+   
+  <!-- end modal privacy point -->
+   
+  <!-- modal for Terms and conditions -->
+   
+  <ion-modal [isOpen]="termss">
+  <ng-template>
+  <ion-header>
+  <ion-toolbar class="modal">
+  <ion-title>Terms and Conditions</ion-title>
+  <ion-buttons slot="end">
+  <ion-button (click)="settOpen(false)"><ion-icon name="close"></ion-icon></ion-button>
+  </ion-buttons>
+  </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding privacy">
+  <p>This ‘Terms and Conditions’ document (“T&C”) governs the end users’
+           (“You/Your/User”) access to and use of the 'SoEasy Platform' (which term shall
+           be deemed to include the internet and mobile website https://soeasyapp.com/ as
+           well as its mobile application and any other means to access the same from time
+           to time) and the services offered thereunder.
+  </p>
+  <p>This T&C, along with the ‘Privacy Policy’ (available here) which constitutes an
+           integral and inalienable part of the T&C, and any other applicable policies
+           published on the SoEasy Platform, comprise a binding agreement between You
+           and Genesis SmartNet Solutions. The ‘T&C’, ‘Privacy Policy’ and any such
+           applicable policies constitute an electronic record under the Information
+           Technology Act, 2000 as amended and the relevant rules made thereunder as
+           applicable, and the amended provisions pertaining to electronic records in
+           various statutes under applicable Indian laws.
+  </p>
+  <p>Your use of the SoEasy Platform and the services provided thereunder shall be
+           governed by this T&C as well as any other applicable policies published on this
+           SoEasy Platform, including but not limited to the Privacy Policy. Your use of the
+           SoEasy Platform whether for the purpose of transacting through the SoEasy
+           Platform or otherwise, implies Your consent to the provisions of this T&C as well
+           as any other applicable policies, including but not limited to Genesis SmartNet
+           Solutions’s use of any information provided by You for the purpose of Your use of
+           the SoEasy Platform. Genesis SmartNet Solutions hereby reserves the right to
+           modify, add or delete any part of this T&C without any prior written notice/ 
+           intimation to You. It shall be Your sole responsibility to periodically review this
+           T&C and all other applicable policies published on the SoEasy Platform for any
+           revisions thereto. If You do not agree to any of the revisions made to this T&C by
+           Genesis SmartNet Solutions, You must discontinue further access and use of the
+           SoEasy Platform and the services provided thereunder. You agree and
+           acknowledge that such discontinuance of access to and use of the SoEasy
+           Platform and the services provided thereunder will render the T&C inapplicable
+           from such date of discontinuance only; however this T&C will remain applicable
+           to all instances of use by You of the SoEasy Platform and the services provided
+           thereunder prior to such date of discontinuanc
+  </p>
+  <p>It is clarified that terms and conditions specific to an event in respect of which
+           Genesis SmartNet Solutions has facilitated the sale of tickets through the So
+           Easy Platform (“Event”) shall be published on the event page accessible on the
+           SoEasy Platform. Genesis SmartNet Solutions Publishes
+  </p>
+  </ion-content>
+  </ng-template>
+  </ion-modal>
+  
+</ion-content>

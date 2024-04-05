@@ -1,0 +1,767 @@
+<ion-content [fullscreen]="true" class="slider_container_demo"> 
+  <!-- <ion-ion-input id="slider" class="customSlider" type="checkbox"></ion-ion-input> 
+  <ion-label for="slider"></ion-label> --> 
+  <!-- <ion-slides pager="true">  -->
+  <ion-slides (ionSlideDidChange)="slideChanged()" #slides> 
+
+    <!-- slide 1 -->
+    <ion-slide class="design_1"> 
+      <div class="wrapper-2"> 
+        <div class="top-icons"> 
+          <ion-icon (click)="goBack()" name="arrow-back-circle-outline"></ion-icon> 
+          <ion-icon (click)="share_card(modalData?.card_url,'card1.php')" name="share-social-outline"></ion-icon> 
+          <ion-icon (click)="navigateToEditPage(2)" name="create-outline"></ion-icon> 
+        </div> 
+        <div class="profile-card js-profile-card"> 
+          <div class="profile-card__img"> 
+            <img *ngIf="modalData?.user_img; else initialsBlock" [src]="modalData.user_img" alt="profile card" (click)="openModal(modalData.user_img)"> 
+            <ng-template #initialsBlock> 
+              <h1 class="init-text">{{ modalData?.user_name ? modalData.user_name[0] : 'Initials' }}</h1> 
+            </ng-template> 
+          </div> 
+          <div class="profile-card__cnt js-profile-cnt"> 
+            <div class="profile-card__name">{{modalData?.user_name}}</div> 
+            <div class="profile-card__txt"><strong>{{modalData?.user_designation}}</strong></div> 
+            <div class="profile-card-loc"> 
+              <span class="profile-card-loc__icon"> 
+                <span class="icon-2"><ion-icon name="location-outline"></ion-icon></span> 
+              </span> 
+              <span class="profile-card-loc__txt"> 
+                {{modalData?.user_address}} 
+              </span> 
+            </div> 
+            <div class="profile-card-social"> 
+              <a *ngIf="modalData?.whatsapp_number" [href]="'whatsapp://send?phone=+91' + modalData?.whatsapp_number" class="profile-card-social__item codepen" target="_blank"> 
+                <span class="icon-font"> 
+                  <span class="icon-2"><ion-icon name="logo-whatsapp"></ion-icon></span> 
+                </span> 
+              </a> 
+              <a *ngIf="modalData?.facebook" [href]="'https://www.facebook.com/' + modalData?.facebook" class="profile-card-social__item facebook" target="_blank"> 
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="logo-facebook"></ion-icon></span>
+                </span>
+              </a>
+              <a *ngIf="modalData?.twitter" [href]="'https://www.twitter.com/' + modalData?.twitter" class="profile-card-social__item twitter" target="_blank">
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="logo-twitter"></ion-icon></span>
+                </span>
+              </a>
+              <a *ngIf="modalData?.instagram" [href]="'https://www.instagram.com/' + modalData?.instagram" class="profile-card-social__item instagram" target="_blank">
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="logo-instagram"></ion-icon></span>
+                </span>
+              </a>
+              <a *ngIf="modalData?.linkedin" [href]="'https://www.linkedin.com/in/' + modalData?.linkedin" class="profile-card-social__item behance" target="_blank">
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="logo-linkedin"></ion-icon></span>
+                </span>
+              </a>
+              <a *ngIf="modalData?.website" [href]="'https://' + modalData?.website" class="profile-card-social__item github" target="_blank">
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="logo-dribbble"></ion-icon></span>
+                </span>
+              </a>
+              <a *ngIf="modalData?.youtube" [href]="'https://www.youtube.com/' + modalData?.youtube" class="profile-card-social__item link" target="_blank">
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="logo-youtube"></ion-icon></span>
+                </span>
+              </a>
+            </div>
+            <div class="hr"> </div>
+            <div class="profile-card-social">
+              <div class="profile-card-social__item-2 github" (click)="setAboutUsModal(true)">
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="person-circle"></ion-icon></span>
+                </span>
+                <ion-label>About Us</ion-label>
+              </div>
+              <div class="profile-card-social__item-2 github" (click)="setAboutCompanyModal(true)">
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="briefcase"></ion-icon></span>
+                </span>
+                <ion-label>About Company</ion-label>
+              </div>
+              <div class="profile-card-social__item-2 github" id="services" style="display: none;">
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="build"></ion-icon></span>
+                </span>
+              </div>
+              <div class="profile-card-social__item-2 github" (click)="setGalleryModal(true)">
+                <span class="icon-font">
+                  <span class="icon-2"><ion-icon name="images"></ion-icon></span>
+                </span>
+                <ion-label>Work</ion-label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ion-slide> 
+
+    <!-- slide 2 -->
+    <ion-slide  class="design_2">
+      <div class="wrapper ion-padding" style="position: absolute;top: 0;">
+        <div class="top-icons">
+          <ion-icon (click)="goBack()" name="arrow-back-circle-outline"></ion-icon>
+          <ion-icon (click)="share_card(modalData?.card_url,'card2.php')" name="share-social-outline"></ion-icon>
+          <ion-icon (click)="navigateToEditPage(2)" name="create-outline"></ion-icon>
+        </div>
+        <div class="sencond_slider_body">
+          <section class="container" id="home">
+            <div class="profile-image">
+              <ion-img class="profile-img" *ngIf="modalData?.user_img; else initialsBlock" [src]="modalData.user_img" (click)="openModal(modalData.user_img)"></ion-img>
+              <ng-template #initialsBlock>
+                <div class="thumbnail">
+                  <h1>{{ modalData?.user_name ? modalData.user_name[0] : 'Initials' }}</h1>
+                </div>
+              </ng-template>
+            </div>
+            <p class="hello">{{modalData?.user_name}}</p>
+            <p class="description">{{modalData?.about_me}}</p>
+            <div class="social">
+              <a [href]="'tel:+91'+modalData?.user_contact" target="_blank" id="profile-link">
+                <ion-icon name="call-outline"></ion-icon>
+              </a>
+              <a [href]="'whatsapp://send?phone=+91' + modalData?.whatsapp_number" target="_blank" id="profile-link">
+                <ion-icon name="logo-whatsapp"></ion-icon>
+              </a>
+              <a [href]="'https://www.google.com/maps'" target="_blank" id="profile-link">
+                <ion-icon name="location-outline"></ion-icon>
+              </a>
+              <a [href]="'mailto:'+modalData?.user_email" target="_blank" id="profile-link">
+                <ion-icon name="mail-outline"></ion-icon>
+              </a>
+            </div>
+          </section>
+          <section class="container" id="about">
+            <div class="about-box">
+              <div class="left">
+                <h3>Contact Info</h3>
+              </div>
+              <div class="right">
+                <ion-item>
+                  <ion-icon name="call-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.user_contact}}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="modalData?.whatsapp_number">
+                  <ion-icon name="logo-whatsapp"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.whatsapp_number}}</ion-label>
+                </ion-item>
+                <ion-item>
+                  <ion-icon name="mail-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.user_email}}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="modalData?.website">
+                  <ion-icon name="logo-dribbble"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.website}}</ion-label>
+                </ion-item>
+              </div>
+            </div>
+          </section>
+          <section class="container" id="about" *ngIf="modalData?.facebook || modalData?.instagram || modalData?.linkedin || modalData?.twitter">
+            <div class="about-box">
+              <div class="left">
+                <h3>Social Info</h3>
+              </div>
+              <div class="right">
+                <ion-item *ngIf="modalData?.facebook">
+                  <ion-icon name="logo-facebook"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.facebook}}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="modalData?.instagram">
+                  <ion-icon name="logo-instagram"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.instagram}}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="modalData?.linkedin">
+                  <ion-icon name="logo-linkedin"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.linkedin}}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="modalData?.twitter">
+                  <ion-icon name="logo-twitter"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.twitter}}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="modalData?.youtube">
+                  <ion-icon name="logo-youtube"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.youtube}}</ion-label>
+                </ion-item>
+              </div>
+            </div>
+          </section>
+          <section class="container" id="about" *ngIf="modalData?.office_name || modalData?.email1 || modalData?.office_address">
+            <div class="about-box">
+              <div class="left">
+                <h3>Company Info</h3>
+              </div>
+              <div class="right">
+                <ion-item *ngIf="modalData?.office_name">
+                  <ion-icon name="business-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.office_name}}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="modalData?.email1">
+                  <ion-icon name="mail-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.email1}}</ion-label>
+                </ion-item>
+                <ion-item *ngIf="modalData?.office_address">
+                  <ion-icon name="home-outline"></ion-icon>
+                  &nbsp;&nbsp;&nbsp;
+                  <ion-label>{{modalData?.office_address}}</ion-label>
+                </ion-item>
+              </div>
+            </div>
+          </section>
+          <section class="container" id="projects">
+            <div class="projects-box">
+              <a href="javascript:void(0)" class="project" *ngFor="let imageUrl of imageUrls">
+                <img [src]="imageUrl" alt="Project-thumbnail">
+              </a>
+            </div>
+          </section>
+        </div>
+        <div class="concept">copyright by SoEasy
+        </div>
+      </div>  
+    </ion-slide> 
+
+    <!-- slide 3 -->
+    <ion-slide class="design_3">
+      <div class="maindiv" style="position: absolute;
+      top: 0;">
+        <div class="top-icons">
+          <ion-icon (click)="goBack()" name="arrow-back-circle-outline"></ion-icon>
+          <ion-icon (click)="share_card(modalData?.card_url,'card3.php')" name="share-social-outline"></ion-icon>
+          <ion-icon (click)="navigateToEditPage(2)" name="create-outline"></ion-icon>
+        </div>
+        <div class="maindivinner">
+          <header class="header">
+            <div class="part1">
+              <div class="company-logo">
+                <ion-avatar>
+                  <ion-img *ngIf="modalData?.user_img; else initialsBlock" [src]="modalData.user_img" (click)="openModal(modalData.user_img)"></ion-img>
+                </ion-avatar>
+                <ng-template #initialsBlock>
+                  <div class="thumbnail">
+                    <h1>{{ modalData?.user_name ? modalData.user_name[0] : 'Initials' }}</h1>
+                  </div>
+                </ng-template>
+              </div>
+              <div class="company-details">
+                <div class="company">{{modalData?.user_name}}</div>
+                <div class="company-tag"><strong>{{modalData?.user_designation}}</strong></div>
+              </div>
+            </div>
+            <div class="part2">
+              <ul>
+                <li>
+                  <a [href]="'tel:+91'+modalData?.user_contact" target="_blank">
+                    <ion-icon name="call"></ion-icon>
+                  </a>
+                  <span> Phone </span>
+                </li>
+                <li>
+                  <a [href]="'mailto:'+modalData?.user_email" target="_blank">
+                    <ion-icon name="mail"></ion-icon>
+                  </a>
+                  <span> E mail </span>
+                </li>
+                <li>
+                  <a [href]="'whatsapp://send?phone=+91' + modalData?.whatsapp_number" target="_blank">
+                    <ion-icon name="logo-whatsapp"></ion-icon>
+                  </a>
+                  <span> Whatsapp </span>
+                </li>
+                <li>
+                  <a *ngIf="modalData?.website" [href]="'https://' + modalData?.website" target="_blank">
+                    <ion-icon name="globe-outline"></ion-icon>
+                  </a>
+                  <span>Website</span>
+                </li>
+              </ul>
+            </div>
+          </header>
+
+          <div class="body-content">
+            <div class="align-center"><a (click)="setAboutUsModal(true)" class="card-btn">About me</a></div>
+            <div class="about-me-description">{{modalData?.about_me}}</div>
+            <ul class="professional-details">
+              <li (click)="setAboutUsModal(true)"><a>
+                <ion-icon name="person-circle" class="about_us_icon"></ion-icon></a><span>About Me</span>
+              </li>
+              <li><a [href]="'https://www.google.com/maps'" target="_blank">
+                <img src="/assets/images/card/location.png" class="imgicon"></a><span>Location</span>
+              </li>
+              <li><a [href]="'https://' + modalData?.website" target="_blank">
+                <img src="/assets/images/card/website.png" class="imgicon"></a><span>Website</span>
+              </li>
+              <li><a *ngIf="modalData?.youtube" [href]="'https://www.youtube.com/' + modalData?.youtube">
+                <ion-icon name="logo-youtube" class="about_us_icon"></ion-icon></a><span>YouTube</span>
+              </li>
+            </ul>
+            <div class="broader-seprator"></div>
+            <div class="align-center">
+              <a (click)="setAboutCompanyModal(true)" class="card-btn">Profession</a>
+            </div>
+            <div class="about-me-description">{{modalData?.about_us}}</div>
+            <ul class="professional-details">
+              <li><a (click)="setAboutCompanyModal(true)"><span class="icon_wrapper">
+                <img src="/assets/images/card/bank.png" class="imgicon"></span></a><span>About Company</span>
+              </li>
+              <li><a (click)="setGalleryModal(true)">
+                <img src="/assets/images/card/gallery.png" class="imgicon"></a><span>Gallery</span>
+              </li>
+            </ul>
+          </div>
+          <div class="follow-me-heading"><span>Follow me</span><span class="bottom-line"></span></div>
+          <ul class="bottom-sharing">
+            <li>
+              <a *ngIf="modalData?.facebook" [href]="'https://www.facebook.com/' + modalData?.facebook" target="_blank">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </a>
+            </li>
+            <li>
+              <a *ngIf="modalData?.instagram" [href]="'https://www.instagram.com/' + modalData?.instagram" target="_blank">
+                <ion-icon name="logo-instagram"></ion-icon>
+              </a>
+            </li>
+            <li>
+              <a *ngIf="modalData?.linkedin" [href]="'https://www.linkedin.com/in/' + modalData?.linkedin" target="_blank">
+                <ion-icon name="logo-linkedin"></ion-icon>
+              </a>
+            </li>
+            <li>
+              <a *ngIf="modalData?.twitter" [href]="'https://www.twitter.com/' + modalData?.twitter" target="_blank">
+                <ion-icon name="logo-twitter"></ion-icon>
+              </a>
+            </li>
+            <li>
+              <a *ngIf="modalData?.youtube" [href]="'https://www.youtube.com/' + modalData?.youtube" target="_blank">
+                <ion-icon name="logo-youtube"></ion-icon>
+              </a>
+            </li>
+          </ul>
+          <div class="broader-seprator-blue"></div>
+          <div class="bgbottom"></div>
+        </div>
+      </div>
+    </ion-slide>
+
+    <!-- slide 4 -->
+    <ion-slide class="design_4">
+      <div class="maindiv">
+        <div class="top-icons" style="padding:20px 7px;"> 
+          <ion-icon (click)="goBack()" name="arrow-back-circle-outline" style="color: white;"></ion-icon> 
+          <ion-icon (click)="share_card(modalData?.card_url,'card4.php')" name="share-social-outline" style="color: white;"></ion-icon> 
+          <ion-icon (click)="navigateToEditPage(2)" name="create-outline" style="color: white;"></ion-icon> 
+        </div> 
+        <div class="maindivinner">
+          <header class="header">
+            <div class="topprofile">
+              <ion-img *ngIf="modalData?.user_img; else initialsBlock" [src]="modalData.user_img" (click)="openModal(modalData.user_img)" class="img-circle" style="margin:0 auto; width:100px; height:100px;border:5px solid #000000; object-fit: cover;"></ion-img>
+              <ng-template #initialsBlock>
+                <div class="thumbnail">
+                  <h1>{{ modalData?.user_name ? modalData.user_name[0] : 'Initials' }}</h1>
+                </div>
+              </ng-template>
+              </div>
+            <div class="headertext">
+              <h1 class="head1">{{modalData?.user_name}}</h1>
+              <h2 class="head2">{{modalData?.user_designation}}</h2>
+            </div>
+          </header>
+          <section class="midmain">
+            <div class="orgmainbox">
+              <div class="textbgbox">Contact </div>
+                <div class="blwhead">
+                  <div class="row">
+                    <div class="col-xs-2">
+                      <div class="icansw"><a [href]="'tel:+91'+modalData?.user_contact" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/CALL.png"></a></div>
+                      <div class="ichead">Call</div>
+                    </div>
+                    <div class="col-xs-2" >
+                      <div class="icansw"><a [href]="'mailto:'+modalData?.user_email" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/MAIL.png"></a></div>
+                      <div class="ichead">Email</div>
+                    </div>
+                    <div class="col-xs-2" >
+                      <div class="icansw"><a [href]="'whatsapp://send?phone=+91' + modalData?.whatsapp_number" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/WHATSAPP.png"></a></div>
+                      <div class="ichead">WhatsApp</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="orgmainbox">
+                 <div class="textbgbox">Profile </div>
+                 <div class="blwhead">
+                    <div class="row">
+                       <div class="col-xs-2" >
+                          <div class="icansw">
+                            <a (click)="setAboutUsModal(true)">
+                              <img src="https://digital.thebusinesscard.in/assets/public/1/images/about me.png">
+                            </a>
+                          </div>
+                          <div class="ichead"><a>AboutMe</a></div>
+                       </div>
+                       <div class="col-xs-2" >
+                        <div class="icansw"><a [href]="'https://' + modalData?.website" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/location.png"></a></div>
+                        <div class="ichead"><a>Location</a></div>
+                      </div>
+                       <div class="col-xs-2" >
+                          <div class="icansw"><a (click)="share_card(modalData?.card_url,'card4.php')"><img src="https://digital.thebusinesscard.in/assets/public/1/images/share this.png"></a></div>
+                          <div class="ichead"><a>Share&nbsp;this</a></div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <div class="orgmainbox">
+                 <div class="textbgbox">Company</div>
+                 <div class="blwhead">
+                    <div class="row">
+                       <div class="col-xs-2" >
+                          <div class="icansw"><a (click)="setAboutCompanyModal(true)"><img src="https://digital.thebusinesscard.in/assets/public/1/images/company.png"></a></div>
+                          <div class="ichead"><a>Company</a></div>
+                       </div>
+                       <div class="col-xs-2" >
+                          <div class="icansw"><a (click)="setGalleryModal(true)"><img src="https://digital.thebusinesscard.in/assets/public/1/images/ga.png"></a></div>
+                          <div class="ichead"><a>Products</a></div>
+                       </div>
+                       <div class="col-xs-2" >
+                          <div class="icansw"><a [href]="'https://' + modalData?.website" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/website.png"></a></div>
+                          <div class="ichead"><a>Website</a></div>
+                       </div>
+                       <div class="col-xs-2" >
+                          <div class="icansw"><a [href]="'https://www.google.com/maps'" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/location.png"></a></div>
+                          <div class="ichead"><a>Location</a></div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <div class="orgmainbox">
+                 <div class="textbgbox">Follow me </div>
+                 <div class="blwheadsocial">
+                    <div class="row">
+                       <div class="col-xs-2 " >
+                          <div class="icansw"><a *ngIf="modalData?.facebook" [href]="'https://www.facebook.com/' + modalData?.facebook" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/facebook-01.png"></a></div>
+                       </div>
+                       <div class="col-xs-2" >
+                          <div class="icansw"><a *ngIf="modalData?.twitter" [href]="'https://www.twitter.com/' + modalData?.twitter" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/twitter-01.png"></a></div>
+                       </div>
+                       <div class="col-xs-2" >
+                          <div class="icansw"><a *ngIf="modalData?.instagram" [href]="'https://www.instagram.com/' + modalData?.instagram" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/instagram-01.png"></a></div>
+                       </div>
+                       <div class="col-xs-2" >
+                          <div class="icansw"><a *ngIf="modalData?.linkedin" [href]="'https://www.linkedin.com/in/' + modalData?.linkedin" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/linked in-01.png"></a></div>
+                       </div>
+                       <div class="col-xs-2" >
+                          <div class="icansw"><a *ngIf="modalData?.youtube" [href]="'https://www.youtube.com/' + modalData?.youtube" target="_blank"><img src="https://digital.thebusinesscard.in/assets/public/1/images/youtu.png"></a></div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </section>
+        </div>
+     </div>
+    </ion-slide>
+
+    <!-- slide 5 -->
+    <ion-slide class="design_5">
+      <div class="main_box">
+        <div class="top-icons" style="padding: 0 10px;"> 
+          <ion-icon (click)="goBack()" name="arrow-back-circle-outline"></ion-icon> 
+          <ion-icon (click)="share_card(modalData?.card_url,'card5.php')" name="share-social-outline"></ion-icon> 
+          <ion-icon (click)="navigateToEditPage(2)" name="create-outline"></ion-icon> 
+        </div> 
+        <div class="container">
+          <div class="profile_img_box">
+            <div class="background-image-area">
+              <div class="thumbnail-image">
+                <ion-img *ngIf="modalData?.user_img; else initialsBlock" [src]="modalData.user_img" (click)="openModal(modalData.user_img)"></ion-img>
+                <ng-template #initialsBlock>
+                  <div class="thumbnail">
+                    <h1>{{ modalData?.user_name ? modalData.user_name[0] : 'Initials' }}</h1>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="user-info-top">
+              <div class="user-info-header">
+                <div class="user">
+                  <ion-icon name="person-circle-outline"></ion-icon>
+                </div>
+                <h2 class="title">{{modalData?.user_name}}</h2>
+                <p class="disc about-me-description">{{modalData?.about_me}}</p>
+              </div>
+              <div class="user-info-footer">
+                <div class="social-share-inner-left">
+                  <ul class="social-share d-flex justify-between liststyle">
+                    <li class="facebook"><a [href]="'tel:+91'+modalData?.user_contact" target="_blank"><ion-icon name="call"></ion-icon></a></li>
+                    <li class="instagram"><a [href]="'mailto:'+modalData?.user_email" target="_blank"><ion-icon name="mail"></ion-icon></a></li>
+                    <li class="linkedin"><a [href]="'whatsapp://send?phone=+91' + modalData?.whatsapp_number" target="_blank"><ion-icon name="logo-whatsapp"></ion-icon></a></li>
+                    <li class="linkedin"><a [href]="'https://' + modalData?.website" target="_blank"><ion-icon name="globe"></ion-icon></a></li>
+                  </ul>
+                </div>
+                <div class="button-wrapper d-flex justify-center mt_lg--50 mt_md--50 mt_sm--40 mt--40" style="display: flex!important;">
+                  <a class="rn-btn" (click)="setAboutUsModal(true)"><span>About me</span></a>
+                </div>
+                <div class="user-info-footer mt_sm--30 mt--30">
+                  <div class="social-share-inner-left">
+                    <ul class="social-share d-flex justify-between liststyle">
+                      <li class="facebook"><a (click)="setAboutUsModal(true)"><ion-icon name="person-circle-outline"></ion-icon></a></li>
+                      <li class="facebook"><a [href]="'https://' + modalData?.website" target="_blank"><ion-icon name="globe"></ion-icon></a></li>
+                      <li class="instagram"><a [href]="'https://www.google.com/maps'" target="_blank"><ion-icon name="location"></ion-icon></a></li>
+                      <li class="instagram"><a *ngIf="modalData?.youtube" [href]="'https://www.youtube.com/' + modalData?.youtube" target="_blank"><ion-icon name="logo-youtube"></ion-icon></a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="button-wrapper d-flex justify-center mt_lg--50 mt_md--50 mt_sm--40 mt--40" style="display: flex!important;">
+                  <a class="rn-btn" (click)="setAboutCompanyModal(true)"><span>Profession</span></a>
+                </div>
+                <div class="user-info-footer mt_sm--30 mt--30">
+                  <div class="social-share-inner-left">
+                    <ul class="social-share d-flex justify-between liststyle">
+                      <li class="instagram"><a (click)="setAboutCompanyModal(true)"><ion-icon name="home"></ion-icon></a></li>
+                      <li class="linkedin"><a (click)="setGalleryModal(true)"><ion-icon name="image"></ion-icon></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="footer" class="rn-footer-area footer-style-2 rn-section-gapTop section-separator">
+          <ul class="social-share d-flex justify-around liststyle">
+              <li class="facebook"><a *ngIf="modalData?.facebook" [href]="'https://www.facebook.com/' + modalData?.facebook" target="_blank"><ion-icon name="logo-facebook"></ion-icon>
+              </a>
+              </li>
+              <li class="instagram"><a *ngIf="modalData?.instagram" [href]="'https://www.instagram.com/' + modalData?.instagram" target="_blank"><ion-icon name="logo-instagram"></ion-icon></a>
+              </li>
+              <li class="linkedin"><a *ngIf="modalData?.linkedin" [href]="'https://www.linkedin.com/in/' + modalData?.linkedin" target="_blank"><ion-icon name="logo-linkedin"></ion-icon></a>
+              </li>
+              <li class="linkedin"><a *ngIf="modalData?.twitter" [href]="'https://www.twitter.com/' + modalData?.twitter" target="_blank"><ion-icon name="logo-twitter"></ion-icon></a>
+              </li>
+              <li class="linkedin"><a *ngIf="modalData?.youtube" [href]="'https://www.youtube.com/' + modalData?.youtube" target="_blank"><ion-icon name="logo-youtube"></ion-icon></a>
+              </li>
+          </ul>
+      </div> 
+      </div>
+    </ion-slide>
+  
+  </ion-slides>  
+
+  <div class="arrow_des">
+    <ion-icon (click)="prevSlide()" name="chevron-back-outline" *ngIf="currentSlideIndex > 0"></ion-icon>
+    <ion-icon (click)="nextSlide()" name="chevron-forward-outline" class="next-btn" [ngClass]="{'first_next_btn': currentSlideIndex == 0}" *ngIf="currentSlideIndex < (totalSlides - 1)"></ion-icon>
+  </div>
+
+  <!-- Modals for design slide 1    -->
+  <ion-modal [isOpen]="isModalAboutUsModalOpen" (willDismiss)="onAboutUsWillDismiss($event)" [enterAnimation]="enterAnimation" [leaveAnimation]="leaveAnimation">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-icon class="ion-padding-end" slot="start" name="arrow-back-outline" (click)="setAboutUsModal(false)"></ion-icon>
+          <ion-title style="text-align: center;">About us</ion-title>
+          <ion-icon class="ion-padding-end" slot="end" name="close-outline" (click)="setAboutUsModal(false)"></ion-icon>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <p>{{modalData?.about_me}}</p>
+        <div class="about-box">
+          <div class="left">
+            <h3>Contact Info</h3>
+          </div>
+          <div class="right">
+            <ion-item *ngIf="modalData?.user_contact">
+              <ion-icon name="call"></ion-icon>
+              &nbsp;&nbsp;&nbsp;
+              <ion-label>{{modalData?.user_contact}}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="modalData?.landline_number">
+              <ion-icon name="call"></ion-icon>
+              &nbsp;&nbsp;&nbsp;
+              <ion-label>{{modalData?.landline_number}}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="modalData?.whatsapp_number">
+              <ion-icon name="logo-whatsapp"></ion-icon>
+              &nbsp;&nbsp;&nbsp;
+              <ion-label>{{modalData?.whatsapp_number}}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="modalData?.user_email">
+              <ion-icon name="mail"></ion-icon>
+              &nbsp;&nbsp;&nbsp;
+              <ion-label>{{modalData?.user_email}}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="modalData?.user_address">
+              <ion-icon name="location"></ion-icon>
+              &nbsp;&nbsp;&nbsp;
+              <ion-label>{{modalData?.user_address}}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="modalData?.address">
+              <ion-icon name="location"></ion-icon>
+              &nbsp;&nbsp;&nbsp;
+              <ion-label>{{modalData?.address}}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="modalData?.address1">
+              <ion-icon name="location"></ion-icon>
+              &nbsp;&nbsp;&nbsp;
+              <ion-label>{{modalData?.address1}}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="modalData?.address2">
+              <ion-icon name="location"></ion-icon>
+              &nbsp;&nbsp;&nbsp;
+              <ion-label>{{modalData?.address2}}</ion-label>
+            </ion-item>
+            <ion-item *ngIf="modalData?.snapchatId">
+              <ion-icon name="logo-snapchat"></ion-icon>
+              &nbsp;&nbsp;&nbsp;
+              <ion-label>{{modalData?.snapchatId}}</ion-label>
+            </ion-item>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="isModalAboutCompanyModalOpen" (willDismiss)="onAboutCompanyWillDismiss($event)" [enterAnimation]="enterAnimation" [leaveAnimation]="leaveAnimation">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-icon class="ion-padding-end" slot="start" name="arrow-back-outline" (click)="setAboutCompanyModal(false)"></ion-icon>
+          <ion-title style="text-align: center;">About the company</ion-title>
+          <ion-icon class="ion-padding-end" slot="end" name="close-outline" (click)="setAboutCompanyModal(false)"></ion-icon>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <p>{{modalData?.about_us}}</p>
+        <div class="about-box">
+           <div class="left">
+              <h3>Business Info</h3>
+           </div>
+           <div class="right">
+              <ion-item *ngIf="modalData?.office_name">
+                 <ion-icon name="business"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.office_name}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.user_contact">
+                 <ion-icon name="call"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.user_contact}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.user_contact1">
+                 <ion-icon name="call"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.user_contact1}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.user_contact2">
+                 <ion-icon name="call"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.user_contact2}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.landline_number">
+                 <ion-icon name="call"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.landline_number}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.whatsapp_number">
+                 <ion-icon name="logo-whatsapp"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.whatsapp_number}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.user_email">
+                 <ion-icon name="mail"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.user_email}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.email1">
+                 <ion-icon name="mail"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.email1}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.email2">
+                 <ion-icon name="mail"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.email2}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.office_address">
+                 <ion-icon name="location"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.office_address}}</ion-label>
+              </ion-item>
+              <ion-item *ngIf="modalData?.head_office_address">
+                 <ion-icon name="location"></ion-icon>
+                 &nbsp;&nbsp;&nbsp;
+                 <ion-label>{{modalData?.head_office_address}}</ion-label>
+              </ion-item>
+           </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal #modal3 trigger="services" [enterAnimation]="enterAnimation" [leaveAnimation]="leaveAnimation">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-icon class="ion-padding-end" slot="start" name="arrow-back-outline" (click)="modal3.dismiss()"></ion-icon>
+          <ion-title style="text-align: center;">Our services</ion-title>
+          <ion-icon class="ion-padding-end" slot="end" name="close-outline" (click)="modal3.dismiss()"></ion-icon>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-accordion-group>
+          <ion-accordion value="first">
+            <ion-item slot="header" color="light">
+              <ion-label>Website Development</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">When developing a digital product, it’s essential to consider both its functionality and look. These two elements are bound together in areas such as user experience (UX), usability, and user interface design (UI design). Here’s why web design is worth your time and money.</div>
+          </ion-accordion>
+          <ion-accordion value="second">
+            <ion-item slot="header" color="light">
+              <ion-label>App Development</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">When developing a digital product, it’s essential to consider both its functionality and look. These two elements are bound together in areas such as user experience (UX), usability, and user interface design (UI design). Here’s why web design is worth your time and money.</div>
+          </ion-accordion>
+          <ion-accordion value="third">
+            <ion-item slot="header" color="light">
+              <ion-label>Digital Marketing</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">When developing a digital product, it’s essential to consider both its functionality and look. These two elements are bound together in areas such as user experience (UX), usability, and user interface design (UI design). Here’s why web design is worth your time and money.</div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="isModalGalleryModalOpen" (willDismiss)="onGalleryWillDismiss($event)"  [enterAnimation]="enterAnimation" [leaveAnimation]="leaveAnimation">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-icon class="ion-padding-end" slot="start" name="arrow-back-outline" (click)="setGalleryModal(false)"></ion-icon>
+          <ion-title style="text-align: center;">Our Work</ion-title>
+          <ion-icon class="ion-padding-end" slot="end" name="close-outline" (click)="setGalleryModal(false)"></ion-icon>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-row>
+            <ng-container *ngFor="let imageUrl of imageUrls">
+              <ion-col size="6" style="height: 200px;">
+                <ion-img [src]="imageUrl" class="gallery"></ion-img>
+              </ion-col>
+            </ng-container>
+        </ion-row>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  <!-- End Modals for design slide 1    -->
+
+</ion-content>

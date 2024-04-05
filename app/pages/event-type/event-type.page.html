@@ -1,0 +1,23 @@
+
+<ion-content>
+  <div class="container ion-padding">
+      <ion-icon name="arrow-back-circle-outline" (click)="goBack()"></ion-icon>
+    <div class="event_comm">
+      <p class="ion-text-center heading">Choose Event Type</p>
+      <ion-row class="content">
+        <ion-col (click)="multievent()">
+          <img src="/assets/images/my_community.png">
+          <div>
+            <ion-label>Multiple Events</ion-label>
+          </div>
+        </ion-col>
+        <ion-col (click)="singleevent()">
+          <img src="/assets/images/cale.png">
+          <div>
+            <ion-label>Single Event</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>

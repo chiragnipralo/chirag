@@ -1,0 +1,355 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-icon color="" slot="start" name="arrow-back-outline" routerLink="/tabs/home"></ion-icon>
+    <ion-title>My Events</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      pullingIcon="arrow-down"
+    	pullingText="Pull to refresh"
+    	refreshingSpinner="circles"></ion-refresher-content>
+	</ion-refresher>
+
+  <ion-list>
+
+    <ion-segment class="segment_one" [(ngModel)]="event_seg" [scrollable]="true">   
+      <ion-segment-button value="create">
+        <ion-label>Created</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="join">
+        <ion-label>Joined</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="list">
+        <ion-label>Invited</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <div class="container" [@fadeIn]>
+      <ion-list *ngIf="event_seg === 'create'">
+
+        <ion-segment class="seg-sec" [(ngModel)]="segment_one" [scrollable]="true">   
+          <ion-segment-button value="upcoming">
+            Upcoming
+          </ion-segment-button>
+          <ion-segment-button value="completed">
+            Completed
+          </ion-segment-button>
+          <ion-segment-button value="cancelled">
+            Cancelled
+          </ion-segment-button>
+          <!-- <ion-segment-button value="unsuccessful">
+            Draft
+          </ion-segment-button> -->
+        </ion-segment>
+
+        <div [ngSwitch]="segment_one">
+          <div *ngSwitchCase="'upcoming'">
+            <ng-container *ngFor="let ui of my_upcoming_events let i = index;" >
+              <ion-card>
+                <ion-card-content>
+                  <ion-row>
+                    <ion-col class="eventcol">
+                      <ion-img [src]="ui.event_images"></ion-img>
+                    </ion-col>
+                    <ion-col>
+                      <div class="head">
+                        <h2>{{ui.title}}</h2>
+                        <ion-button size="small" fill="clear" (click)="edit_details(ui)"><ion-icon name="create-outline"></ion-icon></ion-button>    
+                        <!-- <ion-button fill="clear" size="small" (click)="deleteconfirm()"><ion-icon name="trash"></ion-icon></ion-button> -->
+                      </div>
+                      <div>
+                        <!-- <ng-container  *ngFor="let di of ui.event_dates let i = index;" >
+                          <ion-list><ion-icon name="calendar-outline"></ion-icon><p>{{di.event_date}}</p></ion-list>
+                          <ion-list><ion-icon name="time-outline"></ion-icon><p>{{di.start_time}} - {{di.end_time}}</p></ion-list>
+                        </ng-container>  -->   
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+
+                      </div>
+                      <div class="btnn">
+                        <ion-button color="primary" shape="round" fill="outline" size="small" (click)="view_detailss(ui)">View</ion-button>    
+                        <ion-button color="primary" shape="round" size="small" (click)="add_staff(ui)">Add Admin</ion-button>    
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>  
+          </div>
+          
+          <div *ngSwitchCase="'completed'">
+            <ng-container *ngFor="let ui of my_completed_events let i = index;" >
+              <ion-card>
+                <ion-card-content>
+                  <ion-row>
+                    <ion-col class="eventcol" (click)="view_detailss(ui)">
+                      <ion-img [src]="ui.event_images"></ion-img>
+                    </ion-col>
+                    <ion-col>
+                      <div class="head">
+                        <h2 (click)="view_detailss(ui)">{{ui.title}}</h2>
+                      </div>
+                      <div>
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>
+          </div>
+          
+          <div *ngSwitchCase="'cancelled'">
+            <ng-container *ngFor="let ui of my_cancel_events let i = index;" >
+              <ion-card>
+                <ion-card-content>
+                  <ion-row>
+                    <ion-col>
+                      <ion-img [src]="ui.event_images"></ion-img>
+                    </ion-col>
+                    <ion-col>
+                      <div class="head">
+                        <h2>{{ui.title}}</h2>
+                      </div>
+                      <div>  
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <div class="cancle">
+                    cancelled
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>
+          </div>
+<!--           
+          <div *ngSwitchCase="'unsuccessful'">
+            <ion-card routerLink="/detailseve">
+              <ion-card-content>
+                <ion-row>
+                  <ion-col >
+                    <ion-img src="assets/images/dog1.jpg"></ion-img>
+                  </ion-col>
+                  <ion-col>
+                    <div class="head">
+                      <h2>Dogs Meetup</h2>
+                    </div>
+                    <div>
+                      <ion-list><ion-icon name="calendar-outline"></ion-icon><p>19/12/2022</p></ion-list>
+                      <ion-list><ion-icon name="time-outline"></ion-icon><p>10:00AM-12PM</p></ion-list>
+                      <ion-list><ion-icon name="location-outline"></ion-icon><p>Sambhaji Maidan Mumbai</p></ion-list>
+                      <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                    </div>
+                    <div class="btnn">
+                      <ion-button color="secondary" size="small" routerLink="/editevent">Edit</ion-button>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </div> -->
+        </div>
+      </ion-list>
+
+      <ion-list *ngIf="event_seg === 'join'">
+        <ion-segment class="seg-sec" [(ngModel)]="segment_one" [scrollable]="true">   
+          <ion-segment-button class="upcoming" value="upcoming">
+            Upcoming
+          </ion-segment-button>
+          <ion-segment-button class="completed" value="completed">
+            Completed
+          </ion-segment-button>
+          <ion-segment-button class="cancelled" value="cancelled">
+            Cancelled
+          </ion-segment-button>
+        </ion-segment>
+
+        <div [ngSwitch]="segment_one">
+          <div *ngSwitchCase="'upcoming'">
+            <ng-container  *ngFor="let ui of my_joined_events let i = index;" >
+              <ion-card (click)="view_detailss(ui)">
+                <ion-card-content>
+                  <ion-row>
+                    <ion-col >
+                      <ion-img [src]="ui.event_images"></ion-img>
+                    </ion-col>
+                    <ion-col>
+                      <div class="head">
+                        <h2>{{ui.title}}</h2>
+                      </div>
+                      <div>  
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>
+          </div>
+          
+          <div *ngSwitchCase="'completed'">
+            <ng-container  *ngFor="let ui of joined_completed_events let i = index;" >
+              <ion-card>
+                <ion-card-content>
+                  <ion-row>
+                    <ion-col (click)="view_detailss(ui)">
+                      <ion-img [src]="ui.event_images"></ion-img>
+                    </ion-col>
+                    <ion-col>
+                      <div class="head">
+                        <h2 (click)="view_detailss(ui)">{{ui.title}}</h2>
+                      </div>
+                      <div>  
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>
+          </div>
+          
+          <div *ngSwitchCase="'cancelled'">
+            <ng-container  *ngFor="let ui of joined_cancel_events let i = index;" >
+              <ion-card (click)="view_detailss(ui)">
+                <ion-card-content>
+                  <ion-row>
+                    <ion-col >
+                      <ion-img [src]="ui.event_images"></ion-img>
+                    </ion-col>
+                    <ion-col>
+                      <div class="head">
+                        <h2>{{ui.title}}</h2>
+                      </div>
+                      <div>  
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                  <div class="cancle">
+                    cancelled
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>
+          </div>
+          
+          <div *ngSwitchCase="'unsuccessful'">
+            <ion-card routerLink="/detailseve">
+              <ion-card-content>
+                <ion-row>
+                  <ion-col >
+                    <ion-img src="assets/images/dog1.jpg"></ion-img>
+                  </ion-col>
+                  <ion-col>
+                    <div class="head">
+                      <h2>Dogs Meetup</h2>
+                      <ion-icon name="heart-outline"></ion-icon>
+                    </div>
+                    <div>
+                      <ion-list><ion-icon name="calendar-outline"></ion-icon><p>19/12/2022</p></ion-list>
+                      <ion-list><ion-icon name="time-outline"></ion-icon><p>10:00AM-12PM</p></ion-list>
+                      <ion-list><ion-icon name="location-outline"></ion-icon><p>Sambhaji Maidan Mumbai</p></ion-list>
+                      <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+
+            <ion-card routerLink="/detailseve">
+              <ion-card-content>
+                <ion-row>
+                  <ion-col >
+                    <ion-img src="assets/images/dog2.jpg"></ion-img>
+                  </ion-col>
+                  <ion-col>
+                    <div class="head">
+                      <h2>Meetup</h2>
+                    </div>
+                    <div>
+                      <ion-list><ion-icon name="calendar-outline"></ion-icon><p>19/12/2022</p></ion-list>
+                      <ion-list><ion-icon name="time-outline"></ion-icon><p>10:00AM-12PM</p></ion-list>
+                      <ion-list><ion-icon name="location-outline"></ion-icon><p>Sambhaji Maidan Mumbai</p></ion-list>
+                      <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </div>
+        </div>
+      </ion-list>
+      
+      <ion-list *ngIf="event_seg === 'list'">
+        <ion-segment class="seg-sec" [(ngModel)]="segment_one" [scrollable]="true">   
+          <ion-segment-button class="upcoming" value="upcoming">
+            Upcoming
+          </ion-segment-button>
+          <ion-segment-button class="completed" value="completed">
+            Completed
+          </ion-segment-button>
+        </ion-segment>
+
+        <div [ngSwitch]="segment_one">
+          <div *ngSwitchCase="'upcoming'">
+            <ng-container  *ngFor="let ui of upcoming_invited_event let i = index;" >
+              <ion-card (click)="view_detailss(ui)">
+                <ion-card-content>
+                  <ion-row>
+                    <ion-col >
+                      <ion-img [src]="ui.event_images"></ion-img>
+                    </ion-col>
+                    <ion-col>
+                      <div class="head">
+                        <h2>{{ui.title}}</h2>
+                      </div>
+                      <div>  
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>
+          </div>
+
+          <div *ngSwitchCase="'completed'">
+            <ng-container  *ngFor="let ui of completed_invited_event let i = index;" >
+              <ion-card (click)="view_detailss(ui)">
+                <ion-card-content>
+                  <ion-row>
+                    <ion-col >
+                      <ion-img [src]="ui.event_images"></ion-img>
+                    </ion-col>
+                    <ion-col>
+                      <div class="head">
+                        <h2>{{ui.title}}</h2>
+                      </div>
+                      <div>  
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                      </div>
+                    </ion-col>
+                  </ion-row>
+                </ion-card-content>
+              </ion-card>
+            </ng-container>
+          </div>
+          
+        </div>
+      </ion-list>
+    </div>
+  </ion-list>
+</ion-content>

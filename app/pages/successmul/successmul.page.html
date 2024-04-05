@@ -1,0 +1,23 @@
+<ion-buttons slot="start">
+  <ion-button (click)="closeModal()">
+    <ion-icon slot="end" name="close"></ion-icon>        
+  </ion-button>
+</ion-buttons> 
+
+<ion-content class="ion-padding">
+  <div class="contianer">
+    <ion-img src="assets/images/congratulation.png"></ion-img>
+
+    <div class="text">
+      <p>Event creation completed.</p>
+    </div>
+
+    <div class="foot">
+      <h3>You Can create Multiple event</h3>
+      <div class="btnss">
+        <ion-button expand="block" color="secondary" (click)="closeModal()">Close</ion-button>
+        <ion-button expand="block" color="secondary" (click)="goto()">Go To</ion-button>
+      </div>
+    </div>
+   </div>
+ </ion-content>

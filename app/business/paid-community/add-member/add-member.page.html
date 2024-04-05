@@ -1,0 +1,109 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Add Members</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="container">
+    <ion-item fill="outline">
+      <ion-label position="floating">Search Members</ion-label>
+      <ion-icon slot="start" name="search"></ion-icon>
+      <ion-input class="loading" (ionChange)="testFunc($event)" [(ngModel)]="searchTerm" placeholder="Search"></ion-input>
+    </ion-item>
+  </div>
+
+  <div class="search_result" *ngIf="showSearch">
+    <ng-container *ngFor="let di of user_lists let i = index;">
+      <div (click)="selectExistingMember(di)">{{ di.user_name }}</div>
+    </ng-container>
+    <div (click)="showForm()" *ngIf="showSearch">Other</div>
+  </div>
+
+  <form [formGroup]="ionicForm" (ngSubmit)="submit()" *ngIf="showFormm || isEditingExistingMember">
+    <div class="container" style="margin-bottom: 35px;">
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Name</ion-label>
+        <ion-icon slot="start" name="person"></ion-icon>
+        <ion-input formControlName="full_name" label-placement="floating"type="text" placeholder="Full Name"></ion-input>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Email</ion-label>
+        <ion-icon slot="start" name="mail"></ion-icon>
+        <ion-input formControlName="email" class="ion-padding-start" placeholder="Email"></ion-input>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Contact Number</ion-label>
+        <ion-icon slot="start" name="call"></ion-icon>
+        <ion-input formControlName="contact" class="ion-padding-start" placeholder="Contact Number"></ion-input>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Gender </ion-label>
+        <ion-icon slot="start" slot="start" name="male-female"></ion-icon>
+        <ion-select formControlName="gender" class="ion-padding-start" placeholder="Gender" interface="popover">
+          <ion-select-option value="Male">Male</ion-select-option>
+          <ion-select-option value="Female">Female</ion-select-option>
+          <ion-select-option value="Ohter">Other</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Date Of Birth</ion-label>
+        <ion-icon slot="start" name="calendar"></ion-icon>
+        <ion-input formControlName="dob" class="ion-padding-start" type="date"></ion-input>
+      </ion-item>
+
+      <ion-item fill="outline">    
+        <ion-label position="floating">Marital Status</ion-label>
+        <ion-icon slot="start" name="people"></ion-icon>
+        <ion-select formControlName="marital_status" class="ion-padding-start" interface="popover" placeholder="Marital Status">
+          <ion-select-option value="unmarried">Unmarried</ion-select-option>
+          <ion-select-option value="married">Married</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Qualification</ion-label>
+        <ion-icon slot="start" name="document-attach"></ion-icon>
+        <ion-select formControlName="qualification" class="ion-padding-start" interface="popover" placeholder="Qualification">
+          <ion-select-option value="10">10th</ion-select-option>
+          <ion-select-option value="12">12th</ion-select-option>
+          <ion-select-option value="gra">Graduation/Diploma</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Location</ion-label>
+        <ion-icon slot="start" name="location"></ion-icon>
+        <ion-textarea formControlName="address" class="ion-padding-start" placeholder="Address"></ion-textarea>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Pincode</ion-label>
+        <ion-icon slot="start" name="location"></ion-icon>
+        <ion-input formControlName="pincode" class="ion-padding-start" type="tel" placeholder="Pincode"></ion-input>
+      </ion-item>
+      
+      <!-- <div class="file">     
+        <ion-input type="file"></ion-input>
+      </div> -->
+
+    </div>
+    <!-- <ion-footer class="ion-no-border"> -->
+      <!-- <ion-button expand="block" type="submit" color="secondary">ADD</ion-button> -->
+      <ion-button expand="block" type="submit" shape="round" color="secondary">
+        {{ isEditingExistingMember ? 'SAVE' : 'ADD' }}
+      </ion-button>
+    <!-- </ion-footer>  -->
+  </form> 
+</ion-content>

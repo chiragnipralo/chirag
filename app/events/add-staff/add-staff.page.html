@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <h2>Add Staff</h2>
+    <ion-icon slot="end" name="close" routerLink="/tabs/home"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content class="ion-padding">
+  <div class="form-input">
+    <ion-label>Username</ion-label>
+    <ion-input class="loading" (ionChange)="testFunc($event)"  [(ngModel)]="searchTerm" placeholder="Enter username"></ion-input>
+  </div>
+ 
+  <ng-container  *ngFor="let di of user_lists let i = index;" >                 
+    <div  class="search_container" (click)="SetValue(di)">{{di.user_name}}</div>
+  </ng-container>
+ 
+  <div class="form-input mt-21">
+    <ion-label>Add Supporting Role</ion-label>
+    <ion-select #lang [(ngModel)]="event_man_role" name="cat" interface="popover" placeholder="Select Staff Role">
+      <ion-select-option value="1" style="font-size: 14px;">Manager</ion-select-option>
+      <ion-select-option value="2" style="font-size: 14px;">Entry Manager</ion-select-option>
+    </ion-select>
+ 
+    <div *ngIf="lang.value === 'Yes'">
+      <ion-input placeholder="Mention Staff Role"></ion-input>
+    </div>
+  </div>
+  <ion-footer class="ion-no-border">
+    <ion-button color="secondary" shape="round" (click)="SubmitData()">Save</ion-button>
+  </ion-footer>
+</ion-content>

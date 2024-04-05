@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <div>
+      <ion-icon  routerLink = "tabs/dashboard" name="arrow-back-outline"></ion-icon>
+      <ion-title>Message</ion-title>
+      <ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+    <ion-refresher-content
+      pullingIcon="arrow-down"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles">
+  </ion-refresher-content>  </ion-refresher>
+  <ion-searchbar #searchBar placeholder="Search...." [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+
+  <ng-container *ngIf="chat_events && chat_events.length == 0">
+    <ion-card mode="ios" class="ion-text-center ion-padding">
+      You dont have any chats yet.
+    </ion-card>
+  </ng-container>
+
+  <ng-container *ngIf="chat_events && chat_events.length > 0">
+    <ng-container *ngFor="let events of filterData">
+      <ion-item class="header" lines="full" (click)="navigatetoChat(events)">
+        <ion-avatar style="height: 41px;width: 46px;">
+          <ng-container *ngIf="events.event_images !== null">
+            <ion-img [src]="events.event_images" (click)="openModal(events.original_event_images || events.event_images)"></ion-img> 
+          </ng-container>
+          <ion-icon class="icon_icon" [name]="events.chat_type === 2 ? 'people' : 'calendar'"></ion-icon>
+        </ion-avatar>
+        <div>
+          <ion-label>{{events.event_name | titlecase}}</ion-label>
+          <h6 >{{events.event_date}}</h6>
+        </div>
+      </ion-item>
+    </ng-container>
+  </ng-container>
+  <!-- <ion-fab vertical="bottom" horizontal="end">
+    <ion-fab-button size="small" (click)="chat_connect()">
+      <ion-icon name="chatbubble-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab> -->
+</ion-content>

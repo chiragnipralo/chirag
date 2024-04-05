@@ -1,0 +1,52 @@
+ion-icon{
+    font-size: 1.4rem;
+}
+h3{
+    font-size: 14px !important;
+}
+
+.contianer{
+    position:relative;
+    top: 10%;
+    ion-img{
+        width:fit-content;
+        height:40vh;
+        /*background-color: #D6DFFF;*/
+        border-radius: 20px;
+        margin: auto;
+    }
+    .text{
+        text-align: center;
+
+        h2{
+            font-size: 2rem;
+            font-weight: bolder;
+        }
+        p{
+            font-size: 1.2rem;
+        }
+    }
+
+    .foot{
+        margin-top: 40px;
+        text-align: center;
+
+        ion-icon{
+            background:var(--ion-color-dark);
+            padding: 7px;
+            margin-left: 10px;
+            border-radius: 50%;
+        }
+        
+        .btnss{
+            display: flex;
+        }
+
+        ion-button{
+            max-width: 252px;
+            width: 50%;
+            /* margin: auto; */
+            margin-top: 40px;
+        }
+    }
+}

@@ -1,0 +1,60 @@
+ion-icon{
+    font-size: 2rem;
+}
+
+ion-content{
+    --background: linear-gradient(135deg, #b7b7b7 38%,#61685e 66%, #353e36 90%);
+}
+.container{
+    margin: auto;
+}
+
+.sub_container{
+    padding: 40px 0;
+    margin:50% auto;
+    h3{
+        font-size: 18px;
+        color: rgb(12, 0, 0);
+    }
+
+    .create_eve{
+        //background-image: url("/assets/images/wel/wel13.jpg");
+        // background-image: url("https://img.freepik.com/premium-vector/business-team-planning-events-month-with-giant-calendar-flat-vector-illustration-office-workers-creating-business-schedule-defining-aims-entrepreneurship-time-management-campaign-concept_179970-4864.jpg?w=2000");
+        background:#DEFFC1;
+        background-size: cover;
+        background-repeat: no-repeat;
+        opacity: 0.9;
+        box-shadow: 5px 4px 12px 4px;
+        height: 20vh;
+        width: 20vh;
+        max-height: 20vh;
+        max-width: 20vh;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: 10px auto;
+        box-shadow: 2px 2px 8px 4px grey;
+
+    }
+    .join_eve{
+        //background-image: url("/assets/images/wel/wel13.jpg");
+        background:#DEFFC1;
+        background-size: cover;
+        background-repeat: no-repeat;
+        opacity: 0.9;
+        box-shadow: 5px 4px 12px 4px;
+        height: 20vh;
+        width: 20vh;
+        max-height: 20vh;
+        max-width: 20vh;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin: auto;
+        box-shadow: 2px 2px 8px 4px grey;
+    }
+}

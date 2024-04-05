@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ng-container *ngIf= "current_plan.length > 0">
+      <ion-title *ngIf="current_plan[0].type == 1">Event Plan</ion-title>
+      <ion-title *ngIf="current_plan[0].type == 2">Community Plan</ion-title>
+    </ng-container>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+    <ion-refresher-content
+      pullingIcon="arrow-down"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+	</ion-refresher>
+
+  <ng-container *ngIf= "current_plan.length > 0">
+    <div class="business box">
+      <h1 class="title" *ngIf="current_plan[0].type == 1"> Event plan</h1>
+      <h1 class="title" *ngIf="current_plan[0].type == 2"> Community plan</h1>
+      <div class="view">
+        <div class="icon">
+          <img src="https://i.postimg.cc/2jcfMcf4/hot-air-balloon.png" alt="startup">
+        </div>
+        <div class="cost">
+          <p class="amount">{{current_plan[0]?.plan_amt}}</p>
+          <p class="detail">{{current_plan[0]?.plan_details?.validity}} </p>
+        </div>
+      </div>
+      <div class="description">
+        <ul style="padding:0;">
+          <li>{{current_plan[0]?.plan_details?.type}}</li>
+          <li>{{current_plan[0]?.plan_details?.description}}</li>
+        </ul>
+      </div>  
+      <div class="ion-padding-start days_remaining">
+        <p> {{current_plan[0]?.days_remaining}} Days Remaining</p>
+      </div> 
+      <!-- <div class="static_button">
+        <ion-button shape="round" fill="outline" color="secondary" expand="block">UPGRADE YOUR PLAN</ion-button>
+      </div> -->
+    </div>
+    </ng-container>
+  <!-- <ion-button shape="round" color="secondary">Upgrade</ion-button> -->
+</ion-content>

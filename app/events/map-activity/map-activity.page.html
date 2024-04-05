@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="success" (click)="closeModal()">
+        <ion-icon color="danger" slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Map Activity</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button class="btn" id="open-modall" color="dark"><ion-icon name="location-outline"></ion-icon></ion-button>
+  <canvas #canvas width="900" height="900"></canvas>
+
+  <ion-modal #modal trigger="open-modall" [initialBreakpoint]="0.25" [breakpoints]="[0.25, 0.5, 0.75]">
+    <ng-template>
+      <ion-content class="ion-padding">
+        <h4>Important Location</h4>
+        <ion-list>
+          <div>
+            <ion-button (click)="selectButton('exit')">
+              <ion-icon name="exit-outline" [color]="isActiveButton('exit') ? 'primary' : 'dark'"></ion-icon>
+            </ion-button>
+            <h5>Exit</h5>
+          </div>
+          <div>
+            <ion-button (click)="selectButton('toilets')">
+              <ion-icon name="people-outline" [color]="isActiveButton('toilets') ? 'primary' : 'dark'"></ion-icon>
+            </ion-button>
+            <h5>Toilets</h5>
+          </div>
+          <div>
+            <ion-button (click)="selectButton('parking')">
+              <ion-icon name="car-sport-outline" [color]="isActiveButton('parking') ? 'primary' : 'dark'"></ion-icon>
+            </ion-button>
+            <h5>Parking</h5>
+          </div>
+          <div>
+            <ion-button (click)="selectButton('food')">
+              <ion-icon name="fast-food-outline" [color]="isActiveButton('food') ? 'primary' : 'dark'"></ion-icon>
+            </ion-button>
+            <h5>Food</h5>
+          </div>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

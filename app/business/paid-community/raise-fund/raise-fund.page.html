@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Raise Fund</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="container">
+    <div>
+      <ion-label>Title</ion-label>
+      <ion-input type="text" placeholder="Title"></ion-input>
+    </div>
+
+    <div>
+      <ion-label>Description</ion-label>
+      <ion-textarea></ion-textarea>
+    </div>
+
+    <div>
+      <ion-label>Donation Type</ion-label>
+      <ion-select class="ion-padding-start" placeholder="Select Donation Type" interface="popover">
+        <ion-select-option value="1">Food</ion-select-option>
+        <ion-select-option value="2">Money</ion-select-option>
+      </ion-select>    
+    </div>
+
+    <div>
+      <ion-label>Amount to Raise</ion-label>
+      <ion-input type="text" placeholder="Amount"></ion-input>
+    </div>
+
+    <div>
+      <ion-label>Select Date</ion-label>
+      <div class="dates">
+        <ion-input type="date"></ion-input>&nbsp;
+        <ion-input type="date"></ion-input>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <ion-button expand="block" color="secondary">Raise</ion-button>
+</ion-footer>

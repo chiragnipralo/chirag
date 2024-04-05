@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title style="text-align: center;">All committees</ion-title>
+    <ion-icon slot="end" name="search-outline" class="ion-padding-end search_icon" (click)="toggleSearchBar()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+	</ion-refresher>
+
+  <ion-searchbar placeholder="Search Samiti" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+
+  <ng-container  *ngFor="let ui of filterData; let i = index;" >
+    <ion-item button detail="true" (click)="GoToDetailsPage(ui.id)">
+      <ion-avatar slot="start">
+        <ng-container *ngIf="ui?.samiti_Image !== null; else noImage">
+          <img [src]="ui.samiti_Image" style="height: 100%;width: 100%;">
+        </ng-container>
+        <ng-template #noImage>
+          <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+        </ng-template>
+      </ion-avatar>
+      <ion-label>
+        <h3>{{ui.samiti_name}}</h3>
+        <p>{{ui.samiti_description}}</p>
+      </ion-label>
+    </ion-item>
+  </ng-container>
+</ion-content>

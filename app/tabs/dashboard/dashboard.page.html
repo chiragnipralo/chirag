@@ -1,0 +1,777 @@
+<ion-header>
+	<ion-toolbar color="light">
+		<div class="top">
+			<ion-img src="/assets/images/logo.png"></ion-img>
+			<div  class="search_icon">
+				<ion-icon name="search-outline" (click)="toggleSearchBar()"></ion-icon>
+				<div class="notify" (click)="GoToNotification()">
+					<ion-icon name="notifications-outline"></ion-icon>
+					<ng-container *ngIf ="notifyCount > 0">
+						<p class="notify_badge">{{notifyCount}}</p>
+					</ng-container>
+				</div>
+			</div>
+			<div class="icon">
+				<ion-icon name="person-circle-outline" class="toggle-icon" slot="start"></ion-icon>
+				<ion-icon name="bag-outline" routerLink="/buzwel" slot="end"></ion-icon>
+			</div>
+		</div>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+			pullingIcon="arrow-down"
+        	pullingText="Pull to refresh"
+        	refreshingSpinner="circles">
+		</ion-refresher-content>
+	</ion-refresher>
+
+	<div class="search_section">
+		<ion-searchbar #searchBar placeholder="Search here..." (ionChange)="filterItems($event)" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" id="search-input"></ion-searchbar>
+		<div class="serach_res">
+			<div class="search_result" *ngIf="showSearch">
+				<ng-container *ngFor="let di of lists let i = index;">
+					<div class="result">
+						<ion-avatar><ion-img [src]="di.event_images"></ion-img></ion-avatar>
+				  		<div class="ion-padding-start ion-text-capitalize" (click)="SearchResult(di)">{{ di.title }}</div>
+						<ion-icon slot="end" [name]="di.flag === 2 ? 'people' : 'calendar'"></ion-icon>
+					</div>
+				</ng-container>
+			</div>
+		</div>
+	</div>
+	
+	<ion-row *ngIf="loaded" class="top_slider">
+		<ion-slides [options]="{'slidesPerView': 1, 'loop': true, 'loopedSlides': 10, 'autoplay': {'delay': 2000, 'disableOnInteraction': false}}" style="width: 100%; height: 100%;">
+			<ng-container *ngFor="let slider of dataservice.home_slider">
+			   <ion-slide class="explore_roww">
+				  <div class="img_eve">
+					 <img src="{{slider.banner_img}}"/>
+				  </div>
+			   </ion-slide>
+			</ng-container>
+		</ion-slides>		 
+	</ion-row>
+
+
+	<ion-row *ngIf="!loaded">
+		<ion-slides [options]="{ slidesPerView:1 }" pager="false" style="width: 100%;">
+			<ion-slide class="explore_row" style="width: 96%;margin:10px auto;">
+				<div style="height: 100%;
+				width: 96%;
+				border-radius: 10px;
+				position: absolute;
+				top: -3px;">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+			</ion-slide>
+		</ion-slides>
+	</ion-row>
+
+	<div class="topbar_tab" *ngIf="loaded">
+		<div class="second_tab">
+			<div class="section_one">
+				<div [routerLink]="['/qrcode']" [queryParams]="{ scanActive: true,is_event_or_community:true }">
+					<ion-icon name="qr-code-outline"></ion-icon>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold">Scan to <br>Join</h6>
+			</div>
+			<div class="section_one">
+				<div (click)='create_events()'>
+					<ion-icon name="create-outline"></ion-icon>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;"> Create <br>Event</h6>
+			</div>
+			<div class="section_one">
+				<div routerLink="/myevent">
+					<ion-icon name="calendar-outline"></ion-icon>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;">My <br>Events</h6>
+			</div>
+			<div class="section_one">
+				<div routerLink="/managevent">
+					<ion-icon name="settings-outline"></ion-icon>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold">Manage <br>Events</h6>
+			</div>
+		</div>
+
+		<div class="second_tab">
+			<div class="section_one">
+				<div routerLink="/profilecards">
+					<ion-icon name="card-outline"></ion-icon>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold">Digital Card</h6>
+			</div>
+			<div class="section_one">
+				<div (click)='create_community()'>
+					<ion-icon name="person-add-outline"></ion-icon>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;">Create Community</h6>
+			</div>
+			<div class="section_one">
+				<div routerLink="/my-community">
+					<ion-icon name="people-outline"></ion-icon>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;">My Communities</h6>
+			</div>
+			<div class="section_one" routerLink="/manage-community">
+				<div>
+					<ion-icon name="people-circle-outline"></ion-icon>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;"> Manage Community</h6>
+			</div>
+			<!-- <div class="section_one">
+				<div routerLink="/pages/coming">
+					<ion-icon name="car-sport-outline"></ion-icon>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;">Valet Parking</h6>
+			</div> -->
+		</div>
+	</div>
+	
+	<div class="topbar_tab" *ngIf="!loaded">
+		<div class="second_tab">
+			<div class="section_one section_width">
+				<div class="img">
+					<ion-skeleton-text [animated]="true" height="100%"></ion-skeleton-text>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold">
+				<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</h6>
+			</div>
+			<div class="section_one section_width">
+				<div class="img">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold">
+				<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</h6>
+			</div>
+			<div class="section_one section_width">
+				<div class="img">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold">
+				<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</h6>
+			</div>
+			<div class="section_one section_width">
+				<div class="img">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold">
+				<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</h6>
+			</div>
+		</div>
+	
+		<div class="second_tab">
+			<div class="section_one section_width">
+				<div class="img">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;">
+				<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</h6>
+			</div>
+			<div class="section_one section_width">
+				<div class="img">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;">
+				<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</h6>
+			</div>
+			<div class="section_one section_width">
+				<div class="img">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;">
+				<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</h6>
+			</div>
+			<div class="section_one section_width">
+				<div class="img">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+				<h6 class="mt-10" style="font-size: 12px; font-weight: bold;">
+				<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</h6>
+			</div>
+		</div>
+	</div>
+
+  	<!-- Start Communtiy Section -->
+
+  	<ng-container class="cateLbl" *ngIf="my_community?.length">
+		<div class="events">
+			<div class="show_commu" *ngIf="loaded">
+				<h4>My Community</h4>
+				<div class="right_side">
+					<p (click)="GoToCommunity('community')">See All<ion-icon name="chevron-forward-outline"></ion-icon></p>
+				</div>
+			</div>
+			<div class="show_commu" *ngIf="!loaded">
+				<h4><ion-skeleton-text [animated]="true" style="width: 150px;"></ion-skeleton-text></h4>
+				<div class="right_side">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+			</div>
+			<ion-row>
+				<ion-slides [options]="{ slidesPerView:2 }" style="width: 100%;">
+					<ion-slide *ngFor="let ui of my_community let i = index;">
+						<ion-col *ngIf="loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve" (click)="view_community_details(ui)">
+										<ion-img [src]="ui.community_image"></ion-img>
+										<p class="category_style">
+											{{ui.community_category}}
+										</p>
+									</div>
+									<div class="eve_content">
+										<div class="title ion-text-capitalize">
+											<h2>{{ui.community_title}}</h2>
+										</div>
+										<div class="venue" (click)="view_community_details(ui)">
+											<div>
+												<ion-icon name="people"></ion-icon><p class="ion-padding-start">{{ui.member_count}} Members</p>
+											</div>
+										</div>
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+
+						<ion-col *ngIf="!loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve">
+										<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+									</div>
+									<div class="eve_content">
+										<div class="title">
+											<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+										</div>
+										<div class="venue">
+											<div>
+												<ion-skeleton-text [animated]="true"></ion-skeleton-text>											
+											</div>
+										</div>
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+					</ion-slide>
+				</ion-slides>
+			</ion-row>
+		</div>
+	</ng-container>
+
+	<!-- End of Communtity Section -->
+
+	<!-- My Events -->
+	<ng-container class="cateLbl" *ngIf="my_events?.length">
+		<div class="events">
+			<div class="show_commu" *ngIf="loaded">
+				<h4>My Events</h4>
+				<div class="right_side">
+					<p (click)="GoToEvents('my events')">See All <ion-icon name="chevron-forward-outline"></ion-icon></p>
+				</div>
+			</div>
+			<div class="show_commu" *ngIf="!loaded">
+				<h4><ion-skeleton-text [animated]="true" style="width: 150px;"></ion-skeleton-text></h4>
+				<div class="right_side">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+			</div>
+			<ion-row>
+				<ion-slides [options]="{ slidesPerView:2 }" style="width: 100%;">
+					<!-- <ng-container  *ngFor="let ui of popular_events let i = index;" > -->
+					<ion-slide *ngFor="let ui of my_events let i = index;">
+						<ion-col *ngIf="loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve" (click)="view_details(ui)">
+										<ion-img [src]="ui.event_images"></ion-img>
+										<ng-container *ngIf="ui.user_joined_event && (ui.same_user_created_event === undefined || ui.same_user_created_event === null)">
+                                            <ion-button shape="round" size="small" color="secondary" style="position: absolute;top: 3px;left: 5px;font-size: 9px;">
+                                                <ion-icon slot="start" name="checkmark-done-circle-outline"></ion-icon>
+                                                Joined
+                                             </ion-button>
+                                        </ng-container>
+										<ion-button *ngIf="ui.is_live == 1" shape="round" size="small" color="danger" style="position: absolute;top: 3px;right: 5px;font-size: 9px;">
+											<ion-icon slot="start" name="caret-forward-circle-outline"></ion-icon>
+											Live
+										 </ion-button>
+										 <p class="category_style">
+											{{ui.event_category}}
+										</p>
+									</div>
+									<div class="eve_content">
+										<div class="title ion-text-capitalize">
+											<h2>{{ui.title}}</h2>
+										</div>
+										<div class="venue" (click)="view_details(ui)" *ngIf="!ui.multi_event">
+											<!-- <ng-container  *ngFor="let di of ui.event_dates let i = index;" >                    
+												<div>
+													<ion-icon name="calendar-outline"></ion-icon><p class="ion-padding-start">{{di.event_date}}</p>
+												</div>
+												<div>
+													<ion-icon name="time-outline"></ion-icon><p class="ion-padding-start">{{di.start_time}}-{{di.end_time}}</p>
+												</div>
+											</ng-container> -->
+											<div>
+												<ion-icon name="calendar-outline"></ion-icon><p class="">{{ getFormattedDate(ui.event_dates[0].event_date) }}</p>
+											</div>
+											<div>
+												<ion-icon name="time-outline"></ion-icon><p class="">{{ formatDate(ui.event_dates[0].start_time) }}-{{ formatDate(ui.event_dates[0].end_time) }}
+												</p>
+											</div>
+											<div>
+												<ion-icon name="location-outline"></ion-icon>
+												<p class="">{{ getCityFromEvent(ui.event_venues) }}</p>
+											</div>
+											<!-- <div *ngIf="ui.event_price"> -->
+											<!-- <div>
+												<ion-icon name="card-outline"></ion-icon><p class="ion-padding-start">{{ui.price}}</p>
+											</div> -->
+										</div>
+										<!-- <div class="my_events_btn">
+											<ion-button expand="block" size="small" color="primary" shape="round" fill="outline" (click)="view_details(ui)">View</ion-button>
+											<ion-button expand="block" size="small" color="primary" shape="round" (click)="add_staff(ui)">Add Admin</ion-button>
+										</div> -->
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+
+						<!-- skeleton text -->
+						<ion-col *ngIf="!loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve">
+										<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+									</div>
+									<div class="eve_content">
+										<div class="title">
+											<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+										</div>
+										<div class="venue">
+											<div>
+												<ion-skeleton-text [animated]="true"></ion-skeleton-text>											
+											</div>
+											<div>
+												<ion-skeleton-text [animated]="true"></ion-skeleton-text>											
+											</div>
+										</div>
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+					</ion-slide>
+					<!-- </ng-container> -->
+				</ion-slides>
+			</ion-row>
+		</div>
+	</ng-container>
+	<!-- end My Events -->
+
+	<!-- Invited Event -->
+	<ng-container class="cateLbl" *ngIf="todays_event?.length">
+		<div class="events">
+			<div class="show_commu" *ngIf="loaded">
+				<h4>Invited Events</h4>
+				<div class="right_side">
+					<p (click)="GoToEvents('invited events')">See All <ion-icon name="chevron-forward-outline"></ion-icon></p>
+				</div>
+			</div>
+			<div class="show_commu" *ngIf="!loaded">
+				<h4><ion-skeleton-text [animated]="true" style="width: 150px;"></ion-skeleton-text></h4>
+				<div class="right_side">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+			</div>
+			<ion-row>
+				<ion-slides [options]="{ slidesPerView:2 }" style="width: 100%;">
+					<ion-slide *ngFor="let ui of todays_event let i = index;">
+						<ion-col *ngIf="loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve" (click)="view_event_details(ui)">
+										<ion-img [src]="ui.event_images"></ion-img>
+										<ng-container *ngIf="ui.user_joined_event">
+											<ion-button shape="round" size="small" color="secondary" style="position: absolute;top: 3px;left: 5px;font-size: 9px;">
+												<ion-icon slot="start" name="checkmark-done-circle-outline"></ion-icon>
+												Joined
+											 </ion-button>
+										</ng-container>
+										<ion-button  *ngIf="ui.is_live == 1" shape="round" size="small" color="danger" style="position: absolute;top: 3px;right: 5px;font-size: 9px;">
+											<ion-icon slot="start" name="caret-forward-circle-outline"></ion-icon>
+											Live
+										 </ion-button>
+										 <p class="category_style">
+											{{ui.event_category}}
+										</p>
+									</div>
+									<div class="eve_content" (click)="view_event_details(ui)">
+										<div class="title ion-text-capitalize">
+											<h2>{{ui.title}}</h2>
+										</div>
+										<div class="venue">
+											<div>
+												<ion-icon name="calendar-outline"></ion-icon><p class="ion-padding-start">{{ getFormattedDate(ui.event_dates[0].event_date) }}</p>
+											</div>
+											<div>
+												<ion-icon name="time-outline"></ion-icon><p class="ion-padding-start">{{ formatDate(ui.event_dates[0].start_time) }}-{{ formatDate(ui.event_dates[0].end_time) }}
+												</p>
+											</div>
+											<div>
+												<ion-icon name="location-outline"></ion-icon><p class="ion-padding-start">{{ getCityFromEvent(ui.event_venues) }}</p>
+											</div>
+											<!-- <div>
+												<ion-icon name="card-outline"></ion-icon><p class="ion-padding-start">{{ui.price}}</p>
+											</div> -->
+										</div>
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+
+						<!-- skeleton text -->
+						<ion-col *ngIf="!loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve">
+										<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+									</div>
+									<div class="eve_content">
+										<div class="title">
+											<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+										</div>
+										<div class="venue">
+											<div>
+												<ion-skeleton-text [animated]="true"></ion-skeleton-text>											
+											</div>
+											<div>
+												<ion-skeleton-text [animated]="true"></ion-skeleton-text>											
+											</div>
+										</div>
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+					</ion-slide>
+				</ion-slides>
+			</ion-row>
+		</div>
+	</ng-container>
+	<!-- end invited event  -->
+
+	<!-- Nearby Event -->
+	<ng-container class="cateLbl" *ngIf="nearby_events?.length">
+		<div class="events">
+			<div class="show_commu" *ngIf="loaded">
+				<h4>Nearby Events</h4>
+				<div class="right_side">
+					<p (click)="GoToEvents('nearby')">See All <ion-icon name="chevron-forward-outline"></ion-icon></p>
+				</div>
+			</div>
+
+			<div class="show_commu" *ngIf="!loaded">
+				<h4><ion-skeleton-text [animated]="true" style="width: 150px;"></ion-skeleton-text></h4>
+				<div class="right_side">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+			</div>
+
+			<ion-row>
+				<ion-slides [options]="{ slidesPerView:2}" style="width: 100%;">
+					<ion-slide *ngFor="let ui of nearby_events let i = index;">
+						<ion-col *ngIf="loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve" (click)="view_event_details(ui)">
+										<ion-img [src]="ui.event_images"></ion-img>
+										<ng-container *ngIf="ui.user_joined_event">
+											<ion-button shape="round" size="small" color="secondary" style="position: absolute;top: 3px;left: 5px;font-size: 9px;">
+												<ion-icon slot="start" name="checkmark-done-circle-outline"></ion-icon>
+												Joined
+											 </ion-button>
+										</ng-container>
+										<ion-button *ngIf="ui.is_live == 1" shape="round" size="small" color="danger" style="position: absolute;top: 3px;right: 5px;font-size: 9px;">
+											<ion-icon slot="start" name="caret-forward-circle-outline"></ion-icon>
+											Live
+										 </ion-button>
+										 <p class="category_style">
+											{{ui.event_category}}
+										</p>
+									</div>
+									<div class="eve_content">
+										<div class="title ion-text-capitalize">
+											<h2>{{ui.title}}</h2>
+										</div>
+										<div class="venue" (click)="view_event_details(ui)">
+											<div>
+												<ion-icon name="calendar-outline"></ion-icon><p class="ion-padding-start">{{ getFormattedDate(ui.event_dates[0].event_date) }}</p>
+											</div>
+											<div>
+												<ion-icon name="time-outline"></ion-icon><p class="ion-padding-start">{{ formatDate(ui.event_dates[0].start_time) }}-{{ formatDate(ui.event_dates[0].end_time) }}
+												</p>
+											</div>
+											<div>
+												<ion-icon name="location-outline"></ion-icon><p class="ion-padding-start">{{ getCityFromEvent(ui.event_venues) }}</p>
+											</div>
+											<!-- <div>
+												<ion-icon name="card-outline"></ion-icon><p class="ion-padding-start">{{ui.price}}</p>
+											</div> -->
+										</div>
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+						<ion-col *ngIf="!loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve">
+										<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+									</div>
+									<div class="eve_content">
+										<div class="title">
+											<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+										</div>
+										<div class="venue">
+											<div>
+												<ion-skeleton-text [animated]="true"></ion-skeleton-text>											
+											</div>
+											<div>
+												<ion-skeleton-text [animated]="true"></ion-skeleton-text>											
+											</div>
+										</div>
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+					</ion-slide>
+				</ion-slides>
+			</ion-row>
+		</div>
+	</ng-container>
+	<!-- end Nearby event  -->
+
+	<!-- Start Communtiy Section -->
+
+	<ng-container class="cateLbl" *ngIf="invited_community?.length">
+        <div class="events">
+            <div class="show_commu" *ngIf="loaded">
+                <h4>Invited Community</h4>
+                <div class="right_side">
+                    <p (click)="GoToCommunity('invite community')">See All <ion-icon name="chevron-forward-outline"></ion-icon></p>
+                </div>
+            </div>
+            <div class="show_commu" *ngIf="!loaded">
+                <h4><ion-skeleton-text [animated]="true" style="width: 150px;"></ion-skeleton-text></h4>
+                <div class="right_side">
+                    <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+                </div>
+            </div>
+            <ion-row>
+                <ion-slides [options]="{ slidesPerView:2 }" style="width: 100%;">
+                    <ion-slide *ngFor="let ui of invited_community let i = index;">
+                        <ion-col *ngIf="loaded">
+                            <ion-card>
+                                <ion-card-content>
+                                    <div class="img_eve" (click)="view_community_details(ui)">
+                                        <ion-img [src]="ui.community_image"></ion-img>
+										<ng-container *ngIf="ui.user_joined_community && (ui.same_user_created_community === undefined || ui.same_user_created_community === null)">
+											<ion-button shape="round" size="small" color="secondary" style="position: absolute;top: 3px;left: 5px;font-size: 9px;">
+												<ion-icon slot="start" name="checkmark-done-circle-outline"></ion-icon>
+												Joined
+											 </ion-button>
+										</ng-container>
+										<p class="category_style">
+											{{ui.community_category}}
+										</p>
+                                    </div>
+                                    <div class="eve_content">
+                                        <div class="title ion-text-capitalize">
+                                            <h2>{{ui.community_title}}</h2>
+                                        </div>
+                                        <div class="venue" (click)="view_community_details(ui)">
+                                            <div>
+                                                <ion-icon name="people"></ion-icon><p class="ion-padding-start">{{ui.member_count}} Members</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ion-card-content>
+                            </ion-card>
+                        </ion-col>
+ 
+                        <ion-col *ngIf="!loaded">
+                            <ion-card>
+                                <ion-card-content>
+                                    <div class="img_eve">
+                                        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+                                    </div>
+                                    <div class="eve_content">
+                                        <div class="title">
+                                            <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+                                        </div>
+                                        <div class="venue">
+                                            <div>
+                                                <ion-skeleton-text [animated]="true"></ion-skeleton-text>                                          
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ion-card-content>
+                            </ion-card>
+                        </ion-col>
+                    </ion-slide>
+                </ion-slides>
+            </ion-row>
+        </div>
+    </ng-container>
+	
+  	<ng-container class="cateLbl" *ngIf="popular_community?.length">
+		<div class="events">
+			<div class="show_commu" *ngIf="loaded">
+				<h4>Popular Community</h4>
+				<div class="right_side">
+					<p (click)="GoToCommunity('popular community')">See All <ion-icon name="chevron-forward-outline"></ion-icon></p>
+				</div>
+			</div>
+			<div class="show_commu" *ngIf="!loaded">
+				<h4><ion-skeleton-text [animated]="true" style="width: 150px;"></ion-skeleton-text></h4>
+				<div class="right_side">
+					<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+				</div>
+			</div>
+			<ion-row>
+				<ion-slides [options]="{ slidesPerView:2 }" style="width: 100%;">
+					<ion-slide *ngFor="let ui of popular_community let i = index;">
+						<ion-col *ngIf="loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve" (click)="view_community_details(ui)">
+										<ion-img [src]="ui.community_image"></ion-img>
+										<ng-container *ngIf="ui.user_joined_community && (ui.same_user_created_community === undefined || ui.same_user_created_community === null)">
+											<ion-button shape="round" size="small" color="secondary" style="position: absolute;top: 3px;left: 5px;font-size: 9px;">
+												<ion-icon slot="start" name="checkmark-done-circle-outline"></ion-icon>
+												Joined
+											 </ion-button>
+										</ng-container>
+										<p class="category_style">
+											{{ui.community_category}}
+										</p>
+									</div>
+									<div class="eve_content">
+										<div class="title ion-text-capitalize">
+											<h2>{{ui.community_title}}</h2>
+										</div>
+										<div class="venue" (click)="view_community_details(ui)">
+											<div>
+												<ion-icon name="people"></ion-icon><p class="ion-padding-start">{{ui.member_count}} Members</p>
+											</div>
+										</div>
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+
+						<ion-col *ngIf="!loaded">
+							<ion-card>
+								<ion-card-content>
+									<div class="img_eve">
+										<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+									</div>
+									<div class="eve_content">
+										<div class="title">
+											<ion-skeleton-text [animated]="true"></ion-skeleton-text>
+										</div>
+										<div class="venue">
+											<div>
+												<ion-skeleton-text [animated]="true"></ion-skeleton-text>											
+											</div>
+										</div>
+									</div>
+								</ion-card-content>
+							</ion-card>
+						</ion-col>
+					</ion-slide>
+				</ion-slides>
+			</ion-row>
+		</div>
+	</ng-container>
+
+	<!-- End of Communtity Section -->
+	<!-- insights -->
+	<div class="insights" *ngIf="loaded">
+		<h4>Insights</h4>
+		<!-- <p routerLink="/insights">See All <ion-icon name="chevron-forward-outline"></ion-icon></p> -->
+	</div>
+
+	<div class="insights" *ngIf="!loaded">
+		<h4><ion-skeleton-text [animated]="true" style="width: 150px;"></ion-skeleton-text></h4>
+	</div>
+
+	<div class="card-insights">
+		<ion-row> 
+			<ion-slides [options]="{ slidesPerView:2 }">
+				<ion-slide *ngFor="let ui of insights_arr let i = index;" style="width: 163px;height: 100%;">
+					<ion-col *ngIf="loaded">
+						<ion-card style="margin: 0; height: 100%;">
+							<ion-card-content style="padding: 0">
+								<div class="img_eve" (click)="view_insight(ui)">
+									<ion-img [src]="ui.image_path"></ion-img>
+								</div>
+								<div class="intitle ion-text-capitalize">
+									<h2>{{ui.title}}</h2>
+								</div>
+							</ion-card-content>
+						</ion-card>
+					</ion-col>
+
+					<ion-col *ngIf="!loaded">
+						<ion-card style="margin: 0; height: 100%;">
+							<ion-card-content style="padding: 0">
+								<div class="img_eve">
+									<ion-skeleton-text [animated]="true"></ion-skeleton-text>											
+								</div>
+								<div class="intitle">
+									<h2><ion-skeleton-text [animated]="true"></ion-skeleton-text></h2>
+								</div>
+							</ion-card-content>
+						</ion-card>
+					</ion-col>
+				</ion-slide>
+			</ion-slides>
+		</ion-row>
+	</div>
+
+	<!-- videos -->
+	<!-- <div class="insights">
+		<h4>Videos</h4>
+		<p routerLink="/newinsign">See All <ion-icon name="chevron-forward-outline"></ion-icon></p>
+	</div>
+	<div class="video">
+		<ion-slides #slides scroll-y="false">
+			<ng-container  *ngFor="let ui of yt_videos_arr let i = index;" >
+				<ion-slide class="step-one two ">
+					<ion-row>
+						<ion-col>
+							<iframe class="vid" [src]="transform(ui.video_url)" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+							<p class="imgst">{{ui.sub_title}}</p>
+						</ion-col>
+						<ion-col>
+							<iframe class="vid" [src]="transform(ui.video_url)" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+							<p class="imgst">{{ui.sub_title}}</p>
+						</ion-col>
+					</ion-row> 
+				</ion-slide>
+			</ng-container>
+		</ion-slides>
+	</div> -->
+</ion-content>

@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>{{community_name}}</ion-title>
+        <ion-icon slot="end" name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
+      </div>
+   </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar #searchBar placeholder="Search community.." [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+
+  <div class="container">
+      <ion-row>
+        <ion-col size="6" *ngFor="let ui of filterData; let i = index;" >
+          <ion-row>
+            <ion-card (click)="view_details(ui)">
+              <ion-card-content>
+                <div class="img_eve">
+                  <ion-img [src]="ui.community_image"></ion-img>
+                  <p class="category_style">
+                    {{ui.community_category}}
+                  </p>
+                  <ng-container *ngIf="ui.user_joined_community && (ui.same_user_created_community === undefined || ui.same_user_created_community === null)">
+                    <ion-button shape="round" size="small" color="secondary" style="position: absolute;top: 3px;left: 5px;font-size: 9px;">
+                      <ion-icon slot="start" name="checkmark-done-circle-outline"></ion-icon>
+                      Joined
+                      </ion-button>
+                  </ng-container>
+                </div>
+                <div class="eve_content">
+                  <div class="title">
+                    <h2>{{ui.community_title}}</h2>
+                  </div>
+                  <div class="venue">
+                    <div>
+                      <ion-icon name="people"></ion-icon><p class="ion-padding-start">{{ui.member_count}} Members</p>
+                    </div>
+                  </div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+  </div>
+</ion-content>

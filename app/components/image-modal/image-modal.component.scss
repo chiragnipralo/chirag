@@ -1,0 +1,25 @@
+.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .images{
+        height: 100%;
+        background-size: cover;
+        width: 95%;
+    }
+    ion-img {
+        height: 100%; 
+    }
+}
+  
+ion-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+ion-button.ios{
+  top: 35px;
+}

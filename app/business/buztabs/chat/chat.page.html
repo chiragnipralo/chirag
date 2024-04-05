@@ -1,0 +1,22 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Messages</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-row>
+    <ion-col class="header" routerLink="/memberdetails">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <ion-label>Member Name</ion-label>
+      <ion-button fill="outline" routerLink="/userchat">
+        Message
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>

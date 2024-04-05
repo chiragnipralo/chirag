@@ -1,0 +1,345 @@
+<ion-header class="top_header">
+  <!-- <ion-toolbar style="background-color: transparent !important">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar> -->
+</ion-header>
+
+<ion-content>
+  <!-- <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+    <ion-refresher-content pullingIcon="arrow-down" pullingText="Pull to refresh" refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher> -->
+
+  <div class="left">
+    <ion-fab>
+       <ion-fab-button color="secondary" class="ionfab" (click)="goBack()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+       </ion-fab-button>
+    </ion-fab>
+  </div>
+
+  <div class="rights">
+    <ion-fab>
+      <ion-fab-button id="qr-open-modal-for-community" color="secondary" class="ionfab">
+        <ion-icon name="qr-code-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <ion-fab>
+      <ion-fab-button (click)='Share_Event()' color="secondary" class="ionfab">
+        <ion-icon name="share-social"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <ng-container *ngIf="dataservice?.user_community_data?.is_admin || dataservice?.user_community_data?.user_joined_community">
+      <ion-fab>
+        <ion-fab-button (click)="presentPopover($event)" color="secondary" class="ionfab">
+          <ion-icon name="ellipsis-vertical"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ng-container>
+  </div>
+
+  <ion-popover #popover [isOpen]="isOpen" (didDismiss)="isOpen = false">
+    <ng-template>
+      <ng-container *ngIf="dataservice?.user_community_data?.is_admin">
+        <ion-item (click)="create_events()">
+          <ion-icon name="today"></ion-icon>
+          <ion-label>Create Event</ion-label>
+        </ion-item>
+        <ion-item (click)='invite()'>
+          <ion-icon name="share-social"></ion-icon>
+          <ion-label>Invite</ion-label>
+        </ion-item>
+      </ng-container>
+      <ng-container *ngIf="dataservice?.user_community_data?.same_user_created_community">
+        <ion-item (click)="edit_community()">
+          <ion-icon name="create"></ion-icon>
+          <ion-label>Edit Community</ion-label>
+        </ion-item>
+        <ion-item (click)="delete_community()">
+          <ion-icon name="trash"></ion-icon>
+          <ion-label>Delete Community</ion-label>
+        </ion-item>
+      </ng-container>
+      <ng-container *ngIf="dataservice?.user_community_data?.user_joined_community && !dataservice?.user_community_data?.same_user_created_community">
+        <ion-item (click)="leave_community()">
+          <ion-icon name="arrow-undo"></ion-icon>
+          <ion-label>Leave Community</ion-label>
+        </ion-item>
+      </ng-container>
+    </ng-template>
+  </ion-popover>
+
+  <ion-slides class="img" #slides scroll-y="false">
+    <ion-slide class="step-one one">
+      <ion-img [src]="dataservice?.user_community_data?.community_image" (click)="openModal(dataservice?.user_community_data?.community_image)"></ion-img>
+    </ion-slide>
+  </ion-slides>
+
+  <div class="category ion-padding-start">
+    <ion-button color="dark" size="small">{{dataservice?.user_community_data?.community_category}}</ion-button>
+  </div>
+
+  <ion-list class="head">
+    <h3 class="ion-padding-start">{{dataservice?.user_community_data?.community_title}}</h3>
+  </ion-list>
+
+  <div class="ion-padding-start ion-padding-end">
+    <div class="tab-container">
+      <ion-segment value="custom" [scrollable]="true" class="seg" (ionChange)="segmentChanged()" [(ngModel)]="segment">
+        <ion-segment-button value="0">
+          <ion-label>About</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="1">
+          <ion-label>Events <span>{{ eventCount }}</span></ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="2">
+          <ion-label>Timeline</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="3">
+          <ion-label>Admin Post</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <ion-slides #slider (ionSlideDidChange)="slideChanged()" scrollbar="true" class="segment_slide">
+      <ion-slide>
+        <div class="about" style="width: 100%;height: 100%;">
+          <ion-list>
+            <h4 style="float: left">Community Owner</h4>
+          </ion-list>
+          <ion-list class="prof">
+            <ion-avatar style="display: flex;align-items: center;justify-content: center;background: #cef2cd;">
+              <ng-container *ngIf="dataservice?.user_community_data?.user_data?.profile_img !== null; else noImage">
+                <img [src]="dataservice.user_community_data.user_data.profile_img" style="height: 100%;width: 100%;">
+              </ng-container>
+              <ng-template #noImage>
+                <h4 style="font-size: 23px;font-weight: bold;text-transform: uppercase;">{{dataservice?.user_community_data?.user_data?.user_name[0]}}</h4>
+              </ng-template>
+            </ion-avatar>
+            <h4 style="text-transform: capitalize;">{{dataservice?.user_community_data?.user_data?.user_name}}</h4>
+          </ion-list>
+          <ion-list class="created_by_section">
+            <ion-label>
+              Community Created by {{ dataservice?.user_community_data?.user_data?.user_name }}
+              on {{ formatIndianDate(dataservice?.user_community_data?.create_at) }}
+            </ion-label>
+          </ion-list>
+          <ion-list class="prof">
+            <h4 style="color: var(--ion-color-secondary)" (click)="Viewmember()">
+              View Member
+            </h4>
+            <!-- <ion-button (click)="Viewstats()" style="position: absolute; right: 0">Stats</ion-button> -->
+          </ion-list>
+          <ion-list>
+            <ion-list>
+              <h4 style="float: left">Description</h4>
+            </ion-list>
+            <p>{{dataservice?.user_community_data?.community_description}}</p>
+          </ion-list>
+          <ion-list>
+            <br />
+            <br />
+          </ion-list>
+        </div>
+      </ion-slide>
+
+      <ion-slide>
+        <div class="event" style="width: 100%;height: 100%;">
+          <ng-container class="cateLbl" *ngIf="!filterData || filterData.length === 0">
+            <div style="text-align: center;text-align: center;font-size: 14px;font-weight: bold;display: flex;justify-content: center;align-items: center;height: 100%;" class="no_events">No Events</div>
+          </ng-container>
+          <ng-container *ngFor="let ui of filterData; let i = index;">
+            <ion-card (click)="view_details(ui,dataservice?.user_community_data?.user_joined_community)" class="event-card">
+              <ion-card-content>
+                <ion-row>
+                  <ion-col size="6" class="eventcol">
+                    <ion-img [src]="ui.event_images"></ion-img>
+                      <ion-button shape="round" size="small" color="danger" style="position: absolute;top: 3px;left: 5px;font-size: 9px;">
+                        <!-- <ion-icon slot="start" name="checkmark-done-circle-outline"></ion-icon> -->
+                          {{ui.event_mark}}
+                      </ion-button>
+                      <ng-container *ngIf="ui.user_joined_event">
+                        <ion-button class="join-tag" shape="round" size="small" color="secondary" style="font-size: 9px;">
+                          <ion-icon slot="start" name="checkmark-done-circle-outline" style="font-size: 9px;"></ion-icon>
+                          Joined
+                        </ion-button>
+                      </ng-container>
+                      <p class="category_style">
+                        {{ui.event_category}}
+                      </p>
+                  </ion-col>
+                  <ion-col size="6">
+                    <div class="card-head">
+                      <h2>{{ui.title}}</h2>    
+                    </div>
+                    <div>
+                      <ion-list><ion-icon name="calendar-outline"></ion-icon><p>{{ getFormattedDate(ui.event_dates[0].event_date) }}</p></ion-list> 
+                      <ion-list><ion-icon name="time-outline"></ion-icon><p>{{ formatTime(ui.event_dates[0].start_time) }}-{{ formatTime(ui.event_dates[0].end_time) }}</p></ion-list> 
+                      <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ getCityFromEvent(ui.event_venues) }}</p></ion-list>
+                    </div>
+                  </ion-col>
+                </ion-row>
+              </ion-card-content>
+            </ion-card>
+          </ng-container>
+          <ion-list>
+            <br />
+            <br />
+          </ion-list>
+        </div>
+      </ion-slide>
+
+      <ion-slide style="display: block;">
+        <div class="about" style="height: 100%; overflow: auto; margin-bottom: 20px;">
+          <div class="message-wrap">
+          <ng-container *ngFor="let timeline of dataservice?.user_community_data?.community_timeline;">
+            <ion-row class="timeline">
+              <div class="header">
+                <ion-avatar style="height: 35px;width: 35px;text-transform: capitalize;">
+                  <ion-img *ngIf="timeline.user_image" [src]="timeline.user_image"></ion-img>
+                  <div class="avtar_label" *ngIf="!timeline.user_image">
+                    <p style="text-transform: capitalize;">{{ timeline.user_initials}}</p>
+                  </div>
+                </ion-avatar>
+                <ion-label class="name ion-text-capitalize">{{timeline.user_name}}</ion-label>
+
+                <ng-container *ngIf="dataservice?.user_community_data?.same_user_created_community || dataservice?.user_community_data?.is_admin || dataservice?.user_community_data?.user_itself == timeline.user_id">      
+                  <ion-icon name="trash-outline" slot="end" (click)="delete_timeline(timeline.user_id, timeline.id)"></ion-icon>
+                </ng-container>
+              </div>
+              <div class="mess">
+                <p *ngIf="timeline.message !=''">{{ timeline.message }}</p>
+                <div *ngIf="timeline.image" class="msg-content">
+                  <ion-card class="admin-post">
+                    <img [src]="timeline.image" (click)="openModal(timeline.image)" class="postimg" />
+                  </ion-card>
+                </div>
+                <h6>{{ timeline.date }}</h6>
+              </div>
+              <!-- <div class="comment">
+                <div>
+                  <ion-icon name="thumbs-up-outline"></ion-icon>
+                  <h5>22</h5>
+                </div>
+                <div>
+                  <ion-icon name="thumbs-down-outline"></ion-icon>
+                  <h5>22</h5>
+                </div>
+              </div> -->
+            </ion-row>
+          </ng-container>
+          </div>
+          <div class="chat-container">
+            <ng-container *ngIf="dataservice?.user_community_data?.user_joined_community">
+                <div class="chat-input-container">
+                   <ng-container *ngIf="selectedFileName">
+                      <ion-input class="chat-input-box" readonly>
+                         <div class="chat-input-box-inner">{{ selectedFileName }}</div>
+                      </ion-input>
+                    </ng-container>
+                    <ion-input class="chat-input-box" *ngIf="!selectedFileName" #chat_input placeholder="Write your message here..." [(ngModel)]="message" (keyup.enter)="timelinePost()"></ion-input>
+                   <ion-icon name="attach-outline" slot="end" (click)="fileInput.click()" style="font-size: 25px;color:var(--ion-color-primary);position: absolute; right: 61px;z-index: 11;"></ion-icon>
+                   <input type="file" style="display: none" #fileInput (change)="onFileSelected($event)"/>
+                   <ion-button class="chat-button" fill="clear" slot="end" (click)="timelinePost()">
+                      <ion-icon name="send"></ion-icon>
+                   </ion-button>
+                </div>
+             </ng-container>
+          </div>
+      </div>
+
+      </ion-slide>
+
+      <ion-slide>
+        <div class="mi">
+          <div class="message-wrap">
+            <ng-container *ngIf="!dataservice?.user_community_data?.user_joined_community">
+              <div class="community_not_join">
+                <h5>Join Community To See Post...</h5>      
+              </div>
+            </ng-container>
+            <div class="message" style="max-width: 100%;">
+              <ng-container *ngIf="dataservice?.user_community_data?.user_joined_community">      
+                <ng-container *ngFor="let admin of dataservice?.user_community_data?.admin_post; let i = index;">
+                  <ng-container *ngIf="admin.status == 0">
+                    <!-- <div class="msg-options" [hidden]="!messageStates[i].showOptions"> -->
+                    <!-- </div> -->
+                    <!-- <div class="msg-detail" (click)="toggleMessageOptions(i)"> -->
+                    <div class="msg-detail">
+                      <div *ngIf="admin.message !=''" class="msg-content" style="color: #606060; background: #e0fcd6">
+                        <h5 class="ion-text-capitalize" style="color: black;">{{ admin.user_name }}</h5>
+                        <span class="triangle"></span>
+                        <p style="user-select: auto !important;text-align: left;" class="line-breaker">
+                          {{ admin.message }}
+                        </p>
+                        <p style="user-select: auto !important; font-size: 11px" class="line-breaker ion-text-right">
+                          {{ admin.date }}
+                        </p>
+                        <ng-container *ngIf="dataservice?.user_community_data?.same_user_created_community || dataservice?.user_community_data?.is_admin">
+                          <ion-icon name="close-circle" class="trash_icon" (click)="deleteMessage(admin.user_id,admin.id)"></ion-icon>
+                        </ng-container>
+                      </div>
+                      <div *ngIf="admin.images" class="msg-content" style="color: #606060; background: #e0fcd6">
+                        <h5 class="ion-text-capitalize" style="color: black;">{{ admin.user_name }}</h5>
+                        <ng-container *ngIf="dataservice?.user_community_data?.same_user_created_community || dataservice?.user_community_data?.is_admin">
+                          <ion-icon name="close-circle" class="trash_icon" (click)="deleteMessage(admin.user_id,admin.id)"></ion-icon>
+                        </ng-container>
+                        <ion-card class="admin-post">
+                          <img [src]="admin.images" (click)="openModal(admin.images)" class="postimg" />
+                        </ion-card>
+                      </div>
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </div>
+          </div>
+          <div class="chat-container">
+            <ng-container *ngIf="dataservice?.user_community_data?.same_user_created_community || dataservice?.user_community_data?.is_admin">
+                <div class="chat-input-container">
+                   <ng-container *ngIf="fileAdminName">
+                      <ion-input class="chat-input-box" readonly>
+                         <div class="chat-input-box-inner">{{ fileAdminName }}</div>
+                      </ion-input>
+                    </ng-container>
+                    <ion-input class="chat-input-box" *ngIf="!fileAdminName" #chat_input placeholder="Write your message here..." [(ngModel)]="message" (keyup.enter)="adminPost()"></ion-input>
+                   <ion-icon name="attach-outline" slot="end" (click)="fileInput.click()" style="font-size: 25px;color:var(--ion-color-primary);position: absolute; right: 61px;z-index: 11;"></ion-icon>
+                   <input type="file" style="display: none" #fileInput (change)="onFileSelectedAdminPost($event)"/>
+                   <ion-button class="chat-button" fill="clear" slot="end" (click)="adminPost()">
+                      <ion-icon name="send"></ion-icon>
+                   </ion-button>
+                </div>
+             </ng-container>
+          </div>
+        </div>
+      </ion-slide>
+
+    </ion-slides>
+  </div>
+
+  <ion-modal [keepContentsMounted]="true" trigger="qr-open-modal-for-community" class="qr_modal" #modal>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="modal.dismiss()"><ion-icon name="arrow-back-outline"></ion-icon></ion-button>
+          </ion-buttons>
+          <ion-title>Scan Community QR</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-img [src]="dataservice?.user_community_data?.community_qr"></ion-img>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-footer class="ion-no-border">
+    <ng-container *ngIf="!dataservice?.user_community_data?.user_joined_community">
+      <ion-button expand="block" color="secondary" (click)="join_community()" shape="round">
+        Join Community
+      </ion-button>
+    </ng-container>
+  </ion-footer>
+</ion-content>

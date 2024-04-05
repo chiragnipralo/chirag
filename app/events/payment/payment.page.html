@@ -1,0 +1,136 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Join Event</ion-title>    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding ion-no-border">
+<!-- 
+  <ion-item>
+    <ion-avatar slot="start">
+      <img src="assets/images/dog1.jpg">
+    </ion-avatar>
+    <h4>Dogs Meetup</h4>
+  </ion-item>
+
+  <ion-slides class="img" #slides scroll-y="false">
+    <ion-slide class="step-one one">
+      <ion-img src="assets\images\dog1.jpg"></ion-img>
+    </ion-slide>
+  </ion-slides>
+
+  <div>
+    <ion-row>
+      <ion-col size="9">
+        <h4>Dogs Meetup - Mumbai</h4>
+      </ion-col>
+      <ion-col>
+        <h4> ₹ 500</h4>
+      </ion-col>
+      <ion-col size="9">
+        <h5>Tickets</h5>
+      </ion-col>
+      <ion-col size="3">
+        <div class="counter__section">
+          <ion-button size="small" fill="none" (click)="decrement()">-</ion-button>
+          <p>{{count }}</p>
+          <ion-button size="small" fill="none" (click)="increment()">+</ion-button>
+        </div>
+      </ion-col>
+
+      <ion-row class="sec_row">
+        <ion-col>
+          <h4>Sun,16 Jan 2023</h4>
+          <h4>Venue</h4>
+          <h5>Ghatkopar East</h5>
+        </ion-col>
+      </ion-row>
+    </ion-row>
+  </div>
+  <div>
+    <ion-row class="details_row">
+      <ion-col size="12">
+        <h4>Details to checkout</h4>
+      </ion-col>
+      <ion-col size="9">
+        <h5>Sub Total</h5>
+      </ion-col>
+      <ion-col size="3">
+        <h5>₹ 500</h5>
+      </ion-col>
+      <ion-col size="9">
+        <h5>Booking Fee</h5>
+      </ion-col>
+      <ion-col size="3">
+        <h5>₹ 50</h5>
+      </ion-col>
+      <ion-col size="9">
+        <h4>Total Amount</h4>
+      </ion-col>
+      <ion-col size="3">
+        <h5>₹550</h5>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-card>
+    <ion-accordion-group>
+      <ion-accordion value="first">
+        <ion-item slot="header" color="rose">
+          <h4> Select Payment</h4>
+        </ion-item>
+        <div slot="content">
+          <ion-card-content>
+            <ion-list>
+              <ion-radio-group value="Payment">
+                <ion-item color="rose">
+                  <ion-label>Paytm</ion-label>
+                  <ion-radio slot="start" value="paytm"></ion-radio>
+                </ion-item>
+                
+                <ion-item color="rose">
+                  <ion-label>UPI</ion-label>
+                  <ion-radio slot="start" value="upi"></ion-radio>
+                </ion-item>
+                
+                <ion-item color="rose">
+                  <ion-label>Credit/Debit Card</ion-label>
+                  <ion-radio slot="start" value="credit"></ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </ion-list>
+          </ion-card-content>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group> 
+  </ion-card>
+  <ion-button class="ion-padding" expand="block" shape="round" color="secondary" (click)="presentAlert()"  routerLink="/success">Pay Now<ion-icon name="wallet-outline" slot="end"></ion-icon></ion-button> -->
+
+  <ion-item>
+    <ion-checkbox slot="start" (ionChange)="checkboxClick($event)">></ion-checkbox>
+    <ion-label>Join Event</ion-label>
+  </ion-item>
+
+  <ng-container *ngIf="is_user_joining">
+    <div id="wrapper">
+      <div id="w70">  
+        <h5>People Coming Along Me</h5>
+      </div>
+      <div id="w30">  
+        <div class="counter__section">
+          <ion-button size="small" fill="none" (click)="decrement()">-</ion-button>
+          <p>{{count }}</p>
+          <ion-button size="small" fill="none" (click)="increment()">+</ion-button>
+        </div>
+      </div>
+    </div>
+
+    <ion-button expand="block" color="secondary" (click)="join_events()"> Join Event </ion-button>
+
+  </ng-container>
+
+
+</ion-content>

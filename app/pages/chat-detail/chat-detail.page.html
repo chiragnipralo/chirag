@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-icon name="arrow-back-outline" routerLink="/tabs/chat"></ion-icon>
+    </ion-buttons>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="2"> <!-- Adjust the size as needed to control the width of the image -->
+          <ion-avatar style="height: auto; width: auto;">
+            <ion-img class-="event-img" [src]="dataservice.user_event_chat_data.event_images" (click)="openModal(dataservice.user_event_chat_data.original_event_images || dataservice.user_event_chat_data.event_images)" style="width: 40px; height: 40px;"></ion-img>
+          </ion-avatar>
+        </ion-col>
+        <ion-col class="title-top">
+          <ion-title>{{dataservice.user_event_chat_data.event_name | titlecase}}</ion-title>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+<ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
+
+  <ion-infinite-scroll [position]="top" (ionInfinite)="getMoreMessagesI($event)" *ngIf="canInfinite">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <div class="message-wrap">
+    <div *ngFor="let msg of chat_events_messages" class="message"  [class.left]="msg.user_id != current_user_id" [class.right]="msg.user_id === current_user_id">
+      
+      <ng-container *ngIf="msg.message_type !=1">
+        <div class="user-img">
+          <ion-avatar>
+            <ion-img class="userimg" *ngIf="msg.profile_img" [src]="msg.profile_img"></ion-img>
+            <div class="userinitials" *ngIf="!msg.profile_img">
+              {{ msg.user_initials | titlecase }}
+            </div>
+          </ion-avatar>
+        </div>
+        <ion-spinner name="dots" *ngIf="msg.status === 'pending'"></ion-spinner>
+        <div class="msg-detail">
+          <div class="msg-info">
+            <p>
+            {{msg.userName}} </p>
+          </div>
+          <div class="msg-content">
+            <p class="message_by">{{msg.message_by}}</p>
+            <span class="triangle"></span>
+            <p class="">{{msg.message}} <span slot="end" class="chat-date"> &nbsp;&nbsp;&nbsp;&nbsp;{{msg.event_date}}</span></p>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="msg.message_type ==1">
+       <div class="_2OvAm focusable-list-item _1jHIY">
+         <div data-testid="msg-notification-container" class="UzMP7 n6BPp">
+          <div class="_1BOF7">
+            <div class="_1sykI" data-testid="subtype-modify"><span class="_11JPr">{{msg.message}}</span></div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+</ion-content>
+<ion-footer class="ion-no-border">
+  <div class="input-wrap">
+    <textarea #chat_input placeholder="Type message here" [(ngModel)]="editorMsg" (keyup.enter)="sendMsg()"
+    (focusin)="onFocus()">
+  </textarea>
+  <ion-button fill="clear" slot="icon-only" item-right (click)="sendMsg()">
+    <ion-icon slot="icon-only" name="send"></ion-icon>
+  </ion-button>
+</div>
+</ion-footer>

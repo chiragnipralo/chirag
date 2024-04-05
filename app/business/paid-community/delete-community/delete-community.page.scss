@@ -1,0 +1,39 @@
+ion-buttons{
+    width: 0;
+}
+.top{
+    display: flex;
+    align-items: center;
+
+    ion-title{
+        text-align: center;
+    }
+}
+
+.container{
+    text-align: center;
+    margin: 30% 30px;
+
+    ion-textarea{
+        border-radius: 10px;
+        text-align: left;
+        height: 20vh;
+        background:var(--ion-color-dark);
+        padding-left: 10px;
+    }
+}
+
+ion-footer{
+    margin-top: 10px;
+    border-top: none;
+    position: fixed;
+    bottom: 15px;
+    right: 0;
+    left: 0;
+
+    ion-button{
+        margin: auto;
+        max-width: 250px;
+        height:40px;
+    }
+}

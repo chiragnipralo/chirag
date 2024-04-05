@@ -1,0 +1,75 @@
+<ion-content [fullscreen]="true">
+  <ion-input id="slider" class="customSlider" type="checkbox"></ion-input>
+  <ion-label for="slider"></ion-label>
+  <div class="wrapper">
+    <div class="top-icons">
+      <ion-icon (click)="goBack()" name="arrow-back-circle-outline"></ion-icon>
+      <ion-icon (click)="share_card(modalData?.card_url,'personal-card.php')" name="share-social-outline"></ion-icon>
+      <ion-icon (click)="navigateToEditPage(1)" name="create-outline"></ion-icon>
+    </div>
+    <div class="profile" id="pdfTable" #pdfTable>
+      <ion-img *ngIf="modalData?.user_img; else initialsBlock" [src]="modalData.user_img" class="thumbnail" (click)="openModal(modalData.user_img)"></ion-img>
+      <ng-template #initialsBlock>
+        <div class="thumbnail">
+          <h1>{{ modalData?.user_name ? modalData.user_name[0] : 'Initials' }}</h1>
+        </div>
+      </ng-template>
+      <div class="check"><ion-icon name="checkmark-circle-outline"></ion-icon>
+        <h3 class="name">{{modalData?.user_name}} </h3>
+        <p class="description">{{modalData?.about_me}}</p>
+      </div>
+      <div class="social-icons">
+        <div class="icon">
+          <a [href]="'tel:+91'+modalData?.user_contact"><ion-icon name="call-outline"></ion-icon></a>
+        </div>
+        <div class="icon">
+          <a [href]="'whatsapp://send?phone=+91' + modalData?.whatsapp_number"><ion-icon name="logo-whatsapp"></ion-icon></a>
+        </div>
+        <div class="icon">
+          <a [href]="'https://www.google.com/maps'"><ion-icon name="location-outline"></ion-icon></a>
+        </div>
+        <div class="icon">
+          <a [href]="'mailto:'+modalData?.user_email"><ion-icon name="mail-outline"></ion-icon></a>
+        </div>
+      </div>
+      <div class="contact_info">
+        <p class="bold">Contact Info</p>
+        <ion-list lines="none">
+          <ion-item>
+            <ion-icon name="call-outline"></ion-icon> <ion-label>{{modalData?.user_contact}}</ion-label>
+          </ion-item>
+          <ion-item *ngIf="modalData?.whatsapp_number">
+            <ion-icon name="logo-whatsapp"></ion-icon> <ion-label>{{modalData?.whatsapp_number}}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon name="mail-outline"></ion-icon> <ion-label>{{modalData?.user_email}}</ion-label>
+          </ion-item>
+          <ion-item *ngIf="modalData?.website">
+            <ion-icon name="globe-outline"></ion-icon> <ion-label>{{modalData?.website}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+
+      <div class="contact_info">
+        <p class="bold">Social Info</p>
+        <ion-list lines="none">
+          <ion-item *ngIf="modalData?.facebook">
+            <ion-icon name="logo-facebook"></ion-icon> <ion-label>{{modalData?.facebook}}</ion-label>
+          </ion-item>
+          <ion-item *ngIf="modalData?.instagram">
+            <ion-icon name="logo-instagram"></ion-icon> <ion-label>{{modalData?.instagram}}</ion-label>
+          </ion-item>
+          <ion-item *ngIf="modalData?.snapchatId">
+            <ion-icon name="logo-snapchat"></ion-icon> <ion-label>{{modalData?.snapchatId}}</ion-label>
+          </ion-item>
+        </ion-list>
+      </div>
+    </div>
+
+    <div class="concept">copyright by 
+      <a href="#" target="_blank">
+        <ion-icon name="logo-dribbble"></ion-icon> SoEasy
+      </a>
+    </div>
+  </div>  
+</ion-content>

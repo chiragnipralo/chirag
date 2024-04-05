@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Members</ion-title>
+        <ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
+      </div>
+   </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-start ion-padding-end">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      pullingIcon="arrow-down"
+    	pullingText="Pull to refresh"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+	</ion-refresher>
+
+  <ion-searchbar placeholder="Search Events" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+  
+  <div class="container">
+    <h2>All Members</h2>
+
+    <ng-container  *ngFor="let ui of filterData; let i = index;" >
+      <ng-container *ngIf = "ui.request == 0 && ui.user_id != communityData[0].user_id">
+      <ion-item>
+        <ion-icon style="color: rgb(18, 4, 92);" [name]="ui.is_admin === 1 ? 'checkmark-circle' : ''" slot="start"></ion-icon>
+        <ion-label style="text-transform: capitalize;" (click)="memberdetails(ui.user_id)">{{ui.full_name}}</ion-label>
+        <ng-container *ngIf = "ui.is_admin == 1">
+          <ion-icon (click) = "remove_admin(ui.user_id)" name="remove-circle" slot="end"></ion-icon>
+        </ng-container>
+        <ng-container *ngIf = "ui.is_admin == 0">
+          <ion-icon (click) = "make_admin(ui.user_id)" name="add-circle-outline" slot="end"></ion-icon>
+        </ng-container>
+        <ion-icon (click) = "deletemember(ui.user_id)" style="color: red;" name="trash-outline" slot="end"></ion-icon>
+      </ion-item>
+      </ng-container>
+    </ng-container>
+    
+  </div>
+</ion-content>

@@ -1,0 +1,108 @@
+<ion-header class="top_header">
+  <ion-toolbar style="background-color: transparent !important;">
+     <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+     </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scroll-y="false">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+     <ion-refresher-content
+        pullingIcon="arrow-down"
+        pullingText="Pull to refresh"
+        refreshingSpinner="circles"
+     ></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="rights" *ngIf="user_multievent_data?.my_events == null">
+    <ion-fab>
+      <ion-fab-button id="click-event" color="secondary" class="ionfab">
+        <ion-icon name="ellipsis-vertical"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+
+  <ion-popover trigger="click-event" triggerAction="click">
+    <ng-template>
+      <ion-item (click)="delete_event()">
+        <ion-icon name="trash"></ion-icon>
+        <ion-label>Delete Event</ion-label>
+      </ion-item>
+    </ng-template>
+  </ion-popover>
+
+  <ion-slides class="img" #slides scroll-y="false">
+     <ion-slide class="step-one one">
+        <ion-img [src] ="user_multievent_data?.event_images"></ion-img>
+     </ion-slide>
+  </ion-slides>
+
+  <ion-list class="head">
+     <h3 class="ion-padding-start">{{user_multievent_data?.title}}</h3>
+  </ion-list>
+  <!-- <ion-list>
+    <h4>{{user_multievent_data?.start_date}}</h4>
+    <h4>{{user_multievent_data?.end_date}}</h4>
+  </ion-list> -->
+
+  <div class="ion-padding">
+    <ion-segment class="seg" (ionChange)="segmentChanged()" [(ngModel)]="segment" [scrollable]="true" scrollToTopOnSelect="false">
+      <ion-segment-button value="0">
+        <ion-label>All Event</ion-label>
+      </ion-segment-button>
+      <!-- <ion-segment-button value="1">
+        <ion-label>Completed Event</ion-label>
+      </ion-segment-button> -->
+    </ion-segment>
+
+    <ion-slides #slider (ionSlideDidChange)="slideChanged()" scrollbar="true" class="segment_slide">
+      <ion-slide>
+        <div class="about">  
+          <ion-button class="add_btn" (click)="create_event()">
+            <ion-icon name="add"></ion-icon>
+          </ion-button>
+          <ion-row>
+            <ion-col style="padding: 0;" size="6" *ngFor="let ui of events_data; let i = index;" >
+              <ion-row>
+                <ion-card (click)="view_details(ui)">
+                  <ion-card-content>
+                    <div class="img_eve">
+                      <ion-img [src]="ui.event_images"></ion-img>
+                      <ng-container *ngIf = "ui.premium == 1">
+                        <ion-icon name="shield-checkmark"></ion-icon>
+                      </ng-container>
+                    </div>
+                    <div class="eve_content">
+                      <div class="title">
+                        <h2>{{ui.title}}</h2>
+                      </div>
+                      <div class="venue">
+                        <div>
+                          <ion-icon name="calendar-outline"></ion-icon><p class="ion-padding-start"> {{ getFormattedDate(ui.event_dates[0].event_date) }}</p>
+                        </div>
+                        <div>
+                          <ion-icon name="time-outline"></ion-icon><p class="ion-padding-start"> {{ formatDate(ui.event_dates[0].start_time) }}-{{ formatDate(ui.event_dates[0].end_time) }}
+                          </p>
+                        </div>
+                        <div>
+                          <ion-icon name="location-outline"></ion-icon>
+                          <p class="ion-padding-start"> {{ getCityFromEvent(ui.event_venues) }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </div>
+      </ion-slide>
+
+      <!-- <ion-slide>
+        <div class="mi">
+        </div>
+      </ion-slide> -->
+    </ion-slides> 
+  </div>
+</ion-content>

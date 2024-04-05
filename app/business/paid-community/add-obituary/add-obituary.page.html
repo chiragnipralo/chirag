@@ -1,0 +1,102 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Add Obituary</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="submit()" [formGroup]="ionicForm">
+    <div class="container">
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Name <span class="required_sign">*</span></ion-label>
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+        <ion-input formControlName="person_name" placeholder="Person Name" label-placement="floating" class="ion-padding-start"></ion-input>
+      </ion-item>
+
+      <ng-container *ngFor="let error of error_messages.person_name">
+        <div class="error-message" *ngIf="ionicForm.get('person_name').hasError(error.type) && (ionicForm.get('person_name').dirty || ionicForm.get('person_name').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Date of Birth <span class="required_sign">*</span></ion-label>
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        <ion-input formControlName="date_one" placeholder="Person Expired" label-placement="floating" class="ion-padding-start" type="date"></ion-input>
+      </ion-item>
+
+      <ng-container *ngFor="let error of error_messages.date_one">
+        <div class="error-message" *ngIf="ionicForm.get('date_one').hasError(error.type) && (ionicForm.get('date_one').dirty || ionicForm.get('date_one').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Date of Death<span class="required_sign">*</span></ion-label>
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        <ion-input formControlName="date_two" placeholder="Person Expired" class="ion-padding-start" label-placement="floating" type="date"></ion-input>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Age</ion-label>
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        <ion-input formControlName="age" placeholder="Person Age" class="ion-padding-start" label-placement="floating" type="text"></ion-input>
+      </ion-item>
+      
+      <ion-item fill="outline">
+        <ion-label position="floating">Funeral Date </ion-label>
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        <ion-input formControlName="date_three" placeholder="Person Expired" class="ion-padding-start" label-placement="floating" type="date"></ion-input>
+      </ion-item>
+
+      <ng-container *ngFor="let error of error_messages.date_two">
+        <div class="error-message" *ngIf="ionicForm.get('date_two').hasError(error.type) && (ionicForm.get('date_two').dirty || ionicForm.get('date_two').touched)">
+          {{ error.message }}
+        </div>
+      </ng-container>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Reason of death</ion-label>
+        <ion-icon name="list-outline" slot="start"></ion-icon>
+        <ion-textarea formControlName="desc1" placeholder="Message" class="ion-padding-start" type="text"></ion-textarea>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Description 2</ion-label>
+        <ion-icon name="list-outline" slot="start"></ion-icon>
+        <ion-textarea formControlName="desc2" placeholder="Details" class="ion-padding-start" type="text"></ion-textarea>
+      </ion-item>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Show till </ion-label>
+        <ion-icon name="calendar-outline" slot="start"></ion-icon>
+        <ion-input formControlName="valid_till" placeholder="Person Expired" class="ion-padding-start" label-placement="floating" type="date"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <p class="images">
+          <ng-template ngFor let-imageUrl [ngForOf]="imageUrls">
+            <img [src]="imageUrl" class="image" />
+            <ion-icon name="add-circle" slot="end" (click)="fileInput.click()" style="font-size: 45px;color:seagreen;position: absolute;
+            right: 0;"></ion-icon>
+            <input type="file" style="display:none" #fileInput (change)="loadImageFromDevice($event,'event')" id="file-input" accept="image/png, image/jpg, image/jpeg">
+          </ng-template>
+        </p>  
+        <ng-container *ngIf="!imageUrls || imageUrls.length === 0">
+          <ion-row>
+            <ion-input type="file" (change)="loadImageFromDevice($event,'event')" class="custom-file-input" id="file-input" accept="image/png, image/jpeg" class="custom-file-input"></ion-input>
+          </ion-row>
+        </ng-container>
+      </ion-item>
+    </div>
+    <ion-footer class="ion-no-border">
+      <ion-button expand="block" type="submit" color="secondary" shape="round">ADD</ion-button>
+    </ion-footer>
+  </form>
+</ion-content>

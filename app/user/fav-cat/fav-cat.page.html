@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <!--<ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>-->
+    <ion-icon slot="end" name="close" (click)="closeModal()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="container">
+    <h3>Choose Your Favorite Category of Event</h3>
+    <!-- <h5>Please Choose at least 3 categories personal compilation will be created.</h5> -->
+    <ion-list class="tags"> 
+      <ng-container *ngFor="let item of dataservice.favourites">
+<!--         <ion-button shape="round"><ion-checkbox color="primary"></ion-checkbox>Religion</ion-button><br>
+        <ion-button shape="round"><ion-checkbox color="primary"></ion-checkbox>Sports</ion-button>
+        <ion-button shape="round"><ion-checkbox color="primary"></ion-checkbox>Children</ion-button>
+        <ion-button shape="round"><ion-checkbox color="primary"></ion-checkbox>Pets</ion-button>
+        <ion-button shape="round"><ion-checkbox color="primary"></ion-checkbox>Study</ion-button>
+        <ion-button shape="round"><ion-checkbox color="primary"></ion-checkbox>Art</ion-button><br>
+        <ion-button shape="round"><ion-checkbox color="primary"></ion-checkbox>Movies</ion-button>
+        <ion-button shape="round"><ion-checkbox color="primary"></ion-checkbox>Restaurant</ion-button><br> -->
+        <ion-button shape="round"><ion-checkbox [checked]="item.checked" (ionChange)="ChangeAccess($event,item)" color="primary"></ion-checkbox>{{item.name}}</ion-button>
+      </ng-container>
+    </ion-list>
+  </div>
+  <ion-footer class="ion-no-border">
+    <ion-button fill="none" color="secondary" (click)="closeModal()">Skip</ion-button>
+    <ion-button class="btn" expand="block" color="secondary" (click)="closeModal()">Next</ion-button>
+  </ion-footer>
+</ion-content>
+

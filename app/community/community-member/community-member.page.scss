@@ -1,0 +1,30 @@
+.top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    ion-title{
+        text-align: center;
+    }
+    ion-icon{
+        padding-right: 10px;
+    }
+}
+
+// .header-md::after {
+//     background:none;
+// }
+
+ion-item{
+    --background: transparent;
+    --border-style: solid !important;
+}
+
+ion-searchbar{
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+ion-label{
+    text-transform: capitalize;
+}

@@ -1,0 +1,15 @@
+ion-footer{
+    display: flex;
+    justify-content: center;
+}
+
+.member_list{
+    display: flex;
+    justify-content: space-between;
+    text-transform: capitalize;
+}
+.input_box{
+    border: 1px solid #cbcbcb;
+    margin-top: 16px;
+    border-radius: 5px;
+}

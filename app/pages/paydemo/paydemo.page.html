@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Payment History</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-segment class="segment_one" [(ngModel)]="segment" (ionChange)="segmentChanged()">   
+    <ion-segment-button value="0">
+      <ion-label>Send</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="1" *ngIf = "paymentRecivedHistory.length > 0">
+      <ion-label>Received</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-slides #slider (ionSlideDidChange)="slideChanged()">
+
+    <ion-slide>
+      <ng-container *ngIf = "paymentHistory.length <= 0">
+        <p class="no_payment">No Payment</p>
+      </ng-container>
+      <ion-row *ngIf = "paymentHistory.length > 0">
+        <ng-container *ngFor="let list of paymentHistory; let i = index;">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>{{list.title}}</ion-card-title>
+              <ion-card-subtitle>Paid &nbsp;&nbsp;<b>₹ {{list.amount}}</b></ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <p>On {{list.payment_date}}</p>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+      </ion-row> 
+    </ion-slide>
+
+    <ion-slide *ngIf = "paymentRecivedHistory.length > 0">
+      <ng-container *ngIf = "paymentRecivedHistory.length <= 0">
+        <p class="no_payment">No Payment</p>
+      </ng-container>
+      <ion-row *ngIf = "paymentRecivedHistory.length > 0">
+        <ng-container *ngFor="let list of paymentRecivedHistory; let i = index;">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-subtitle>Received &nbsp;&nbsp;<b>₹ {{list.send_amount}}</b></ion-card-subtitle>
+              <ion-label> For &nbsp;&nbsp;<b>{{list.eveventDetails.title}}</b></ion-label>
+            </ion-card-header>
+          
+            <ion-card-content>
+              <p>On {{list.payment_date}}</p>
+            </ion-card-content>
+          </ion-card>
+        </ng-container>
+      </ion-row>
+    </ion-slide>
+
+  </ion-slides>
+</ion-content>

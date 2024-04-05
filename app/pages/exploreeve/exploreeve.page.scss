@@ -1,0 +1,103 @@
+ion-toolbar{
+    ion-title{
+        text-align: center;
+    }
+}
+
+.no_events{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+ion-card{
+    background: rgb(248, 248, 248);
+    margin: 15px 0;
+    padding: 0;
+    box-shadow: 0px 5px 4px -1px rgb(202, 202, 202);
+    border-radius: 10px;
+
+    ion-card-content{
+        margin: 0;
+        padding: 0;
+ 
+        ion-row{
+            ion-col:nth-child(1){
+                cursor: pointer;
+                height: 160px;
+
+                ion-img{
+                    height: 100%;
+                }
+            }
+
+            ion-img::part(image){
+                border-radius: 10px;
+                object-fit: cover;
+            }
+        } 
+
+        .head{
+            display: flex;
+            justify-content:space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: black;
+
+            h2{
+                --color: black;
+                font-size: 13px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        ion-icon{
+            font-size: 20px;
+        }
+    }
+
+    ion-list{
+        background: transparent;
+        padding: 0;
+        display: flex;
+        align-items: center;
+
+        ion-icon{
+            color: black;
+            margin-right: 5px;
+        }
+
+        p{
+            font-size: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 140px;
+            font-weight: 600;
+        }
+    }
+    .join-tag{
+        position: absolute;
+        top: 4px;
+        left: 5px;
+    }
+    .category_style{
+        position: relative;
+        bottom: 25px;
+        right: 0;
+        border-radius: 0 0 7px 7px;
+        left: 0;
+        z-index: 0;
+        background: #469c27;
+        color: white;
+        padding: 2px 7px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}

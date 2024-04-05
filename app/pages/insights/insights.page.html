@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-icon slot="start" (click)="handleBackButtonClick()" text="" name="arrow-back-outline"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-label style="font-weight: bolder;">{{dataservice?.insight_data?.title}}</ion-label>
+  <ion-card>
+    <div class="img_cls">
+      <ion-img [src]="dataservice?.insight_data?.image_path"></ion-img>
+    </div>
+  </ion-card>  
+  <ion-card class="desc">
+    <p>{{dataservice?.insight_data?.description}}</p>
+  </ion-card>  
+</ion-content>

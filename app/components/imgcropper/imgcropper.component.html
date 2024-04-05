@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title >Crop </ion-title>
+    <ion-buttons slot="start">
+      <ion-button color="success" (click)="close()" *ngIf="dataservice.event_base64img">
+        <ion-icon color="danger" slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button color="success" (click)="cropImage()" *ngIf="dataservice.event_base64img">
+        <ion-icon color="success" slot="icon-only" name="checkmark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <image-cropper #cropper [imageBase64]="dataservice.event_base64img" [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+  [aspectRatio]="16/9"  [cropperMaxWidth]="3000"  [cropperMaxHeight]="3000"  format="jpeg"   [transform]="transform"   [autoCrop]="false"   (imageCropped)="imageCropped($event)"   (loadImageFailed)="loadImageFailed()"   (imageLoaded)="imageLoaded()"   ></image-cropper>
+
+
+  <div style="display:flex; justify-content: space-around;">
+    <ion-button (click)="zoomOut()">Zoom -</ion-button> 
+    <ion-button (click)="zoomIn()">Zoom +</ion-button>
+  </div>
+
+</ion-content>

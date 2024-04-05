@@ -1,0 +1,50 @@
+ion-buttons{
+    width: 0%;
+}
+
+.container{
+    text-align: center;
+
+    ion-img{
+        height: 28vh;
+    }
+    .otpsec{
+        margin-top: 10px;
+        margin: auto;
+    
+        ion-grid{
+            display: flex;
+            justify-content: center;
+        }
+
+        ion-row{
+            margin: auto;
+            padding: 0;
+        }
+
+        ion-input{
+            background: rgb(241, 241, 241);
+            border: 1px solid #285500;
+            height: 50px;
+            width: 50px;
+            font-size: 1.5rem;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        h5{
+            padding: 0 10px;
+        }
+    }
+}
+
+ion-footer{
+    position: relative;
+    bottom: 11px;
+
+    ion-button{
+        margin: auto;
+        height: 40px;
+        max-width: 222px;
+    }
+}

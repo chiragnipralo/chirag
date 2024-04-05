@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+     <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+     </ion-buttons>
+     <ion-title>
+      Payment Plan
+     </ion-title>
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content class="ion-padding"> 
+  <div *ngIf="1">
+    <div class="grid">
+
+      <ng-container *ngIf="paidEventData?.length && selectedType == 1">
+        <ng-container *ngFor="let plan of paidEventData">
+          <ng-container *ngFor="let detail of plan.plan_details">
+            <label class="pay-card">
+              <!-- handleEventSelection(detail.id,detail.amount,detail.validity) -->
+             <input name="plan" class="radio" type="radio" [checked]="selectedDetailId === detail.id" (click)="handleEventSelection(detail)">
+              <span class="plan-details">
+                <span class="plan-type">{{ detail.type }}</span>
+                <span class="plan-cost">₹{{ detail.amount }} <span class="val">{{ detail.validity }}</span></span>
+                <span>{{ detail.description }}</span>
+                <span style="padding: 0.5rem 0;">{{ detail.invite_count }}</span>
+              </span>
+            </label>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="paidCommunityData?.length && selectedType == 2">
+        <ng-container *ngFor="let plan of paidCommunityData">
+          <ng-container *ngFor="let detail of plan.plan_details">
+            <label class="pay-card">
+             <input name="plan" class="radio" type="radio" [checked]="selectedDetailId === detail.id" (click)="handleEventSelection(detail)">
+              <span class="plan-details">
+                <span class="plan-type">{{ detail.type }}</span>
+                <span class="plan-cost">₹{{ detail.amount }} <span class="val">{{ detail.validity }}</span></span>
+                <span>{{ detail.description }}</span>
+                <span style="padding: 0.5rem 0;">{{ detail.invite_count }}</span>
+              </span>
+            </label>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+    </div>
+  </div>
+  <ion-button expand="block" shape="round" color="secondary" (click)="payNow()">Pay Now {{selectedAmount}}</ion-button>
+</ion-content>

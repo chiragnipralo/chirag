@@ -1,0 +1,57 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-buttons slot="start">
+			<ion-icon color="" slot="start" name="arrow-back-outline" routerLink="/buztabs/map"></ion-icon>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+	<ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+			pullingIcon="arrow-down"
+      		pullingText="Pull to refresh"
+      		refreshingSpinner="circles">
+		</ion-refresher-content>
+	</ion-refresher>
+	<div class="container">
+		<ion-card>
+			<ion-card-header>
+				<!-- <ion-icon name="qr-code-outline" routerLink="/qrcode"></ion-icon> -->
+				<ion-avatar>
+					<ion-label class="avatar-label">{{ user_data?.account_name[0] }}</ion-label>
+				</ion-avatar>
+				<!-- <ion-icon name="pencil" routerLink="/editprof"></ion-icon> -->
+			</ion-card-header>
+			<ion-card-content>
+				<div class="center">
+					<h3>{{user_data?.account_name}}</h3>
+					<h5>{{user_data?.email}}</h5>
+				</div>
+				<ion-row class="foot">
+          			<ion-row></ion-row>
+					<ion-col>
+						<h2>Created</h2>
+						<h5>{{user_data?.events_visited}}</h5>
+					</ion-col>
+					<ion-col>
+						<h2>Upcoming</h2>
+						<h5>{{user_data?.events_upcoming}}</h5>
+					</ion-col>
+					<ion-col>
+						<h2>Completed</h2>
+						<h5>{{user_data?.events_completed}}</h5>
+					</ion-col>
+				</ion-row>
+			</ion-card-content>
+		</ion-card>
+  	</div>
+
+	<ion-list>
+		<h2>Account</h2>
+		<ion-item (click)="ManageEvent()"> 
+			<ion-icon name="pricetags"></ion-icon>
+			<ion-label>Manage Event</ion-label>
+		</ion-item>
+	</ion-list>
+</ion-content>

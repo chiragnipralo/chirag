@@ -1,0 +1,166 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <ion-icon color="" slot="start" name="arrow-back-outline" routerLink="/tabs/home"></ion-icon>
+    <ion-title>My Communities</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      pullingIcon="arrow-down"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+	</ion-refresher>
+
+  <ion-list class="main_container">
+    <ion-segment class="segment_one" [(ngModel)]="segment" (ionChange)="segmentChanged()">   
+      <ion-segment-button value="0">
+        <ion-label>Created <ng-container *ngIf="my_community && my_community.length != 0">({{my_community.length}})</ng-container>
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="1">
+        <ion-label>Joined <ng-container *ngIf="my_joined_community && my_joined_community.length != 0">({{my_joined_community.length}})</ng-container>
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="2">
+        <ion-label>Invited <ng-container *ngIf="invite_community && invite_community.length != 0">({{invite_community.length}})</ng-container>
+        </ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <div class="container">
+      <ion-slides #slider (ionSlideDidChange)="slideChanged()">
+        <ion-slide>
+          <ion-row style="width: 100%;">
+            <ng-container class="cateLbl" *ngIf="!my_community || my_community.length === 0">
+              <div class="sub_containerr">
+                <div class="no_events">No Communities</div>
+              </div>
+            </ng-container>
+            <ion-col size="6" *ngFor="let ui of my_community let i = index;" >
+              <ion-row>
+                <ion-card (click)="view_detailss(ui)">
+                  <ion-card-content>
+                    <div class="img_eve">
+                      <ng-container *ngIf="ui.community_image !=null; else defaultImage">
+                        <ion-img [src]="ui.community_image"></ion-img>
+                      </ng-container>
+                      <ng-template #defaultImage>
+                        <ion-img src="assets/community.png"></ion-img>
+                      </ng-template>
+                      <p class="category_style">
+                        {{ui.community_category}}
+                      </p>
+                    </div>
+                    <div class="eve_content">
+                      <div class="title">
+                        <h2>{{ui.community_title}}</h2>
+                      </div>
+                      <div class="venue">
+                        <div>
+                          <ion-icon name="people"></ion-icon><p class="ion-padding-start">{{ui.member_count}} Members</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-slide>
+
+        <ion-slide>
+          <ion-row style="width: 100%;">
+            <ng-container class="cateLbl" *ngIf="!my_joined_community || my_joined_community.length === 0">
+              <div class="sub_containerr">
+                <div class="no_events">No Communities</div>
+              </div>
+            </ng-container>
+            <ion-col size="6" *ngFor="let ui of my_joined_community let i = index;" >
+              <ion-row>
+                <ion-card (click)="view_detailss(ui)">
+                  <ion-card-content>
+                    <div class="img_eve">
+                      <ng-container *ngIf="ui.community_image !=null; else defaultImage">
+                        <ion-img [src]="ui.community_image"></ion-img>
+                      </ng-container>
+                      <ng-template #defaultImage>
+                        <ion-img src="assets/community.png"></ion-img>
+                      </ng-template>
+                        <p class="category_style">
+                          {{ui.community_category}}
+                        </p>
+                    
+                      <!-- Display a placeholder image if no community image -->
+                      <ion-img *ngIf="!ui.community_image"></ion-img>
+                      <ng-container *ngIf = "ui.premium == 1">
+                        <ion-icon name="shield-checkmark" style="color: gold;"></ion-icon>
+                      </ng-container>
+                    </div>
+                    <div class="eve_content">
+                      <div class="title">
+                        <h2>{{ui.community_title}}</h2>
+                      </div>
+                      <div class="venue">
+                        <div>
+                          <ion-icon name="people"></ion-icon><p class="ion-padding-start">{{ui.member_count}} Members</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-slide>
+
+        <ion-slide>
+          <ion-row style="width: 100%;">
+            <ng-container class="cateLbl" *ngIf="!invite_community || invite_community.length === 0">
+              <div class="sub_containerr">
+                <div class="no_events">No Communities</div>
+              </div>
+            </ng-container>
+            <ion-col size="6" *ngFor="let ui of invite_community let i = index;" >
+              <ion-row>
+                <ion-card (click)="view_detailss(ui)">
+                  <ion-card-content>
+                    <div class="img_eve">
+                      <ng-container *ngIf="ui.community_image !=null; else defaultImage">
+                        <ion-img [src]="ui.community_image"></ion-img>
+                      </ng-container>
+                      <ng-template #defaultImage>
+                        <ion-img src="assets/community.png"></ion-img>
+                      </ng-template>
+                        <p class="category_style">
+                          {{ui.community_category}}
+                        </p>
+                    
+                      <!-- Display a placeholder image if no community image -->
+                      <ion-img *ngIf="!ui.community_image"></ion-img>
+                      <ng-container *ngIf = "ui.premium == 1">
+                        <ion-icon name="shield-checkmark" style="color: gold;"></ion-icon>
+                      </ng-container>
+                    </div>
+                    <div class="eve_content">
+                      <div class="title">
+                        <h2>{{ui.community_title}}</h2>
+                      </div>
+                      <div class="venue">
+                        <div>
+                          <ion-icon name="people"></ion-icon><p class="ion-padding-start">{{ui.member_count}} Members</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-slide>
+      </ion-slides>
+    </div>
+  </ion-list>
+</ion-content>

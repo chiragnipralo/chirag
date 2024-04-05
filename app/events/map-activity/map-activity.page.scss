@@ -1,0 +1,25 @@
+ion-title{
+    text-align: center;
+}
+
+.btn{
+    position: absolute;
+    right: 0;
+}
+ion-list{
+    display: flex;
+    justify-content: space-around;
+
+    ion-button{
+        --background: rgba(222, 255, 193, 1);
+        height: 50px;
+        width: 50px;
+        max-width: 50px;
+        height: 50px;
+
+        ion-icon{
+            color:black;
+            font-size:1.3rem;
+        }
+    }
+}

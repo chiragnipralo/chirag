@@ -1,0 +1,41 @@
+.container{
+    text-align: center;
+    
+    p{
+        margin-top: 10%;
+        font-size: 1rem;
+    }
+    .tags{
+        margin:auto;
+        margin-top: 10%;
+        margin-bottom: 10%;
+        padding: 20px;
+
+        ion-checkbox{
+            --background:var(--ion-color-primary);
+            margin-right: 10px;
+        }
+        ion-button{
+            margin-bottom: 30px;
+            --color-activated:var(--ion-color-secondary);
+            --background-activated:var(--ion-color-dark);
+        }
+    }
+}
+
+ion-footer{
+    display: flex;
+    justify-content: space-between;
+    border-top: none;
+    position: fixed;
+    bottom: 20px;
+
+    ion-button{
+        //margin: auto;
+        //max-width: 222px;
+        height: 40px;
+    }
+    .btn{
+        width: 40%;
+    }
+}

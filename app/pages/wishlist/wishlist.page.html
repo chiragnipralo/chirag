@@ -1,0 +1,50 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Wishlist</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+	<ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+	
+	<ion-item>
+		<ion-searchbar placeholder="Search Events" (ionChange)="filterItems($event)"></ion-searchbar>
+	</ion-item>
+	<div class="container">
+		<ion-row>
+			<ion-col size="6" *ngFor="let ui of events_data let i = index;" >
+				<ion-row>
+					<ion-card>
+						<ion-card-content>
+							<div class="img_eve">
+								<ion-img [src]="ui.event_images"></ion-img>
+                  				<ion-icon class="heart" name="heart-outline"></ion-icon>
+							</div>
+							<div class="eve_content">
+								<div class="title">
+									<h2>{{ui.title}}</h2>
+								</div>
+								<div class="venue">
+									<div>
+										<ion-icon name="location-outline"></ion-icon><p class="ion-padding-start">{{ui.event_venues}}</p>
+									</div>
+									<div>
+										<ion-icon name="card-outline"></ion-icon><p class="ion-padding-start">Free</p>
+									</div>
+								</div>
+								<div>
+									<ion-button expand="block" size="small" color="primary" shape="round" fill="outline" (click)="view_details(ui)">View</ion-button>
+								</div>
+							</div>
+						</ion-card-content>
+					</ion-card>
+          		</ion-row>
+        	</ion-col>
+      	</ion-row>
+  	</div>
+</ion-content>

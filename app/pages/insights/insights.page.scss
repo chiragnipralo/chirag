@@ -1,0 +1,22 @@
+.header-md::after{
+    background-image:none;
+}
+ion-card{
+	margin-top: 20px;
+}
+.img_cls{
+    height: 100%;
+    ion-img{
+        height: 100%;
+    }
+    ion-img::part(image){
+        object-fit: cover;
+        border-radius: 10px;
+    }
+}
+.desc{
+	background-color: #f2f2f2;
+    padding: 8px;
+    font-size: 15px;
+    text-align: justify;
+}

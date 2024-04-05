@@ -1,0 +1,74 @@
+  <ion-header class="">
+    <ion-toolbar color="light">
+      <ion-img src="assets/images/logo.png"></ion-img>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content scroll-y="false">
+    <div class="slides">
+      <ion-slides #slides (ionSlideDidChange)="slideChanged()"  pager="true" scroll-y="false">
+        <ion-slide class="step-one">
+          <ion-row class="ion-align-items-center sltwo">
+            <ion-col class="one">
+            </ion-col>
+            <ion-col>
+              <ion-row>
+                <ion-col class="two"></ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="three"></ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          <div class="text">
+            <h3>Join to create and host your own events and build your communities.</h3>
+          </div>
+        </ion-slide>
+
+        <ion-slide class="step-one">
+          <ion-row class="ion-align-items-center slthree">
+            <ion-col class="one">
+            </ion-col>
+            <ion-col>
+              <ion-row>
+                <ion-col class="two"></ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="three"></ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          <div class="text">
+            <h3>Effortlessly invite everyone to your events and communities.</h3>
+            <!-- <h6>You can create your own Event</h6> -->
+          </div>
+        </ion-slide>
+
+        <ion-slide class="step-one">
+          <ion-row class="ion-align-items-center slone">
+            <ion-col class="one">
+            </ion-col>
+            <ion-col>
+              <ion-row>
+                <ion-col class="two"></ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="three"></ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          <div class="text">
+            <h3>Empower yourself as an event manager and community administrator with SoEasy.</h3>
+            <!-- <h6>You can create your own Event</h6> -->
+          </div>
+        </ion-slide>
+
+
+      </ion-slides>
+      <ion-footer class="ion-no-border btn">
+        <ion-button size="large" color="secondary" fill="clear" *ngIf="currentIndex < 2 " (click)=start()>Skip</ion-button>
+        <ion-button size="large" color="secondary" (click)=swipeNext() *ngIf="currentIndex < 2" shape="round">Next</ion-button>
+        <ion-button class="finishbtn" expand="block" shape="round" color="secondary" (click)=start() *ngIf="currentIndex === 2">Get Started</ion-button>
+      </ion-footer>  
+    </div>
+  </ion-content>

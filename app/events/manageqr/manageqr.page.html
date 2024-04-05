@@ -1,0 +1,47 @@
+<!--<ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-img src="assets/images/logo.png"></ion-img>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content
+  [fullscreen]="true"
+  [style.--background]="scanActive?'#00000000':'#ffffff'"
+>
+<ion-segment class="segment_one" [(ngModel)]="qr">   
+  <ion-segment-button value="urqr">
+    <ion-label>Qr Code</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="scan">
+    <ion-label>Scan QR</ion-label>
+  </ion-segment-button>
+</ion-segment>
+<div [ngSwitch]="qr">
+  <div *ngSwitchCase="'urqr'">
+    
+  </div>
+  <div *ngSwitchCase="'scan'">
+    <ion-button  class="btn" expand="full" (click)="startScanner()" [hidden]="scanActive">
+      SCAN
+    </ion-button>
+    <ion-row class="scan-button" [hidden]="!scanActive">
+      <ion-col class="ion-no-padding">
+        <ion-button expand="full" (click)="stopScanner()">Stop</ion-button>
+      </ion-col>
+    </ion-row>
+    <div class="scan-box" [hidden]="!scanActive"></div>
+  </div>
+</div>
+</ion-content> -->
+
+<ion-content [fullscreen]="true" [style.--background]="scanActive?'#00000000':'#ffffff'">
+  <ion-row class="scan-button" [hidden]="!scanActive">
+    <ion-col class="ion-no-padding" style="display: flex; justify-content: center;">
+      <ion-button class="stopscan" (click)="stopScanner()"><ion-icon name="close-outline"></ion-icon></ion-button>
+    </ion-col>
+  </ion-row>
+  <div class="scan-box" [hidden]="!scanActive"></div>
+</ion-content>

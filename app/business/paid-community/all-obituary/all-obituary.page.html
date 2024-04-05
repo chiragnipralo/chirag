@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Obituary</ion-title>
+    </div>
+    <ion-icon slot="end" name="search-outline" class="ion-padding-end search_icon" (click)="toggleSearchBar()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-searchbar placeholder="Search.." [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+
+  <div class="container">
+    <ng-container  *ngFor="let ui of filterData; let i = index;" >
+      <ion-card>
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="6">
+              <ng-container *ngIf="ui?.person_img !== null; else noImage">
+                <img [src]="ui.person_img" style="height: 100%;width: 100%;">
+              </ng-container>
+              <ng-template #noImage>
+                <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+              </ng-template>
+            </ion-col>
+            <ion-col>
+              <h3>{{ui?.person_name}}</h3>
+              <div class="title">
+                <ion-label>{{ui?.date1}}</ion-label>
+              </div>
+              <div class="title">
+                <ion-label>{{ui?.description}}</ion-label>
+              </div>
+            </ion-col>
+
+            <ion-fab class="menu_buttton">
+              <ion-fab-button id="click-menu{{i}}">
+                <ion-icon name="ellipsis-vertical"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+
+            <ion-popover trigger="click-menu{{i}}" triggerAction="click">
+              <ng-template>
+                <ng-container *ngIf="ui?.status == 1">
+                  <ion-item (click)="verify_obituary(ui.id)">
+                    <ion-icon name="podium-outline"></ion-icon>
+                    <ion-label> Verify</ion-label>
+                  </ion-item>
+                </ng-container>
+                <ion-item (click)="delete_obituary(ui.id)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                  <ion-label>Delete</ion-label>
+                </ion-item>
+              </ng-template>
+            </ion-popover>
+            <div *ngIf="ui?.status == 1" class="pending">
+              <h5>Waiting for approval</h5>
+            </div>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </div>
+</ion-content>

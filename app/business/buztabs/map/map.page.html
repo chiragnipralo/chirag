@@ -1,0 +1,280 @@
+<ion-header>
+	<ion-toolbar color="light">
+		<div class="top">
+      <ion-menu-toggle>
+        <ion-menu-button id="main-content"></ion-menu-button>
+      </ion-menu-toggle>
+			<ion-img src="assets/images/logo.png"></ion-img>
+			<div class="icon">
+				<ion-icon name="person-circle-outline" routerLink="/tabs/dashboard" class="toggle-icon"></ion-icon>
+				<ion-icon name="bag-outline"></ion-icon>
+				<!-- <ion-toggle [checked]="true"></ion-toggle> -->
+			</div>
+		</div>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-menu contentId="main-content">
+    <ion-card>
+      <ion-card-content>
+        <div class="profile_des">
+          <div class="profile_des" id="open-modal">
+            <ion-avatar>
+              <ion-label class="avatar-label">{{ user_data?.account_name[0] }}</ion-label>
+            </ion-avatar>
+            <div>
+              <h2>{{user_data?.account_name}}</h2>
+              <p>{{user_data?.email}}</p>
+            </div>
+          </div>
+          <div>
+            <ion-icon name="arrow-forward-circle-outline" style="font-size: 32px;" routerLink="/buztabs/about"></ion-icon>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-content>
+      <ion-list class="m-i" line="full">
+        <!-- <ion-menu-toggle> -->
+          <ion-accordion-group>
+
+            <ion-item>
+              <ion-accordion value="addevent" toggleIcon="none">
+                <ion-item slot="header" color="light" (click)="CreateEvent()">
+                  <ion-icon name="add"></ion-icon>
+                  <ion-label>Create Event</ion-label> 
+                </ion-item>
+              </ion-accordion>
+            </ion-item>
+
+            <ion-item>
+              <ion-accordion value="event" toggleIcon="none">
+                <ion-item slot="header" color="light" routerLink="/curr-plan">
+                  <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+                  <ion-label>Current Plan</ion-label>
+                </ion-item>
+              </ion-accordion>
+            </ion-item>
+
+            <!-- <ion-item>
+              <ion-accordion value="obituary" toggleIcon="none">
+                <ion-item slot="header" color="light" routerLink="/payhistory">
+                  <ion-icon name="card-outline"></ion-icon>
+                  <ion-label>Payment History</ion-label>
+                </ion-item>
+              </ion-accordion>
+            </ion-item> -->
+
+            <ion-item>
+              <ion-accordion toggleIcon="none">
+                <ion-item slot="header" color="light"  routerLink="/delete-community">
+                  <ion-icon name="log-out-outline"></ion-icon><ion-label>Delete Account</ion-label>  
+                </ion-item>
+              </ion-accordion>
+            </ion-item>
+          </ion-accordion-group>
+        <!-- </ion-menu-toggle> -->
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+    <ion-refresher-content
+      pullingIcon="arrow-down"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles">
+  </ion-refresher-content>	</ion-refresher>
+  <!-- start events -->
+  <ion-list>
+    <!-- <ion-label class="ion-padding" style="font-size: 20px;font-weight: bolder;">Created</ion-label> -->
+
+
+    <div class="container">
+      <ion-list>
+        <ion-segment class="seg-sec" [(ngModel)]="segment" (ionChange)="segmentChanged()" [scrollable]="true">   
+          <ion-segment-button value="0">
+            Upcoming <ng-container *ngIf="my_upcoming_events && my_upcoming_events.length != 0">({{my_upcoming_events.length}})</ng-container>
+          </ion-segment-button>
+          <ion-segment-button value="1">
+            Completed <ng-container *ngIf="my_completed_events && my_completed_events.length != 0">({{my_completed_events.length}})</ng-container>
+          </ion-segment-button>
+          <ion-segment-button value="2">
+            Cancelled <ng-container *ngIf="my_cancel_events && my_cancel_events.length != 0">({{my_cancel_events.length}})</ng-container>
+          </ion-segment-button>
+          <ion-segment-button value="3">
+            Draft <ng-container *ngIf="my_draft_events && my_draft_events.length != 0">({{my_draft_events.length}})</ng-container>
+          </ion-segment-button>
+        </ion-segment>
+
+        <ion-list style="background: none;">
+        <ion-slides #slider (ionSlideDidChange)="slideChanged()">
+          <ion-slide>
+            <div>
+              <ng-container class="cateLbl" *ngIf="!my_upcoming_events || my_upcoming_events.length === 0">
+                <div class="sub_container">
+                  <div class="no_events">No Events</div>
+                </div>
+              </ng-container>
+              <ng-container *ngFor="let ui of my_upcoming_events let i = index;" >
+                <ion-card>
+                  <ion-card-content>
+                    <ion-row>
+                      <ion-col class="eventcol">
+                        <ion-img [src]="ui.event_images"></ion-img>
+                        <p class="category_style">
+                          {{ui.event_category}}
+                        </p>
+                      </ion-col>
+                      <ion-col>
+                        <div class="head">
+                          <h2>{{ui.title}}</h2>
+                          <ion-button size="small" fill="clear" (click)="edit_details(ui)"><ion-icon name="create-outline"></ion-icon></ion-button>    
+                        </div>
+                        <div> 
+                          <ion-list><ion-icon name="calendar-outline"></ion-icon><p>{{ getFormattedDate(ui.event_dates[0].event_date) }}</p></ion-list> 
+                          <ion-list><ion-icon name="time-outline"></ion-icon><p>{{ formatTime(ui.event_dates[0].start_time) }}-{{ formatTime(ui.event_dates[0].end_time) }}</p></ion-list> 
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ getCityFromEvent(ui.event_venues) }}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>₹ {{ui.price}}</p></ion-list>
+                        </div>
+                        <div class="btnn">
+                          <ion-button color="primary" size="small" shape="round" fill="outline" (click)="view_detailss(ui)">View</ion-button>    
+                          <ion-button color="primary" size="small" shape="round" (click)="add_staff(ui)">Add Admin</ion-button>    
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-card-content>
+                </ion-card>
+              </ng-container>  
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div>
+              <ng-container class="cateLbl" *ngIf="!my_completed_events || my_completed_events.length === 0">
+                <div class="sub_container">
+                  <div class="no_events">No Events</div>
+                </div>
+              </ng-container>
+              <ng-container *ngFor="let ui of my_completed_events let i = index;" >
+                <ion-card (click)="view_detailss(ui)">
+                  <ion-card-content>
+                    <ion-row>
+                      <ion-col class="eventcol">
+                        <ion-img [src]="ui.event_images"></ion-img>
+                        <p class="category_style">
+                          {{ui.event_category}}
+                        </p>
+                      </ion-col>
+                      <ion-col>
+                        <div class="head">
+                          <h2>{{ui.title}}</h2>
+                        </div>
+                        <div> 
+                          <ion-list><ion-icon name="calendar-outline"></ion-icon><p>{{ getFormattedDate(ui.event_dates[0].event_date) }}</p></ion-list> 
+                          <ion-list><ion-icon name="time-outline"></ion-icon><p>{{ formatTime(ui.event_dates[0].start_time) }}-{{ formatTime(ui.event_dates[0].end_time) }}</p></ion-list> 
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ getCityFromEvent(ui.event_venues) }}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>₹ {{ui.price}}</p></ion-list>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-card-content>
+                </ion-card>
+              </ng-container>
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div>
+              <ng-container class="cateLbl" *ngIf="!my_cancel_events || my_cancel_events.length === 0">
+                <div class="sub_container">
+                  <div class="no_events">No Events</div>
+                </div>
+              </ng-container>
+              <ng-container  *ngFor="let ui of my_cancel_events let i = index;" >
+                <ion-card>
+                  <ion-card-content>
+                    <ion-button shape="round" size="small" color="danger" style="position: absolute;top: 3px;left: 5px;font-size: 9px; z-index: 1;">
+                      <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+                          Cancelled
+                    </ion-button>
+                    <ion-row [ngStyle]="{'opacity': '0.5'}">
+                      <ion-col >
+                        <ion-img [src]="ui.event_images"></ion-img>
+                        <p class="category_style">
+                          {{ui.event_category}}
+                        </p>
+                      </ion-col>
+                      <ion-col>
+                        <div class="head">
+                          <h2>{{ui.title}}</h2>
+                        </div>
+                        <div> 
+                            <ion-list><ion-icon name="calendar-outline"></ion-icon><p>{{ getFormattedDate(ui.event_dates[0].event_date) }}</p></ion-list> 
+                            <ion-list><ion-icon name="time-outline"></ion-icon><p>{{ formatTime(ui.event_dates[0].start_time) }}-{{ formatTime(ui.event_dates[0].end_time) }}</p></ion-list> 
+                            <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ getCityFromEvent(ui.event_venues) }}</p></ion-list>
+                            <ion-list><ion-icon name="card-outline"></ion-icon><p>₹ {{ui.price}}</p></ion-list>
+                            </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-card-content>
+                </ion-card>
+              </ng-container>
+            </div>
+          </ion-slide>
+          <ion-slide>
+            <div>
+              <ng-container class="cateLbl" *ngIf="!my_draft_events || my_draft_events.length === 0">
+                <div class="sub_container">
+                  <div class="no_events">No Events</div>
+                </div>
+              </ng-container>
+              <ng-container *ngFor="let ui of my_draft_events let i = index;" >
+                <ion-card>
+                  <ion-card-content>
+                    <ion-row>
+                      <ion-col >
+                        <ion-img [src]="ui.event_images"></ion-img>
+                        <p class="category_style">
+                          {{ui.event_category}}
+                        </p>
+                      </ion-col>
+                      <ion-col>
+                        <div class="head">
+                          <h2>{{ui.title}}</h2>
+                          <ion-button size="small" fill="clear" (click)="edit_details(ui)"><ion-icon name="create-outline"></ion-icon></ion-button>    
+                        </div>
+                        <div> 
+                          <ion-list><ion-icon name="calendar-outline"></ion-icon><p>{{ getFormattedDate(ui.event_dates[0].event_date) }}</p></ion-list> 
+                          <ion-list><ion-icon name="time-outline"></ion-icon><p>{{ formatTime(ui.event_dates[0].start_time) }}-{{ formatTime(ui.event_dates[0].end_time) }}</p></ion-list> 
+                          <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ getCityFromEvent(ui.event_venues) }}</p></ion-list>
+                          <ion-list><ion-icon name="card-outline"></ion-icon><p>₹ {{ui.price}}</p></ion-list>
+                        </div>
+                      </ion-col>
+                    </ion-row>
+                  </ion-card-content>
+                </ion-card>
+              </ng-container>
+            </div>
+          </ion-slide>
+        </ion-slides>
+        </ion-list>
+      </ion-list>
+    </div>
+  </ion-list>
+
+  <ion-modal #modal trigger="open-modal" [initialBreakpoint]="0.25" [breakpoints]="[0, 0.25, 0.5, 0.75]">
+    <ng-template>
+      <ion-list>
+        <ng-container *ngFor="let ui of events_data let i = index;">
+          <ion-item>
+            <ion-label (click)="view_account(ui)"><b>{{ui.account_name}}</b></ion-label>
+          </ion-item>
+        </ng-container>  
+        <ion-item>
+          <ion-icon name="add-circle-outline"></ion-icon>
+          <ion-button fill="none" routerLink="/buzregister"> Create New</ion-button>
+        </ion-item>
+      </ion-list>
+    </ng-template>
+  </ion-modal>
+</ion-content>

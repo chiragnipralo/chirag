@@ -1,0 +1,77 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Payment Details</ion-title>    
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content>
+  <div class="ion-content-center">
+    <ion-card class="ion-card-center">
+      <ion-card-header>
+        <h4>Details</h4>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="9">
+              <ion-label>Total Selected Contacts</ion-label>
+            </ion-col>
+            <ion-col>
+              <h5>{{ this.dataservice.totalContactCount ? this.dataservice.totalContactCount : 0 }}</h5>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="9">
+              <ion-label>Cost Per Invite</ion-label>
+            </ion-col>
+            <ion-col>
+              <h5>{{this.dataservice.inviteCharge}}</h5>
+            </ion-col>
+            <!-- <ion-col size="9">
+              <ion-label>Cost Per SMS Invite</ion-label>
+            </ion-col>
+            <ion-col>
+              <h5>0.25</h5>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col size="9">
+              <ion-label>Cost Per Whats App Invite</ion-label>
+            </ion-col>
+            <ion-col>
+              <h5>0.75</h5>
+            </ion-col> -->
+          </ion-row>
+          <ion-row class="total_cost">
+            <ion-col size="9">
+              <ion-label>Total Cost</ion-label>
+            </ion-col>
+            <ion-col>
+              <h5>{{ this.dataservice.totalContactCount ? this.dataservice.totalContactCount * this.dataservice.inviteCharge : 0 }}</h5>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <!-- <p>Currently, there is no cost associated with your invites. You can use the 'Invite' button to send invites via SMS and WhatsApp. For SMS invites, it will cost 0.25 per invite, and for WhatsApp invites, it will cost 0.75 per invite.</p> -->
+              <!-- <p>Currently, there is no cost associated with your invites. You can use the 'Invite' button to send invites via SMS and WhatsApp. <b>Rs. 10</b> are charged to add an event</p> -->
+              <p>You are using free version, enjoy your invitations cost free.</p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <ng-container *ngIf="this._route.snapshot.params['invite_type'] == 'invite'">
+    <ion-button class="right" color="secondary" shape="round" (click)="GoClose()">Close</ion-button>  
+  </ng-container>
+  <ng-container *ngIf="this._route.snapshot.params['invite_type'] != 'invite'">
+    <ion-button class="right" color="secondary" shape="round" (click)="GoNext(this.dataservice.totalContactCount ? this.dataservice.totalContactCount * 1 : 0)">Invite</ion-button>  
+  </ng-container>
+  <!-- {{ this.dataservice.totalContactCount ? this.dataservice.totalContactCount * 1 : 0 }} -->
+  <!-- <ion-button class="right" color="secondary" shape="round" (click)="GoNext(this.dataservice.totalContactCount ? this.dataservice.totalContactCount * 1 : 0)">Pay 10</ion-button>   -->
+</ion-footer>

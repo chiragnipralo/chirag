@@ -1,0 +1,26 @@
+.header-md::after {
+    background:none;
+}
+
+.fall-and-stick {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: fall 1s ease-in-out forwards;
+    font-weight: bold;
+    text-align: center;
+    font-size: 20px; /* initial font size */
+  }
+
+  @keyframes fall {
+    0% {
+      top: -50px;
+      opacity: 0;
+    }
+    100% {
+      top: 50%;
+      opacity: 1;
+      font-size: 30px; /* final font size */
+    }
+  }

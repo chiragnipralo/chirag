@@ -1,0 +1,90 @@
+.register{
+    ion-input,ion-select{
+        background: rgb(241, 241, 241);
+        border: 1px solid #285500;
+        border-radius: 5px;  
+        height: 50px;
+        padding-left: 30px !important;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    ion-icon{
+        font-size: 20px;
+        position: absolute;
+        color: #00000b;
+        padding: 15px 10px 10px 10px;
+        z-index: 10;
+        font-weight: bolder;
+    }
+}
+.header-md::after {
+    background:none;
+}
+h5{
+    font-size: 16px;
+}
+h4{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.main_flex{
+    display: flex;
+}
+
+.center{
+    text-align: center;
+
+    ion-icon{
+        font-size: 1.6rem;
+        background-color: rgb(162, 180, 170);
+        padding: 6px;
+        margin:10px;
+        border-radius: 25px;
+    }
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    padding-bottom:10px ;
+}
+
+.ion-invalid.ion-touched{
+    border: 1px solid red !important;
+}
+
+.condition{
+    //margin: 30px 0;
+
+    p{
+        text-align:justify !important;
+        position: relative;
+        top: -33px;
+        margin-left: 6px;
+        font-size: 12px;
+        b{
+            color:rgba(37, 128, 233, 0.849);
+            font-family: 'Montserrat-Bold' !important;
+        }
+    }
+}
+
+ion-button{
+    margin-bottom: 20px;
+    padding: auto;
+    height: 45px;
+}
+
+.modal{
+    display: flex;
+    align-items: center;
+
+    ion-icon{
+        color: black;
+        position: absolute;
+        top:10px;
+        font-size: 1.4rem;
+    }
+}

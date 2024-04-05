@@ -1,0 +1,19 @@
+.more_participant ion-col{
+    background-color: #135d54;
+    border: solid 1px #fff;
+    color: #fff;
+    text-align: center;
+}
+
+ion-col{
+    text-align: center; 
+}
+
+.add_more_btn{
+    display: flex;
+    justify-content: end;
+
+    ion-button{
+        padding-right: 5px;
+    }
+}

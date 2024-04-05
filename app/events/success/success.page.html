@@ -1,0 +1,27 @@
+<ion-buttons slot="start">
+  <ion-button (click)="closeModal()">
+    <ion-icon slot="end" name="close"></ion-icon>        
+  </ion-button>
+</ion-buttons>
+
+<ion-content class="ion-padding">
+  <div class="contianer">
+    <ion-img src="assets/images/congratulation.png"></ion-img>
+
+    <div class="text">
+      <p class="head-text">Event creation complete!</p>
+      <ng-container *ngIf="this.dataservice.public_event == 0">
+        <P>Your public event has been sent for approval. You will be notified once it's approved.</P>
+      </ng-container>
+    </div>
+
+    <div class="foot">
+      <!-- <h3>Share Event</h3>
+      <ion-icon name="copy-outline"></ion-icon>
+      <ion-icon name="logo-whatsapp"></ion-icon> -->
+      <ion-button expand="block" color="secondary" (click)="closeModal()" shape="round">Close</ion-button>
+     </div>
+
+   </div>
+
+ </ion-content>

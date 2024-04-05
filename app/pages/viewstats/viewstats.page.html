@@ -1,0 +1,187 @@
+<ion-header>
+  <ion-toolbar>
+    <ng-container *ngIf="is_modal_open">
+      <ion-icon  class="back_icon" slot="start" name="arrow-back-outline" (click)="closeModal()"></ion-icon>
+      <ion-title>Event Stats</ion-title>
+    </ng-container>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+    <ion-refresher-content
+       pullingIcon="arrow-down"
+       pullingText="Pull to refresh"
+       refreshingSpinner="circles"
+    ></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-item (click)="setOpenInvitedModal(true)">
+    <ion-icon name="people"></ion-icon>
+    <ion-label style="padding-left: 10px;">Invited</ion-label>
+    <ion-label class="count">{{ getGuestCount(invited_guests) }}</ion-label>
+  </ion-item>
+
+  <ion-item (click)="setOpenComingModal(true)">
+    <ion-icon name="people"></ion-icon>
+    <ion-label style="padding-left: 10px;">Coming</ion-label>
+    <ion-label class="count">{{ getGuestCount(coming_guests) }}</ion-label>
+  </ion-item>
+
+  <ion-item (click)="setOpenAttendeesModal(true)">
+    <ion-icon name="people"></ion-icon>
+    <ion-label style="padding-left: 10px;">Attendees</ion-label>
+    <ion-label class="count">{{ getGuestCount(attendees_guests) }}</ion-label>
+  </ion-item>
+
+  <!-- <ion-item (click)="setOpenMaleModal(true)"> -->
+  <ion-item>
+    <ion-icon name="man"></ion-icon>
+    <ion-label style="padding-left: 10px;">Male</ion-label><br>
+    <ion-label class="count">{{ getMaleCount() }}</ion-label>
+  </ion-item>
+
+  <!-- <ion-item (click)="setOpenFemaleModal(true)"> -->
+  <ion-item>
+    <ion-icon name="woman"></ion-icon>
+    <ion-label style="padding-left: 10px;">Female</ion-label><br>
+    <ion-label class="count">{{ getFemaleCount() }}</ion-label>
+  </ion-item>
+
+  <ng-container *ngIf="this.dataservice.events_guests.is_premium">
+    <ion-item (click)="ticketList()">
+      <ion-icon name="card"></ion-icon>
+      <ion-label style="padding-left: 10px;">Total Collection</ion-label><br>
+      <ion-label class="count">{{ this.dataservice.events_guests.Ticketspayments.total_amount }}</ion-label>
+    </ion-item>
+  </ng-container>
+
+  <ng-container *ngIf="event_food_type?.length !== 0">
+    <ng-container *ngFor="let food of event_food_type[0].food_type; let i = index;">
+      <ion-item>
+        <ion-icon name="fast-food"></ion-icon>
+        <ion-label style="padding-left: 10px;">{{food.name | titlecase}}</ion-label><br>
+        <ion-label class="count">{{ getFoodCount(food.id) }}</ion-label>
+      </ion-item>
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="poll_section && poll_section.length > 0">
+    <ng-container *ngFor="let question of poll_section[0] | keyvalue">
+      <div class="poll_section">
+        <ion-icon name=""></ion-icon>
+        <ion-label style="padding-left: 10px;">{{ question.key | titlecase }}</ion-label><br>
+        <div *ngFor="let option of question.value | keyvalue">
+          <div class="ion-padding-start ion-padding-end">
+            <div style="margin: 10px 0;display: flex;align-items: center;justify-content: space-between;">
+              <ion-label class="ion-padding-start">{{ option.key | titlecase }}</ion-label>
+              <ion-label class="count">{{ option.value }}</ion-label> <!-- Display the count -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+   
+
+  <!-- modal for invited  -->
+
+  <ion-modal [isOpen]="isModalInvitedModalOpen" (willDismiss)="onInviteWillDismiss($event)"> 
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Invited</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenInvitedModal(false)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item *ngFor="let ui of invited_guests let i = index;">
+          <ion-label>{{ui.user_name}}</ion-label>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- modal for coming -->
+
+  <ion-modal [isOpen]="isModalComingModalOpen" (willDismiss)="onComingWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Coming</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenComingModal(false)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item *ngFor="let ui of coming_guests let i = index;">
+          <ion-label>{{ui.user_name}}</ion-label>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- modal for Attendees -->
+
+  <ion-modal [isOpen]="isModalAttendeesModalOpen" (willDismiss)="onAttendeesWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Attendees</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenAttendeesModal(false)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item *ngFor="let ui of attendees_guests let i = index;">
+          <ion-label>{{ui.user_name}}</ion-label>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- modal for Male -->
+
+  <ion-modal [isOpen]="isModalMaleModalOpen" (willDismiss)="onMaleWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Male</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenMaleModal(false)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item *ngFor="let ui of coming_guests let i = index;">
+          <ion-label>{{ui.user_name}}</ion-label>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- modal for Female -->
+
+  <ion-modal [isOpen]="isModalFemaleModalOpen" (willDismiss)="onFemaleWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Female</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenFemaleModal(false)">Close</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item *ngFor="let ui of coming_guests let i = index;">
+          <ion-label>{{ui.user_name}}</ion-label>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

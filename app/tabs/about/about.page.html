@@ -1,0 +1,114 @@
+<ion-content>
+	<ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+			pullingIcon="arrow-down"
+        	pullingText="Pull to refresh"
+        	refreshingSpinner="circles">
+		</ion-refresher-content>
+	</ion-refresher>
+	<div class="fixed-container">
+		<div class="container">
+			<ion-card>
+				<div class="header">
+					<ion-icon name="arrow-back-outline" routerLink="/tabs/home" class="qrr"></ion-icon>
+					<!-- <ion-icon name="qr-code-outline" [routerLink]="['/qrcode']" [queryParams]="{ scanActive: true, is_event_or_community:'false'}" class="qrr"></ion-icon> -->
+				</div>
+				<ion-card-header>
+					<ion-avatar>
+						<ng-container *ngIf="user_data?.profile_img; else noImage">
+							<img [src]="user_data?.profile_img" alt="Profile Image">
+						</ng-container>
+						<ng-template #noImage>
+							<ion-label class="avatar-label">{{ user_data?.user_name[0] }}</ion-label>
+						</ng-template>
+					</ion-avatar>
+				</ion-card-header>
+				<ion-card-content>
+					<div class="center">
+						<h3>{{user_data?.user_name}}</h3>
+						<h6>{{user_data?.user_unique_name}}</h6>
+					</div>
+					<ion-row class="foot">
+	          			<ion-row></ion-row>
+						<ion-col (click)="GoToMyEvents('upcoming')">
+							<h5>{{user_data?.events_visited}}</h5>
+							<h3>Created</h3>
+						</ion-col>
+						<ion-col (click)="GoToMyEvents('upcoming')">
+							<h5>{{user_data?.events_upcoming}}</h5>
+							<h3>Upcoming</h3>
+						</ion-col>
+						<ion-col (click)="GoToMyEvents('completed')">
+							<h5>{{user_data?.events_completed}}</h5>
+							<h3>Completed</h3>
+						</ion-col>
+					</ion-row>
+				</ion-card-content>
+				<!-- <ion-row *ngFor="let key of keys">
+					<ion-col style="text-align: right;">{{key}}:</ion-col>
+					<ion-col style="text-align: left;">{{appInfo[key]}}</ion-col>
+				</ion-row> -->
+			</ion-card>
+	  	</div>
+	</div>  	
+	<ion-list class="ion-padding-start ion-padding-end menus">
+		<!-- <ion-item routerLink="/buztabs/dashboard">
+			<ion-label>Check Community Dashboard</ion-label>
+		</ion-item> -->
+
+		<ion-item (click)="EditProfile()">
+			<ion-icon name="person-circle"></ion-icon>
+			<ion-label>My Profile</ion-label>
+		</ion-item>
+		<ion-item routerLink="/pages/notification">
+			<ion-icon name="notifications"></ion-icon>
+			<ion-label>Notification</ion-label>
+			<ion-badge color="primary">{{notifyCount}}</ion-badge>
+		</ion-item>
+		<!-- <ion-item (click)="payment()">
+			<ion-icon name="checkbox"></ion-icon>
+			<ion-label>Purchased Plan</ion-label>
+		</ion-item> -->
+		<ion-item routerLink="/profilecards">
+			<ion-icon name="card"></ion-icon>
+			<ion-label>Digital Card</ion-label>
+		</ion-item>
+		<ion-item (click)="ManageEvent()"> 
+			<ion-icon name="pricetags"></ion-icon>
+			<ion-label>Manage Event</ion-label>
+		</ion-item>
+		<ion-item (click)="InviteEvent()">
+			<ion-icon name="share-social"></ion-icon>
+			<ion-label>Invited Event</ion-label>
+		</ion-item>
+		<ion-item (click)="paymenthistory()">
+			<ion-icon name="card"></ion-icon>
+			<ion-label>Payment History</ion-label>
+		</ion-item>
+		<ion-item routerLink="/pages/support">
+			<ion-icon name="chatbubble-ellipses"></ion-icon>
+			<ion-label>Help & Support</ion-label>
+		</ion-item>
+		<ion-item routerLink="/pages/feedback">
+			<ion-icon name="bookmark"></ion-icon>
+			<ion-label>Feedback</ion-label>
+		</ion-item>
+		<ion-item routerLink="/pages/terms-and-conditions">
+			<ion-icon name="document-text"></ion-icon>
+			<ion-label>Terms and Conditions</ion-label>
+		</ion-item>
+		<ion-item routerLink="/pages/privacy-policy">
+			<ion-icon name="help-circle"></ion-icon>
+			<ion-label>Privacy Policy</ion-label>
+		</ion-item>
+		<ion-item (click)="deleteUser()">
+			<ion-icon name="trash"></ion-icon>
+			<ion-label>Delete Account</ion-label>
+		</ion-item>
+		<ion-item (click)="Logout()" style="color:red;border-bottom: none;">
+			<ion-icon name="log-out" style="color:red;"></ion-icon>
+			<ion-label>Logout</ion-label>
+		</ion-item>
+		<p align="center"><b>App Version</b>: {{user_data?.app_version}}</p>
+	</ion-list>
+</ion-content>

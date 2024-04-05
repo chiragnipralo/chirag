@@ -1,0 +1,113 @@
+.error-message {
+    color: red;
+    text-align: center;
+    padding-bottom:10px ;
+}
+
+ion-toolbar{
+    --border-style: none;
+    ion-title{
+        text-align: center;
+    }
+
+    ion-icon{
+        font-size: 1.3rem;
+        padding: 10px;
+    }
+}
+
+.asct{
+    font-size: 15px;
+    color: red;
+}
+.custom-file-input{
+    text-indent: -9999px;
+    z-index: 1;
+    height: 99%;
+    max-width: 99%;
+    margin: auto;
+    border: none;
+    background: url(/assets/images/download.png);
+    background-size: 35px 35px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.container{
+    margin: 0 auto 50px auto;
+    max-width: 800px;
+}
+
+ion-row{
+    height: 25vh;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: rgb(241, 241, 241);
+    border: 1px solid #285500;
+
+
+    h5 {
+        position: absolute;
+            font-size: 14px;
+            left: 0;
+            z-index: 1;
+            right: 0;
+            top: 43px;
+            color: rgb(0, 0, 0);
+    }
+}
+
+.form-input{
+    margin-bottom: 5px;
+}
+
+h4{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+ion-label{
+    font-size:16px;
+    font-weight: bolder !important;
+}
+
+ion-input{
+    margin-top:10px;
+    font-size: 14px;
+    border-radius: 5px;
+    height: 40px;
+    padding:5px !important;
+    background: rgb(241, 241, 241);
+    border: 1px solid #285500;
+}
+
+ion-textarea{
+    margin-top:10px;
+    font-size: 14px;
+    border-radius: 5px;
+    padding:5px !important;
+    background: rgb(241, 241, 241);
+    border: 1px solid #285500;
+}
+
+ion-select{
+    margin-top:10px;
+    font-size: 14px;
+    border-radius: 5px;
+    padding-left:14px !important;
+    height: 40px;
+    background: rgb(241, 241, 241);
+    border: 1px solid #285500;
+}
+
+.btn{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+
+    ion-button{
+        margin: auto;
+        max-width: 200px;
+    }
+}

@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Activity</ion-title>
+    <!-- <ion-icon slot="end" name="close" routerLink="/tabs/home"></ion-icon> -->
+    <ion-icon slot="end" name="close-circle-outline" (click)="closeModal()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div class="container">
+    <ion-input [(ngModel)]="activity_name" type="text" placeholder="Activity Name"></ion-input>
+    <ion-textarea [(ngModel)]="activity_details" placeholder="Details for activity"></ion-textarea>
+
+    <!-- <ion-fab>
+      <ion-fab-button color="dark">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-list side="bottom">
+        <ion-fab-button>
+          <ion-icon name="camera"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="videocam"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="musical-notes"></ion-icon>
+        </ion-fab-button>
+        <ion-fab-button>
+          <ion-icon name="link"></ion-icon>
+        </ion-fab-button>
+      </ion-fab-list>
+    </ion-fab> -->
+
+    <!-- <ion-button expand="block" routerLink="/createv3">Save</ion-button> -->
+    <ion-button expand="block" (click)="closeModal()">Save</ion-button>
+  </div>
+
+</ion-content>

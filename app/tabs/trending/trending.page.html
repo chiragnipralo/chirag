@@ -1,0 +1,57 @@
+<ion-header>
+	<ion-toolbar>
+		<div class="top">
+			<ion-buttons slot="start">
+				<ion-icon color="" slot="start" name="arrow-back-outline" routerLink="/tabs/home"></ion-icon>
+			</ion-buttons>
+			<ion-title>Explore</ion-title>
+			<ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
+		</div>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged()" slot="fixed">
+		<ion-segment-button value="0">
+			<ion-label>Events</ion-label>
+		</ion-segment-button>
+		<ion-segment-button value="1">
+		  <ion-label>Community</ion-label>
+		</ion-segment-button> 
+	</ion-segment>
+
+	<ion-searchbar #searchBar placeholder="Search Category" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+
+	<ion-slides #slider (ionSlideDidChange)="slideChanged()" scrollbar="true">
+		<ion-slide>
+			<ion-list [@fadeIn] style="margin-top: 47px;width: 100%;">
+				<!-- <h4 class="ion-padding-start">Event Category</h4> -->
+				<div class="container">
+					<ion-row >
+						<ng-container *ngFor="let list of filterData; let i = index;">
+							<ion-col size="4" (click)="ExploreEv(list)">
+								<ion-img class="img" [src]="list.cat_img"></ion-img>
+								<h4>{{list.name}}</h4>
+							</ion-col>
+						</ng-container>
+					</ion-row>
+				</div>
+			</ion-list>
+		</ion-slide>
+
+		<ion-slide>
+		  <ion-list [@fadeIn] style="margin-top: 47px;width: 100%;">
+		    <div class="container">
+		      <ion-row>
+		        <ng-container *ngFor="let list of filterData; let i = index;">
+		          <ion-col size="4" (click)="ExploreCom(list)">
+		            <ion-img class="img" [src]="list?.cat_img"></ion-img>
+		            <h4>{{list?.name}}</h4>
+		          </ion-col>
+		        </ng-container>
+		      </ion-row>
+		    </div>
+		  </ion-list>
+		</ion-slide>
+	</ion-slides>	
+</ion-content>

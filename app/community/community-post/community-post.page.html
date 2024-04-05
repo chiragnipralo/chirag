@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Posts</ion-title>
+        <ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
+      </div>
+   </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-start ion-padding-end">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      pullingIcon="arrow-down"
+    	pullingText="Pull to refresh"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+	</ion-refresher>
+
+  <ion-searchbar placeholder="Search Events" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+  
+  <div class="container">
+    <h2>All Posts</h2>
+
+    <ng-container  *ngFor="let ui of filterData; let i = index;" >
+      <ng-container *ngIf = "ui.status == 1">
+        <ion-accordion-group expand="inset">
+          <ion-accordion value="member">
+            <ion-item slot="header" color="dark">
+              <div class="icon_design">
+                <ion-icon (click) = "verifytimeline(ui.user_id,ui.id)" name="checkmark-circle-outline"></ion-icon> 
+                <ion-icon (click) = "deletetimeline(ui.user_id,ui.id)" name="close-circle-outline"></ion-icon>
+              </div>
+              <ion-label style="padding-left: 10px;">{{ui.user_name}}</ion-label>
+            </ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-item routerLink="/member-request">
+                <ion-label *ngIf="ui.message !=''">{{ ui.message }}</ion-label>
+                <div *ngIf="ui.image" class="msg-content">
+                  <ion-card class="admin-post">
+                    <img [src]="ui.image" class="postimg" />
+                  </ion-card>
+                </div>
+              </ion-item>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ng-container>
+    </ng-container>
+  </div>
+</ion-content>

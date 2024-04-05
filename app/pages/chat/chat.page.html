@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar color="light">
+    <div class="top">
+      <ion-avatar>
+        <img [src]="dataservice?.user_event_data.event_images">
+      </ion-avatar>
+      <ion-title >{{dataservice?.user_event_data.title}}</ion-title>
+      <ion-buttons slot="start">
+        <ion-icon slot="end" name="close-outline" (click)="closeModal()"></ion-icon>
+      </ion-buttons>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
+
+  <ion-infinite-scroll [position]="top" (ionInfinite)="getMoreMessagesI($event)" *ngIf="canInfinite">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+  <!-- <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+    <ion-refresher-content pullingIcon="arrow-down" pullingText="Pull to refresh" refreshingSpinner="circles"></ion-refresher-content>
+  </ion-refresher> -->
+
+  <div class="message-wrap">
+    <div *ngFor="let msg of jData let i = index;"
+    class="message" style="max-width: 100%;" [class.left]="msg.user_id !== current_user_id" [class.right]="msg.user_id == current_user_id">
+    
+    <!-- <div class="msg-detail">
+      <div class="msg-info">
+        <p>{{msg.user_initials | titlecase}}&nbsp;&nbsp;&nbsp;{{msg.event_date}}</p>
+      </div>
+      <div class="msg-content">
+        <span class="triangle"></span>
+        <p style="user-select: auto !important" class="line-breaker" [innerHTML]="sanitizer.bypassSecurityTrustHtml(msg.message)" #content></p>
+      </div>
+    </div> -->
+
+    <ng-container *ngIf="msg.message_type !=1">
+      <div class="user-img">{{msg.user_initials| titlecase}}</div>
+      <ion-spinner name="dots" *ngIf="msg.status === 'pending'"></ion-spinner>
+      <div class="msg-detail">
+        <div class="msg-info">
+          <p>
+          {{msg.userName}}&nbsp;&nbsp;&nbsp;{{msg.event_date}}</p>
+        </div>
+        <div class="msg-content">
+          <span class="triangle"></span>
+          <p class="line-breaker ">{{msg.message}}</p>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="msg.message_type ==1">
+     <div class="_2OvAm focusable-list-item _1jHIY">
+       <div data-testid="msg-notification-container" class="UzMP7 n6BPp">
+        <div class="_1BOF7">
+          <div class="_1sykI" data-testid="subtype-modify"><span class="_11JPr">{{msg.message}}</span></div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  </div>
+</div>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <ion-item>
+    <ion-input #chat_input
+    placeholder="Write your message here..."
+    [(ngModel)]="senderMsg"
+    value="{{ showMsg }}"
+    (keyup.enter)="sendMessage()"></ion-input>
+    <ion-button  fill="clear" slot="end" (click)="sendMessage()">
+      <ion-icon name="send" slot="end" ></ion-icon>
+    </ion-button>
+  </ion-item>
+</ion-footer>

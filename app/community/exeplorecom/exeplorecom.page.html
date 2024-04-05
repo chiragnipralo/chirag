@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Explore</ion-title>
+      <ion-icon slot="end" name="search-outline" class="search_icon ion-padding-end" (click)="toggleSearchBar()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar #searchBar placeholder="Search Community" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+
+  <ng-container class="cateLbl" *ngIf="!filterData || filterData.length === 0">
+    <div style="text-align: center;" class="no_community">No Communities</div>
+  </ng-container>
+
+  <ion-row>
+    <ion-col size="6" *ngFor="let ui of filterData; let i = index;" >
+      <ion-row>
+        <ion-card (click)="view_details(ui)">
+          <ion-card-content>
+            <div class="img_eve">
+              <ng-container *ngIf="ui.community_image !=null; else defaultImage">
+                  <ion-img [src]="ui.community_image"></ion-img>
+              </ng-container>
+              <ng-template #defaultImage>
+                  <ion-img src="assets/community.png"></ion-img>
+              </ng-template>
+              <ng-container *ngIf = "ui.premium == 1">
+                <ion-icon name="shield-checkmark"></ion-icon>
+              </ng-container>
+              <p class="category_style">
+                {{ui.community_category}}
+              </p>
+            </div>
+            <div class="eve_content">
+              <div class="title ion-text-capitalize">
+                <h2>{{ui.community_title}}</h2>
+              </div>
+              <div class="venue">
+                <div>
+                  <ion-icon name="people"></ion-icon><p class="ion-padding-start">{{ui.member_count}} Members</p>
+                </div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-content>

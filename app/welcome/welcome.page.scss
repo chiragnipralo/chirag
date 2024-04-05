@@ -1,0 +1,153 @@
+ion-col{
+    border-radius: 5px;
+    margin-left: 5px;
+}
+.header-md::after {
+    background:none;
+}
+.slides{
+    margin-top: 40px;
+    ion-slide{
+      flex-direction: column;
+  }
+  
+  ion-slides{
+    ion-img{
+        width: 100% !important;
+    }
+    
+    .step-one{
+        background-repeat: no-repeat;
+    }
+}
+}
+.slone{
+    .one{
+        background-image: url("/assets/images/wel/wel13.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 80vw;
+        height:40vh;
+    }
+
+    ion-col:nth-child(2){
+        width: 50%;
+        height: 100%;
+        ion-row{
+            border-radius: 5px;
+            margin-bottom: 5px; 
+
+            .two{
+                background-image: url("/assets/images/nimg/wel6.jpg");
+                background-size: cover;
+                background-repeat: no-repeat;
+                width: 80vw;
+                height:20vh;
+            }
+            
+            .three{
+                background-image: url("/assets/images/nimg/wel7.jpg");
+                background-size: cover;
+                background-repeat: no-repeat;
+                width: 80vw;
+                height:19vh;
+            }
+        }
+    }
+}
+.sltwo{
+    .one{
+        background-image: url("/assets/images/nimg/wel1.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 80vw;
+        height:40vh;
+    }
+
+    ion-col:nth-child(2){
+        width: 50%;
+        height: 100%;
+        ion-row{
+            border-radius: 5px;
+            margin-bottom: 5px; 
+
+            .two{
+                background-image: url("/assets/images/nimg/wel2.jpg");
+                background-size: cover;
+                background-repeat: no-repeat;
+                width: 80vw;
+                height:20vh;
+            }
+            
+            .three{
+                background-image: url("/assets/images/nimg/tab2.jpg");
+                background-size: cover;
+                background-repeat: no-repeat;
+                width: 80vw;
+                height:19vh;
+            }
+        }
+    }
+}
+
+.slthree{
+    .one{
+        background-image: url("/assets/images/nimg/tab3.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        width: 80vw;
+        height:40vh;
+    }
+
+    ion-col:nth-child(2){
+        width: 50%;
+        height: 100%;
+        ion-row{
+            border-radius: 5px;
+            margin-bottom: 5px; 
+
+            .two{
+                background-image: url("/assets/images/nimg/wel3.jpg");
+                background-size: cover;
+                background-repeat: no-repeat;
+                width: 80vw;
+                height:20vh;
+            }
+
+            .three{
+                background-image: url("/assets/images/nimg/wel4.jpg");
+                background-size: cover;
+                background-repeat: no-repeat;
+                width: 80vw;
+                height:19vh;
+            }
+        }
+    }
+}
+
+.text{
+    text-align: center ;
+    margin: 15px 0;
+    padding: 30px;
+
+    h3{
+        padding-top: 37px;
+    }
+}
+
+.btn{
+    position: absolute;
+    bottom: 15px;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding: 0 10px;
+}
+ion-button{
+    height: 40px;
+}
+.finishbtn{
+    width: 250px;
+    margin: auto;
+}
+ 

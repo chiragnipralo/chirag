@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal()">
+        <ion-icon slot="end" name="close"></ion-icon>        
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Contacts</ion-title>    
+  </ion-toolbar>
+  <ion-searchbar class="ion-no-padding" (ionChange)="filterItems($event)"></ion-searchbar>  
+</ion-header>
+ 
+<ion-content>
+  <ng-container *ngIf="!permissionGranted">
+    <!-- <div class="ion-padding-start ion-padding-end share-container" (click)="getContacts()"> -->
+    <div class="ion-padding-start ion-padding-end share-container" (click)="getContacts()">
+      <div>
+        <ion-icon name="share-outline"></ion-icon>
+        <div>
+          <ion-label>Tap to sync contacts</ion-label>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div class="container">
+    <ng-container *ngFor="let contact of filterData">
+      <ion-item *ngIf="contact.checked">
+        <ion-label class="ion-text-wrap">
+          <ion-text>
+            <h3>{{contact.name}}</h3>
+            <p>{{contact.phone_number}}</p>
+          </ion-text>
+        </ion-label>
+        <ion-checkbox slot="end" (ionChange)="checkboxClick($event, contact)" [checked]="contact.checked"></ion-checkbox>
+      </ion-item>
+    </ng-container>
+  
+    <!-- Display unselected items below -->
+    <ng-container *ngFor="let contact of filterData">
+      <ion-item *ngIf="!contact.checked">
+        <ion-label class="ion-text-wrap">
+          <ion-text>
+            <h3>{{contact.name}}</h3>
+            <p>{{contact.phone_number}}</p>
+          </ion-text>
+        </ion-label>
+        <ion-checkbox slot="end" (ionChange)="checkboxClick($event, contact)" [checked]="contact.checked"></ion-checkbox>
+      </ion-item>
+    </ng-container>
+  </div>
+</ion-content>
+<ion-footer class="ion-no-border">
+  <!-- <div class="csv_style">
+    <div>
+      <ion-icon name="cloud-download-outline"></ion-icon>
+      <div>
+        <ion-label>Download Sample</ion-label>
+      </div>
+    </div>
+    <div>
+      <ion-icon name="cloud-upload-outline"></ion-icon>
+      <div>
+        <ion-label>Import csv</ion-label>
+      </div>
+    </div>
+  </div>   -->
+  <div class="action-button">
+    <ion-button class="right" color="secondary" (click)="GoNext()" shape="round">Invite</ion-button>  
+  </div>
+</ion-footer>

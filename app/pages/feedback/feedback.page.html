@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Feedback</ion-title>
+    <ion-icon slot="end" name="close" routerLink="/tabs/dashboard"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="submit()" [formGroup]="ionicForm">
+    <ion-list>
+      <div class="container">
+        <div class="checkbox">
+          <ion-item>
+            <ion-label class="ion-padding-end">Events</ion-label>
+            <ion-checkbox formControlName="events"></ion-checkbox>
+          </ion-item>
+          <ion-item>
+            <ion-label class="ion-padding-end">Community</ion-label>
+            <ion-checkbox formControlName="community"></ion-checkbox>
+          </ion-item>
+        </div>
+
+        <div class="form-input">
+          <ion-textarea formControlName="msg"  placeholder="Write Your Feedback About Event"></ion-textarea>
+        </div>
+
+        <ng-container *ngFor="let error of error_messages.msg">
+          <div class="error-message" *ngIf="ionicForm.get('msg').hasError(error.type) && (ionicForm.get('msg').dirty || ionicForm.get('msg').touched)">
+            {{ error.message }}
+          </div>
+        </ng-container>
+      </div>
+    </ion-list>
+    <div class="ion-text-center">
+      <ion-button type="submit" color="secondary" shape="round">Submit</ion-button>
+    </div>
+  </form>
+</ion-content>

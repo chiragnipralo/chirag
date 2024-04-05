@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="GoNext()">
+        <ion-icon slot="end" name="close"></ion-icon>        
+      </ion-button>
+    </ion-buttons>
+    <ion-title>New Event</ion-title>    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="container">
+    <div class="">
+      <ion-list>
+        <h4>Permissions</h4>
+        <div class="content">
+          <ion-item>
+            <div class="main-event">
+              <ion-label>Free Event</ion-label>
+              <p>If Enable user can join for free</p>
+            </div>
+            <ion-toggle slot="end" color="secondary" (ionChange)="notify()" [checked]="isToggled"></ion-toggle>
+          </ion-item>   
+          <ion-input placeholder="Enter Amount" *ngIf="paidEventBar" #moreBar  animated="true" debounce="700"></ion-input>
+          <ion-item>
+            <div class="main-event">
+              <ion-label>Allow Sharing</ion-label>
+              <p>User can share event with others</p>
+            </div>
+            <ion-toggle slot="end" color="secondary"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <div class="main-event">
+              <ion-label>Notify Participants</ion-label>
+              <p>It will notify user about event</p>
+            </div>
+            <ion-toggle slot="end" color="secondary"></ion-toggle></ion-item>
+          </div>
+        </ion-list>
+
+      <!-- <ion-list>
+        <ion-label>Privacy</ion-label>
+        <div class="content">
+          <ion-item>
+            <ion-label>Free Event</ion-label>
+            <ion-toggle slot="end"></ion-toggle></ion-item>
+          <ion-item>
+            <ion-label>Allow Sharing</ion-label>
+            <ion-toggle slot="end"></ion-toggle></ion-item>
+          <ion-item>
+            <ion-label>Notify Participants</ion-label>
+            <ion-toggle slot="end"></ion-toggle></ion-item>
+        </div>
+      </ion-list> -->
+    </div>
+  </div>
+
+  <ion-footer class="ion-no-border">
+    <!-- <ion-button expand="block" color="secondary" routerLink="/contact">Finish</ion-button> -->
+    <ion-button expand="block" color="secondary" (click)="GoNext()">Finish</ion-button>
+  </ion-footer>
+
+</ion-content>

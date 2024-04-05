@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-icon slot="start" name="arrow-back-outline" routerLink="/tabs/account"></ion-icon>
+    <ion-img src="assets/images/logo.png"></ion-img>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-item>
+    <ion-searchbar></ion-searchbar>
+  </ion-item>
+
+  <div class="container">
+    <h3>Events to Manage</h3>
+
+    <ng-container  *ngFor="let ui of events_data let i = index;" >
+      <ion-row  (click)="view_details(ui)">
+        <ion-col>
+          <ion-img [src]="ui.event_images"></ion-img>
+        </ion-col>
+        <ion-col>
+          <h2>{{ui.title}}</h2>
+          <div class="syb">
+            <div class="sub_info">
+              <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+              <ion-label>{{ui.title}}</ion-label>
+            </div>
+            <ng-container  *ngFor="let di of ui.event_dates let i = index;" >                    
+              <div class="sub_info">
+                <ion-icon slot="start" name="calendar-clear-outline"></ion-icon>
+                <ion-label>{{di.event_date}}</ion-label>
+              </div>
+            </ng-container>
+            <div class="sub_info">
+              <ion-icon slot="start" name="location-outline"></ion-icon>
+              <ion-label>{{ui.event_venues}}</ion-label>
+            </div>
+            <div class="sub_info">
+              <ion-icon slot="start" name="card-outline"></ion-icon>
+              <ion-label>{{ui.event_price}}</ion-label>
+            </div>
+          </div>   
+        </ion-col>
+      </ion-row>
+    </ng-container>
+
+
+
+<!--     <ion-row routerLink="/guest-list">
+      <ion-col>
+        <ion-img src="assets/images/Yoga.jpg"></ion-img>
+      </ion-col>
+      <ion-col>
+        <h2>Yoga Event</h2>
+        <div class="syb">
+          <div class="sub_info">
+            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+            <ion-label>User Name</ion-label>
+          </div>
+          <div class="sub_info">
+            <ion-icon slot="start" name="calendar-clear-outline"></ion-icon>
+            <ion-label>07/01/2023</ion-label>
+          </div>
+          <div class="sub_info">
+            <ion-icon slot="start" name="location-outline"></ion-icon>
+            <ion-label>Thane West</ion-label>
+          </div>
+          <div class="sub_info">
+            <ion-icon slot="start" name="card-outline"></ion-icon>
+            <ion-label>Free</ion-label>
+          </div>
+        </div>   
+      </ion-col>
+    </ion-row>
+
+    <ion-row routerLink="/guest-list">
+      <ion-col>
+        <ion-img src="assets/images/dog2.jpg"></ion-img>
+      </ion-col>
+      <ion-col>
+        <h2>Dogs Meetup</h2>
+        <div class="syb">
+          <div class="sub_info">
+            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+            <ion-label>User Name</ion-label>
+          </div>
+          <div class="sub_info">
+            <ion-icon slot="start" name="calendar-clear-outline"></ion-icon>
+            <ion-label>11/01/2023</ion-label>
+          </div>
+          <div class="sub_info">
+            <ion-icon slot="start" name="location-outline"></ion-icon>
+            <ion-label>Goregaon</ion-label>
+          </div>
+          <div class="sub_info">
+            <ion-icon slot="start" name="card-outline"></ion-icon>
+            <ion-label>100</ion-label>
+          </div>
+        </div>   
+      </ion-col>
+    </ion-row> -->
+  </div>
+</ion-content>

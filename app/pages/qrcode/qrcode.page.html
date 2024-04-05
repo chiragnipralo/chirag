@@ -1,0 +1,17 @@
+<!-- <ion-header>
+  <ion-toolbar color="light">
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-img src="assets/images/logo.png"></ion-img>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content [fullscreen]="true" [style.--background]="scanActive?'#00000000':'#ffffff'">
+  <ion-row class="scan-button" [hidden]="!scanActive">
+    <ion-col class="ion-no-padding" style="display: flex; justify-content: center;">
+      <ion-button class="stopscan" (click)="stopScanner()"><ion-icon name="close-outline"></ion-icon></ion-button>
+    </ion-col>
+  </ion-row>
+  <div class="scan-box" [hidden]="!scanActive"></div>
+</ion-content>

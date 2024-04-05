@@ -1,0 +1,34 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Ticket</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="container">
+    <ng-container *ngFor="let ui of ticket_data let i = index;">
+      <ion-card class="modal-content" [ngClass]="{'scanned': ui.scan_count == 0}">
+        <ion-row>
+          <ion-col size="6">
+            <ion-img [src]="ui.qr"></ion-img>
+          </ion-col>
+          <ion-col size="6" style="color: black;">
+            <h4><b> Ticket {{count}}</b></h4>
+            <h6 style="text-transform: capitalize;">{{ui.user_name}}</h6>
+            <h6>{{ui.user_number}}</h6>
+            <!-- <ion-icon *ngIf="ui.scan_count > 0 && ticketType =='free'" name="trash" class="delete_icon" (click)="deleteTicket(ui)"></ion-icon> -->
+          </ion-col>  
+          <div *ngIf="ui.scan_count === 0 && ticketType === 'free'" class="scanned_title">
+            <p>Scanned</p>
+          </div>
+          <div *ngIf="ui.scan_count > 0 && ticketType =='free'" class="cancel_ticket" (click)="deleteTicket(ui)">
+            <ion-label>Cancel Ticket</ion-label>
+          </div>
+        </ion-row>
+      </ion-card>
+    </ng-container>
+  </div>
+</ion-content>

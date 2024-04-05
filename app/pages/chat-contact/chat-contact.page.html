@@ -1,0 +1,266 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <div>
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Message</ion-title>
+      <ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content></ion-refresher-content>
+	</ion-refresher>
+
+  <ion-searchbar placeholder="Search Here" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar"></ion-searchbar>
+
+    <ion-item class="header" lines="full">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Community Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6 >9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <ion-item class="header">
+      <ion-avatar>
+        <img src="assets/images/prof.jfif">
+      </ion-avatar>
+      <div routerLink="/userchat">
+        <ion-label>Event Name</ion-label>
+        <h6>9:00AM</h6>
+      </div>
+    </ion-item>
+    <!-- <ion-button color="secondary" (click)="chat_connect()">
+      <ion-icon name="chatbubble-outline"></ion-icon>
+    </ion-button> -->
+</ion-content>

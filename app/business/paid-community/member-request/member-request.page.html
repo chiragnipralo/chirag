@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Members Request</ion-title>
+        <ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
+      </div>
+   </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-start ion-padding-end">
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+      pullingIcon="arrow-down"
+    	pullingText="Pull to refresh"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+	</ion-refresher>
+
+  <ion-searchbar #searchBar placeholder="Search..." [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+  
+  <div class="container" *ngIf="filterData.length > 0">
+    <h2>All Request</h2>
+
+    <ng-container  *ngFor="let ui of filterData; let i = index;" >
+      <!-- <ng-container *ngIf = "ui.request == 1"> -->
+        <ng-container *ngIf = "ui.user_id != communityData?.user_id">
+          <ion-item lines="inset">
+            <ion-label (click)="memberdetails(ui.user_id)">{{ui.full_name}}</ion-label>
+            <div class="icon_design">
+              <ion-icon (click) = "verifymember(ui.user_id)" name="checkmark-circle-outline"></ion-icon> 
+              <ion-icon (click) = "deletemember(ui.user_id)" name="close-circle-outline"></ion-icon>
+            </div>
+          </ion-item>
+        </ng-container>
+      <!-- </ng-container> -->
+    </ng-container>
+  </div>
+  <div class="container" *ngIf="!filterData || filterData.length === 0" style="height: 100%;">
+    <h2 style="display: flex;justify-content: center;align-items: center;height: 98%">No Request !!</h2>
+  </div>
+</ion-content>

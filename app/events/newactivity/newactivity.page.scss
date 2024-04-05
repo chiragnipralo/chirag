@@ -1,0 +1,36 @@
+ion-toolbar{
+    --border-style: none;
+    ion-title{
+        text-align: center;
+    }
+
+    ion-icon{
+        font-size: 1.5rem;
+        padding: 10px;
+    }
+}
+
+.container{
+    margin: auto;
+
+    ion-input,ion-textarea{
+        margin: 40px auto;
+        border-bottom: 1px solid;
+        width: 90%;
+    }
+
+    ion-fab{
+        position: absolute;
+        right: 20px;
+    }
+
+    ion-button{
+        position: fixed;
+        bottom: 20px;
+        right: 0;
+        left: 0;
+        max-width: 250px;
+        margin: auto;
+        height: 40px;
+    }
+}

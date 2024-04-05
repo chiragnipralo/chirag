@@ -1,0 +1,28 @@
+<ion-content>
+  <ion-icon name="arrow-back-outline" routerLink="/tabs/dashboard"></ion-icon>
+  <div class="mainn">
+    <ng-container class="cateLbl">
+      <div class="container">
+        <h2 class="ion-padding-start" style="background:#D2EDF6;z-index:10;padding: 10px;margin-top: 0;">Select Account</h2>
+        <ion-list [inset]="true">
+          <ng-container *ngIf="events_data?.length; else noAccount">
+            <ng-container *ngFor="let ui of events_data let i = index;">
+              <ion-item lines="inset">
+                <ion-icon [name]="ui.type === 2 ? 'people' : 'calendar'" slot="start"></ion-icon>
+                <ion-label (click)="view_account(ui)">{{ui.account_name}}</ion-label>
+              </ion-item>
+            </ng-container>
+          </ng-container>
+        </ion-list>
+      </div>
+    </ng-container>
+    
+    <ng-template #noAccount>
+      <div>
+        <h2 style="text-align: center;">No Account Created!!</h2>
+      </div>
+    </ng-template>
+    
+  </div>
+  <ion-button color="secondary" shape="round" routerLink="/buzregister">Create New</ion-button>
+</ion-content>

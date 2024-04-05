@@ -1,0 +1,43 @@
+.top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    ion-title{
+        text-align: center;
+    }
+    ion-icon{
+        padding-right: 10px;
+    }
+}
+
+// .header-md::after {
+//     background:none;
+// }
+
+// ion-item{
+//     --background: transparent;
+//     --border-style: solid !important;
+// }
+
+ion-accordion-group{
+    margin-bottom: 10px;
+}
+
+.icon_design{
+    ion-icon{
+        font-size: 25px;
+        margin: 5px;
+    }
+    ion-icon:nth-child(1){
+        color: green;
+    }
+    ion-icon:nth-child(2){
+        color: red;
+    }
+}
+
+ion-searchbar{
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}

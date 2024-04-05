@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Contacts</ion-title>    
+  </ion-toolbar>
+  <ion-searchbar class="ion-no-padding" (ionChange)="filterItems($event)"></ion-searchbar>  
+</ion-header>
+ 
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
+		<ion-refresher-content
+			pullingIcon="arrow-down"
+        	pullingText="Pull to refresh"
+        	refreshingSpinner="circles">
+		</ion-refresher-content>
+	</ion-refresher>
+  <ng-container *ngIf="!permissionGranted">
+    <div class="ion-padding-start ion-padding-end share-container" (click)="getContacts()">
+      <div>
+        <ion-icon name="share-outline" style="width: 100%;"></ion-icon>
+        <div style="text-align: center;">
+          <ion-label>Sync your phone contacts with SoEasy by clicking on icon above</ion-label>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <!-- <div class="container">
+    <ion-item *ngFor="let contact of filterData">
+      <ion-label class="ion-text-wrap">
+        <ion-text>
+          <h3>{{contact.name}}</h3>
+          <p>{{contact.phone_number}}</p>
+        </ion-text>
+      </ion-label>
+      <ion-checkbox  slot="end" (click)="checkboxClick($event,contact)"></ion-checkbox>
+    </ion-item>
+  </div> -->
+  <div class="container">
+    <!-- Display selected items at the top -->
+    <ng-container *ngFor="let contact of filterData">
+      <ion-item *ngIf="contact.checked">
+        <ion-label class="ion-text-wrap">
+          <ion-text>
+            <h3>{{contact.name}}</h3>
+            <p>{{contact.phone_number}}</p>
+          </ion-text>
+        </ion-label>
+        <ion-checkbox slot="end" (ionChange)="checkboxClick($event, contact)" [checked]="contact.checked"></ion-checkbox>
+      </ion-item>
+    </ng-container>
+  
+    <!-- Display unselected items below -->
+    <ng-container *ngFor="let contact of filterData">
+      <ion-item *ngIf="!contact.checked">
+        <ion-label class="ion-text-wrap">
+          <ion-text>
+            <h3>{{contact.name}}</h3>
+            <p>{{contact.phone_number}}</p>
+          </ion-text>
+        </ion-label>
+        <ion-checkbox slot="end" (ionChange)="checkboxClick($event, contact)" [checked]="contact.checked"></ion-checkbox>
+      </ion-item>
+    </ng-container>
+  </div>
+  
+</ion-content>
+
+<ion-footer class="ion-no-border">  
+  <div class="action-button">
+    <ion-button class="right" color="secondary" shape="round" (click)="GoNext()">Next</ion-button>  
+  </div>
+</ion-footer>

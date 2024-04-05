@@ -1,0 +1,20 @@
+ion-title{
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+}
+
+.no_payment{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-weight: bold;
+}
+
+ion-row, ion-card{
+    width: 100%;
+}

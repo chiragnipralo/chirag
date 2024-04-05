@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Invited Event</ion-title>
+    <ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding-start ion-padding-end">
+  <ion-searchbar #searchBar placeholder="Search Events" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" (ionChange)="filterItems($event)"></ion-searchbar>
+  <div class="container">
+    <ng-container class="cateLbl" *ngIf="!filterData || filterData.length === 0">
+      <div class="sub_container">
+        <div class="no_events">No Events</div>
+      </div>
+    </ng-container>
+    <ng-container  *ngFor="let ui of filterData; let i = index;" >
+      <ion-card (click)="view_details(ui)">
+        <ion-card-content>
+          <ion-row>
+            <ion-col size="6" class="eventcol">
+              <ion-img [src]="ui.event_images"></ion-img>
+              <ion-button *ngIf="ui.is_live == 1" shape="round" size="small" color="danger" style="position: absolute;top: 3px;left: 5px;font-size: 9px;max-width: 48px;">
+                <ion-icon slot="start" name="caret-forward-circle-outline" style="font-size: 9px;"></ion-icon>
+                Live
+               </ion-button>
+                <p class="category_style">
+                  {{ui.event_category}}
+                </p>
+                <ng-container *ngIf="ui.user_joined_event">
+                  <ion-button class="join-tag" shape="round" size="small" color="secondary" style="font-size: 9px;">
+                    <ion-icon slot="start" name="checkmark-done-circle-outline" style="font-size: 9px;"></ion-icon>
+                    Joined
+                  </ion-button>
+                </ng-container>
+               <ion-icon *ngIf="ui.is_premium" name="star" style="position: absolute;top: 8px;color: gold;right: 10px;font-size: 21px;"></ion-icon>
+            </ion-col>
+            <ion-col size="6">
+              <div class="head">
+                <h2>{{ui.title}}</h2>    
+              </div>
+              <div>
+                <ion-list><ion-icon name="calendar-outline"></ion-icon><p>{{ getFormattedDate(ui.event_dates[0].event_date) }}</p></ion-list> 
+                <ion-list><ion-icon name="time-outline"></ion-icon><p>{{ formatTime(ui.event_dates[0].start_time) }}-{{ formatTime(ui.event_dates[0].end_time) }}</p></ion-list> 
+                <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ getCityFromEvent(ui.event_venues) }}</p></ion-list>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </div>
+</ion-content>

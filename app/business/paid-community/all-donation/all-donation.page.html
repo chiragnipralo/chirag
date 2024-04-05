@@ -1,0 +1,96 @@
+<ion-header>
+  <ion-toolbar>
+    <div class="top">
+      <ion-buttons slot="start">
+        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+      </ion-buttons>
+      <ion-title>All Donations</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-searchbar></ion-searchbar>
+    <ion-icon id="top-center" name="funnel-outline"></ion-icon>
+  </ion-item>
+
+  <ion-popover trigger="top-center">
+    <ng-template>
+      <ion-content>
+        <ion-searchbar></ion-searchbar><br>
+        <ion-radio-group value="cat">
+          <ion-item>
+            <ion-label>Today</ion-label>
+            <ion-radio slot="end" value="1"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>This Week</ion-label>
+            <ion-radio slot="end" value="2"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>This Month</ion-label>
+            <ion-radio slot="end" value="3"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>All Time</ion-label>
+            <ion-radio slot="end" value="4"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-content>
+    </ng-template>
+  </ion-popover>
+
+  <!-- segment fot week and month -->
+
+  <ion-segment class="seg" [(ngModel)]="segment" [scrollable]="true">
+    <ion-segment-button class="Popular" value="week">
+      <ion-label>Weekly</ion-label>
+    </ion-segment-button>
+    <ion-segment-button class="Music" value="month">
+      <ion-label>Monthly</ion-label>
+    </ion-segment-button>
+  </ion-segment> 
+
+  <ion-list [ngSwitch]="segment">
+    <div *ngSwitchCase="'week'">
+      <ion-row>
+          <ion-col routerLink="/donate-now">
+            <ion-row>
+              <ion-row>
+                <div class="title">
+                  <h6>International Krishna Society</h6>
+                  <p>$1234 fund raised so far</p>
+                  <ion-range></ion-range>
+                  <div class="foot">
+                    <p>123 Donators</p>
+                    <P>6 Days left</P>
+                  </div>
+                </div>
+              </ion-row>
+            </ion-row>
+          </ion-col>
+      </ion-row>
+    </div>
+
+    <div *ngSwitchCase="'month'">
+      <ion-row>
+        <ion-col routerLink="/donate-now">
+          <ion-row>
+            <ion-row>
+              <div class="title">
+                <h6>International Krishna Society</h6>
+                <p>$1234 fund raised so far</p>
+                <ion-range></ion-range>
+                <div class="foot">
+                  <p>123 Donators</p>
+                  <P>6 Days left</P>
+                </div>
+              </div>
+            </ion-row>
+          </ion-row>
+        </ion-col>  
+    </ion-row>
+    </div>
+  </ion-list>
+</ion-content>
