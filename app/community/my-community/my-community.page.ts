@@ -36,7 +36,7 @@ export class MyCommunityPage implements OnInit {
   public inviteCommunityCount!: number;
 
   doRefresh(refresher: { target: { complete: () => void; }; }) {
-    this.ngOnInit();
+    this.GetUserEvents();
 		setTimeout(() => {
 			refresher.target.complete();
 		}, 2000);

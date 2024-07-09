@@ -7,7 +7,7 @@ import { DataService } from '../../services/data.service';
 import { HttpService } from '../../services/http.service';
 import { Share } from '@capacitor/share';
 import { Router,ActivatedRoute, NavigationExtras } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Location } from '@angular/common';
 import { CommunityMemberPage } from '../community-member/community-member.page';
 import { AddObituryPage } from '../add-obitury/add-obitury.page';
@@ -35,6 +35,7 @@ export class PremiumCommunityDetailsPage implements OnInit {
   message: string = '';
   selectedFileName: string = '';
   selectedAdminFile: File | null = null;
+  communityDescription!: SafeHtml;
 
   @ViewChild('slider', { static: true })
   private slider!: IonSlides;
@@ -163,12 +164,18 @@ export class PremiumCommunityDetailsPage implements OnInit {
       console.log("This is result",result);
       if(result.Response.status ==1){
         this.dataservice.setCommunityData(result.Response.community_data);
+        this.formatDescription(this.dataservice?.user_community_data?.community_description)
       }else{
         this.commonservice.presentToast("Oops",result.Response.message)
       }
     },(err)=>{ 
       console.log("Connection failed Messge");
     });    
+  }
+
+  formatDescription(description: string) {
+    const convertedDescription = description.replace(/\r\n/g, '<br>');
+    this.communityDescription =  this.sanitizer.bypassSecurityTrustHtml(convertedDescription);
   }
 
   join_community() {

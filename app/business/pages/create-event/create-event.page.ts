@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormArray,FormBuilder, Validators, FormControl } from "@angular/forms";
-import { NavController,LoadingController,ModalController,AlertController, IonTextarea } from '@ionic/angular';
+import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from "@angular/forms";
+import { NavController, LoadingController, ModalController, AlertController, IonTextarea } from '@ionic/angular';
 import { DomSanitizer } from "@angular/platform-browser";
 import { SafeUrl } from "@angular/platform-browser";
 import { CommonService } from '../../../services/common.service';
 import { ImgcropperComponent } from '../../../components/imgcropper/imgcropper.component';
 import { DataService } from '../../../services/data.service';
 import { HttpService } from '../../../services/http.service';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CreatePermPage } from '../create-perm/create-perm.page';
 import { CreateContactPage } from '../create-contact/create-contact.page';
 
@@ -18,7 +18,7 @@ declare var google: any;
   templateUrl: './create-event.page.html',
   styleUrls: ['./create-event.page.scss'],
 })
-  
+
 export class CreateEventPage implements OnInit {
   selectedFiles: File[] = [];
   activityForm: FormGroup;
@@ -34,13 +34,13 @@ export class CreateEventPage implements OnInit {
   showSubmitButton = false;
   extra_food_name: any;
   drinks_name: any;
-  contact_name:any;
-  contact_role:any;
-  contact_number:any;
+  contact_name: any;
+  contact_role: any;
+  contact_number: any;
   food_name: any;
   cuisine_name: any;
-  activity_name:any;
-  activity_details:any;
+  activity_name: any;
+  activity_details: any;
   contacts = [];
   paidEventBar: boolean | undefined;
   isToggled: boolean = true;
@@ -50,16 +50,17 @@ export class CreateEventPage implements OnInit {
   file_uploaddata = '';
   isPaidEvent = false;
   price!: number;
-  public showMoreBar : boolean = false;
-  public is_custom_food_show : boolean = false;
-  public is_event_permission_skipped : boolean = false;
+  public showMoreBar: boolean = false;
+  public is_custom_food_show: boolean = false;
+  public is_event_permission_skipped: boolean = false;
   private sanitizer: DomSanitizer;
   public imageUrls: SafeUrl[];
   public mapsUrls: SafeUrl[];
   public menuUrls: SafeUrl[];
-  public Blobimage:any=[];
-  public LocalFoodItem=[];
-  public LocalCusineItem=[];
+  public Blobimage: any = [];
+  public LocalFoodItem = [];
+  public LocalCusineItem = [];
+  currentDate: string;
 
   customAlertOptions = {
     header: 'Select Category',
@@ -75,40 +76,37 @@ export class CreateEventPage implements OnInit {
     header: 'Select Event Type',
     translucent: true,
   };
-  
+
   error_messages = {
-    'title':[
+    'title': [
       { type: 'required', message: 'Title is required.' },
-      ],
-    'description':[
+    ],
+    'description': [
       { type: 'required', message: 'Description is required.' },
-      ],
-    'category':[
+    ],
+    'category': [
       { type: 'required', message: 'Category is required.' },
-      ],
-    'event_date':[
+    ],
+    'event_date': [
       { type: 'required', message: 'Event date is required.' },
-      ],
-    'selectedAge':[
+    ],
+    'selectedAge': [
       { type: 'required', message: 'Age is required.' },
-      ],
-    'start_time':[
+    ],
+    'start_time': [
       { type: 'required', message: 'Start time is required.' },
-      ],
-    'end_time':[
+    ],
+    'end_time': [
       { type: 'required', message: 'End time is required.' },
     ],
-    'location_name':[
+    'location_name': [
       { type: 'required', message: 'Venue location is required.' },
-    ],
-    // 'terms_and_conditions':[
-    //   { type: 'required', message: 'Terms & conditions is required.' },
-    // ],   
+    ] 
   }
-  
+
   constructor(sanitizer: DomSanitizer,
     public formBuilder: FormBuilder,
-    public common:CommonService,
+    public common: CommonService,
     public dataservice: DataService,
     public navCtrl: NavController,
     public chatconnect: HttpService,
@@ -118,24 +116,28 @@ export class CreateEventPage implements OnInit {
     public contactpagemodal: ModalController,
     public router: Router,
     private _route: ActivatedRoute,
-    public alertController: AlertController){
-      this.sanitizer = sanitizer;
-      this.segment = "1";
-      this.imageUrls = [];
-      this.mapsUrls=[]
-      this.menuUrls = []
+    public alertController: AlertController) {
+    this.sanitizer = sanitizer;
+    this.segment = "1";
+    this.imageUrls = [];
+    this.mapsUrls = []
+    this.menuUrls = []
 
-      this.activityForm = this.formBuilder.group({
-        activity_name: [''],
-        activity_details: [''],
-      });
-    }  
+    this.activityForm = this.formBuilder.group({
+      activity_name: [''],
+      activity_details: [''],
+    });
+
+    const today = new Date();
+    today.setDate(today.getDate() + 1);
+    this.currentDate = today.toISOString().split('T')[0];
+  }
 
   @ViewChild('autocomplete') autocomplete: any;
 
   @ViewChild(IonTextarea)
   textarea!: IonTextarea;
-  @ViewChild('moreBar') moreBar: { setFocus: () => void; } | undefined ;
+  @ViewChild('moreBar') moreBar: { setFocus: () => void; } | undefined;
   age_group: FormGroup<{ age_group_to: FormControl<string>; age_group_from: FormControl<string>; }> | undefined;
 
   async populateTextarea() {
@@ -143,17 +145,15 @@ export class CreateEventPage implements OnInit {
       const selectedItems = this.termsAndConditionsList
         .filter((item: { selected: any; }) => item.selected)
         .map((item: { text: any; }) => item.text);
-   
+
       const termsAndConditionsControl = this.ionicForm.get('terms_and_conditions');
       if (termsAndConditionsControl) {
         termsAndConditionsControl.setValue(selectedItems.join('\n'));
       }
-  
-      console.log("This is Selected", selectedItems);
       await this.modalController.dismiss();
     }
   }
-  
+
   dismissModal() {
     this.modalController.dismiss();
   }
@@ -163,17 +163,13 @@ export class CreateEventPage implements OnInit {
   }
 
   onCategoryChange(event: any) {
-    console.log("This is selected Category", event.detail.value);
     let apidata = {
       user_token: this.dataservice.getUserData(),
       category_id: event.detail.value,
     };
 
-    console.log(apidata);
     this.chatconnect.postData(apidata, "get_terms_by_categoryId").then((result: any) => {
-      console.log(result);
       if (result.Response.status === 1) {
-        //this.dataservice.termsCondition = result.Response.terms;
         if (result.Response.terms && result.Response.terms.length > 0) {
           this.termsAndConditionsList = result.Response.terms[0].terms.map((term: { text: any; }) => ({
             text: term.text,
@@ -203,10 +199,8 @@ export class CreateEventPage implements OnInit {
     const inputElement = document.querySelector("#autocomplete input");
     const autocomplete = new google.maps.places.Autocomplete(inputElement);
     autocomplete.addListener('place_changed', () => {
-      console.log(autocomplete.getPlace());
       const selectedPlace = autocomplete.getPlace();
       if (selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location) {
-        console.log("IF ENTER");
         const latitude = selectedPlace.geometry.location.lat();
         const longitude = selectedPlace.geometry.location.lng();
         const locationn = selectedPlace.formatted_address;
@@ -215,18 +209,20 @@ export class CreateEventPage implements OnInit {
         if (locationNameControl) {
           locationNameControl.setValue(locationn);
         }
-        this.dataservice.events_form.push({maps_coordinates:[{"latitude": latitude, "longitude": longitude}]});
-        console.log("Latitude:", latitude);
-        console.log("Longitude:", longitude);
-        console.log("Location:", locationn);
-        console.log("Longitude:", this.dataservice.events_form);
+        this.dataservice.events_form.push({ maps_coordinates: [{ "latitude": latitude, "longitude": longitude }] });
       }
     });
   }
 
   async ngOnInit() {
     this.dataservice.community_event_or_not = this._route.snapshot.params['event_for'];
-    console.log("This is Community Checkings=>",this.dataservice.community_event_or_not)
+    this.dataservice.events_form = [];
+    this.dataservice.foodImages = [];
+    this.dataservice.locationn = null;
+    this.dataservice.emergency_contact = []
+    this.dataservice.event_cusine_type = null
+    this.dataservice.foodImages = []
+    
     this.ionicForm = this.formBuilder.group({
       title: ['', [Validators.required]],
       description: [''],
@@ -245,20 +241,20 @@ export class CreateEventPage implements OnInit {
       drink_section: this.formBuilder.array([]),
       event_dates: this.formBuilder.array([]),
       age_group: this.formBuilder.group({
-        age_group_from: [''],  
+        age_group_from: [''],
         age_group_to: ['']
       })
     })
 
     const piece = this.formBuilder.group({
-     event_date: ['', [Validators.required]],
-     start_time: ['', [Validators.required]],
-     end_time: ['', [Validators.required]],
+      event_date: ['', [Validators.required]],
+      start_time: ['', [Validators.required]],
+      end_time: ['', [Validators.required]],
     });
 
     const activity = this.formBuilder.group({
-     activity_name: [''],
-     activity_details: [''],
+      activity_name: [''],
+      activity_details: [''],
     });
 
     const econtact = this.formBuilder.group({
@@ -270,7 +266,7 @@ export class CreateEventPage implements OnInit {
     const mulfood = this.formBuilder.group({
       extra_food_name: [''],
     });
-   
+
     const drinks = this.formBuilder.group({
       drinks_name: [''],
     });
@@ -293,29 +289,28 @@ export class CreateEventPage implements OnInit {
     await this.GetDashboard()
   }
 
-  GetDashboard(){    
+  GetDashboard() {
     return new Promise<any>((resolve, reject) => {
-      let apidata={
-        user_token:this.dataservice.getUserData()
+      let apidata = {
+        user_token: this.dataservice.getUserData()
       }
-      this.chatconnect.postData(apidata,"user_dashboard").then((result:any)=>{
-        console.log(result);
-        if(result.Response.status ==1){
-          this.dataservice.events_categories =result.Response.all_categories;
-          this.dataservice.events_languages =result.Response.languages;
+      this.chatconnect.postData(apidata, "user_dashboard").then((result: any) => {
+        if (result.Response.status == 1) {
+          this.dataservice.events_categories = result.Response.all_categories;
+          this.dataservice.events_languages = result.Response.languages;
           this.dataservice.events_fooditems = result.Response.fooditems;
           this.dataservice.cusines_items = result.Response.cusinesitems;
           this.LocalFoodItem = result.Response.fooditems;
           this.LocalCusineItem = result.Response.cusinesitems;
           resolve(true);
-        }else{
-          this.common.presentToast("Oops",result.Response.message)
+        } else {
+          this.common.presentToast("Oops", result.Response.message)
         }
-      },(err)=>{
+      }, (err) => {
         // this.common.hide();
         console.log("Connection failed Messge");
         reject(err);
-      });    
+      });
     });
   }
 
@@ -325,15 +320,12 @@ export class CreateEventPage implements OnInit {
       start_time: ['', [Validators.required]],
       end_time: ['', [Validators.required]],
     });
-    
+
     this.getPiecesArray.push(piece);
-    console.log('After Add: ', this.ionicForm.value);
-    console.log(this.getPiecesArray.controls)
   }
 
   deletePiece(i: number) {
     this.getPiecesArray.removeAt(i);
-    console.log(this.getPiecesArray.controls)
   }
 
   addActivity() {
@@ -342,51 +334,46 @@ export class CreateEventPage implements OnInit {
       activity_details: ['', [Validators.required]],
     });
     this.getActivityArray.push(activity);
-    console.log('After Add: ', this.ionicForm.value);
-    console.log(this.getActivityArray.controls)
   }
 
   deleteActivity(i: number) {
     this.getActivityArray.removeAt(i);
-    console.log(this.getActivityArray.controls)
   }
 
   async Addacti() {
     const updatedActivities = [];
-  
     for (let i = 0; i < this.getActivityArray.length; i++) {
       const activityGroup = this.getActivityArray.at(i) as FormGroup;
-  
-      // Perform null check on activityGroup
       if (activityGroup) {
         const activity_name = activityGroup.get('activity_name')?.value;
         const activity_details = activityGroup.get('activity_details')?.value;
-  
+
         if (activity_name) {
           const existingActivityIndex = this.tempActivities.findIndex(activity => activity.activity_name === activity_name);
-  
+
           if (existingActivityIndex !== -1) {
             this.tempActivities[existingActivityIndex].activity_details = activity_details || '';
             updatedActivities.push(this.tempActivities[existingActivityIndex]);
           } else {
-            const existingActivity = this.tempActivities.find(activity => activity.activity_name === activity_name);
-            if (existingActivity) {
-              existingActivity.activity_details = activity_details || '';
-              updatedActivities.push(existingActivity);
-            } else {
-              const activity = {
-                activity_name,
-                activity_details: activity_details || ''
-              };
-              this.tempActivities.push(activity);
-              updatedActivities.push(activity);
-            }
+            const activity = {
+              activity_name,
+              activity_details: activity_details || ''
+            };
+            this.tempActivities.push(activity);
+            updatedActivities.push(activity);
           }
         }
       }
     }
-  
-    console.log("Updated activities:", updatedActivities);
+
+    for (let i = this.tempActivities.length - 1; i >= 0; i--) {
+      const activityName = this.tempActivities[i].activity_name;
+      const exists = this.getActivityArray.controls.some(control => control.get('activity_name')?.value === activityName);
+      if (!exists) {
+        this.tempActivities.splice(i, 1);
+      }
+    }
+
     await this.modalController.dismiss(updatedActivities);
   }
 
@@ -394,40 +381,34 @@ export class CreateEventPage implements OnInit {
     const econtact = this.formBuilder.group({
       contact_name: ['', [Validators.required]],
       contact_role: ['', [Validators.required]],
-      contact_number: ['', [Validators.required,Validators.minLength(10),Validators.pattern('^[0-9]+$')]],
+      contact_number: ['', [Validators.required, Validators.minLength(10), Validators.pattern('^[0-9]+$')]],
     });
     this.getEcontactArray.push(econtact);
-    console.log('After Add: ', this.ionicForm.value);
-    console.log(this.getEcontactArray.controls)
   }
 
   deleteContact(i: number) {
     this.getEcontactArray.removeAt(i);
-    console.log(this.getEcontactArray.controls)
   }
 
   async addEmergencyContact() {
     const updatedEmergencyContacts = [];
-  
+
     for (let i = 0; i < this.getEcontactArray.length; i++) {
       const contactGroup = this.getEcontactArray.at(i) as FormGroup;
-  
-      // Perform null check on contactGroup
+
       if (contactGroup) {
         const contact_name = contactGroup.get('contact_name')?.value;
         const contact_role = contactGroup.get('contact_role')?.value;
         const contact_number = contactGroup.get('contact_number')?.value;
-  
+
         if (contact_name && contact_number) {
           const existingContactIndex = this.tempEmergencyContact.findIndex(econtact => econtact.contact_name === contact_name);
-  
+
           if (existingContactIndex !== -1) {
-            // Update existing emergency contact if found
             this.tempEmergencyContact[existingContactIndex].contact_role = contact_role || '';
             this.tempEmergencyContact[existingContactIndex].contact_number = contact_number || '';
             updatedEmergencyContacts.push(this.tempEmergencyContact[existingContactIndex]);
           } else {
-            // Add new emergency contact if not found
             const econtact = {
               contact_name,
               contact_role: contact_role || '',
@@ -439,8 +420,15 @@ export class CreateEventPage implements OnInit {
         }
       }
     }
-  
-    console.log("Updated emergency contacts:", updatedEmergencyContacts);
+
+    for (let i = this.tempEmergencyContact.length - 1; i >= 0; i--) {
+      const contactName = this.tempEmergencyContact[i].contact_name;
+      const exists = this.getEcontactArray.controls.some(control => control.get('contact_name')?.value === contactName);
+      if (!exists) {
+        this.tempEmergencyContact.splice(i, 1);
+      }
+    }
+
     await this.modalController.dismiss(updatedEmergencyContacts);
   }
 
@@ -452,15 +440,13 @@ export class CreateEventPage implements OnInit {
       poll_option3: [''],
       poll_option4: [''],
 
-   });
+    });
     this.getPollArray.push(poll);
-    console.log('After Add: ', this.ionicForm.value);
-    console.log(this.getPollArray.controls)
   }
 
   async addPollSection() {
     const updatedPolls = [];
-  
+
     for (let i = 0; i < this.getPollArray.length; i++) {
       const pollGroup = this.getPollArray.at(i) as FormGroup;
       const poll_question = pollGroup.get('poll_question')?.value;
@@ -468,18 +454,17 @@ export class CreateEventPage implements OnInit {
       const poll_option2 = pollGroup.get('poll_option2')?.value;
       const poll_option3 = pollGroup.get('poll_option3')?.value;
       const poll_option4 = pollGroup.get('poll_option4')?.value;
-  
+
       if (poll_question && poll_option1) {
         const existingPollIndex = this.tempoll.findIndex(poll => poll.poll_question === poll_question);
+
         if (existingPollIndex !== -1) {
-          // Update existing poll section if found
           this.tempoll[existingPollIndex].poll_option1 = poll_option1 || '';
           this.tempoll[existingPollIndex].poll_option2 = poll_option2 || '';
           this.tempoll[existingPollIndex].poll_option3 = poll_option3 || '';
           this.tempoll[existingPollIndex].poll_option4 = poll_option4 || '';
           updatedPolls.push(this.tempoll[existingPollIndex]);
         } else {
-          // Add new poll section if not found
           const poll = {
             poll_question,
             poll_option1: poll_option1 || '',
@@ -492,47 +477,46 @@ export class CreateEventPage implements OnInit {
         }
       }
     }
-  
-    console.log("Updated poll sections:", updatedPolls);
+
+    for (let i = this.tempoll.length - 1; i >= 0; i--) {
+      const pollQuestion = this.tempoll[i].poll_question;
+      const exists = this.getPollArray.controls.some(control => control.get('poll_question')?.value === pollQuestion);
+      if (!exists) {
+        this.tempoll.splice(i, 1);
+      }
+    }
     await this.modalController.dismiss(updatedPolls);
   }
 
   deletePoll(i: number) {
     this.getPollArray.removeAt(i);
-    console.log(this.getPollArray.controls)
   }
 
   addfood() {
     const mulfood = this.formBuilder.group({
       extra_food_name: ['', [Validators.required]],
     });
-     this.getfoodArray.push(mulfood);
-     console.log('After Add: ', this.ionicForm.value);
-     console.log(this.getPollArray.controls)
+    this.getfoodArray.push(mulfood);
   }
 
   removefood(i: number) {
     this.getfoodArray.removeAt(i);
-    console.log(this.getPollArray.controls)
   }
 
   addDrink() {
     const drinks = this.formBuilder.group({
       drinks_name: [''],
     });
-     this.getdrinkArray.push(drinks);
-     console.log('After Add: ', this.ionicForm.value);
+    this.getdrinkArray.push(drinks);
   }
 
   removeDrink(i: number) {
     this.getdrinkArray.removeAt(i);
-    console.log(this.getPollArray.controls)
   }
 
   async saveFoodItems() {
     const foodItemId = this.ionicForm.value.food_name;
     this.foodItems.push(foodItemId);
-    console.log("This is Food:",this.foodItems)
     this.modalController.dismiss(this.foodItems);
   }
 
@@ -545,42 +529,41 @@ export class CreateEventPage implements OnInit {
   get getEcontactArray() {
     return (<FormArray>this.ionicForm.get('emergency_contact'));
   }
-  get   getfoodArray() {
+  get getfoodArray() {
     return (<FormArray>this.ionicForm.get('food_section'));
   }
-  get   getdrinkArray() {
+  get getdrinkArray() {
     return (<FormArray>this.ionicForm.get('drink_section'));
   }
-  get   getPollArray() {
+  get getPollArray() {
     return (<FormArray>this.ionicForm.get('poll_section'));
   }
 
   loadImagesFromDeviceMulti(event: any) {
     const files: File[] = event.target.files;
     if (files && files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.menuUrls.push(reader.result as string);
-            };
-            reader.readAsDataURL(files[i]);
-            this.selectedFiles.push(files[i]);
-        }
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.menuUrls.push(reader.result as string);
+        };
+        reader.readAsDataURL(files[i]);
+        this.selectedFiles.push(files[i]);
+      }
       this.dataservice.foodImages = this.selectedFiles;
     }
   }
-  
+
   removeImage(index: number) {
     this.menuUrls.splice(index, 1);
     this.selectedFiles.splice(index, 1);
     this.dataservice.foodImages = this.selectedFiles;
   }
 
-  async submit(){
+  async submit() {
     this.isSubmitted = true;
-    this.ionicForm.markAllAsTouched(); 
-    console.log(this.ionicForm)
-    if (!this.ionicForm.valid || this.imageUrls.length == 0){
+    this.ionicForm.markAllAsTouched();
+    if (!this.ionicForm.valid || this.imageUrls.length == 0) {
       let alert = await this.alertController.create({
         header: 'Please Enter',
         subHeader: 'Please Enter all details',
@@ -593,19 +576,17 @@ export class CreateEventPage implements OnInit {
       const termsAndConditionsControl = this.ionicForm.get('terms_and_conditions');
       if (termsAndConditionsControl) {
         termsAndConditionsValue = this.ionicForm.value.terms_and_conditions
-        .split('\n')
-        .map((line: string) => `<li>${line}</li>`)
-        .join('\n');
+          .split('\n')
+          .map((line: string) => `<li>${line}</li>`)
+          .join('\n');
         // Check if termsAndConditionsControl.value is not null before setting it
         if (termsAndConditionsControl.value !== null) {
           // Set the formatted value back to the form control
           if (termsAndConditionsValue != '<li></li>') {
             termsAndConditionsControl.setValue(`<ul>${termsAndConditionsValue}</ul>`);
           }
-          console.log(this.ionicForm.value);
-          this.dataservice.event_food_type=this.LocalFoodItem.filter((item:any)=> { return   this.ionicForm.value.food_name.indexOf(item.id) !== -1 });
+          this.dataservice.event_food_type = this.LocalFoodItem.filter((item: any) => { return this.ionicForm.value.food_name.indexOf(item.id) !== -1 });
           this.dataservice.events_form.push(this.ionicForm.value);
-          console.log("Event Form ==> ",this.dataservice.events_form);
           this.ContactPageModal();
         } else {
           console.error("terms_and_conditions form control value is null.");
@@ -616,7 +597,7 @@ export class CreateEventPage implements OnInit {
     }
   }
 
-  async view(img: any,showflag: string) {
+  async view(img: any, showflag: string) {
     const modal = await this.modalController.create({
       component: ImgcropperComponent,
       cssClass: 'my-menubar',
@@ -625,21 +606,21 @@ export class CreateEventPage implements OnInit {
       if (data.data != undefined) {
         if (data.data.cropped_image) {
           this.dataservice.convertBase64ToBlob(data.data.cropped_image)
-          if(showflag == "eventmap"){
-            this.mapsUrls=[] 
+          if (showflag == "eventmap") {
+            this.mapsUrls = []
             this.mapsUrls.unshift(data.data.cropped_image);
             localStorage.setItem("event_map_image", data.data.cropped_image);
-          }else if (showflag == "event"){
-            this.imageUrls=[]
+          } else if (showflag == "event") {
+            this.imageUrls = []
             this.imageUrls.unshift(data.data.cropped_image);
             localStorage.setItem("event_images", data.data.cropped_image);
-          }else{
-            this.menuUrls=[]
+          } else {
+            this.menuUrls = []
             this.menuUrls.unshift(data.data.cropped_image);
             localStorage.setItem("menu_imgData", data.data.cropped_image);
           }
         }
-      }else {
+      } else {
         if (showflag == "event") {
           this.imageUrls = [];
         } else {
@@ -650,89 +631,72 @@ export class CreateEventPage implements OnInit {
     return await modal.present();
   }
 
-  moveFocus(event:any){
-    console.log("my evet --",event.target.value)
+  moveFocus(event: any) {
     this.dataservice.events_fooditems.forEach((item: { id: number; name: any; }) => {
-      if(item.id ===0){
-        item.name=event.target.value
+      if (item.id === 0) {
+        item.name = event.target.value
       }
     });
   }
 
-  ChangeFood(event: { detail: { value: any[]; }; }){
-    console.log("my evet --",event.detail.value)
-    console.log("my evet --",this.ionicForm.value.food_name)
+  ChangeFood(event: { detail: { value: any[]; }; }) {
     // this.LocalFoodItem.filter((item)=> { return this.ionicForm.value.food_name.indexOf(item.id) === 1 });
-
     event.detail.value.forEach((item: number) => {
-      console.log("sel item -->",item);
-      if(item ==0){
-        this.is_custom_food_show=true;
+      if (item == 0) {
+        this.is_custom_food_show = true;
       }
     });
   }
 
-  loadImageFromDevice(event: { target: { files: any[]; }; },showflag: string) {
-    console.log(event)
+  loadImageFromDevice(event: { target: { files: any[]; }; }, showflag: string) {
     const photo = event.target.files[0];
-    console.log(photo);
-    this.file_uploaddata=photo;
-    console.log(photo)
+    this.file_uploaddata = photo;
     let formData = new FormData();
     // Add the file that was just added to the form data
     formData.append("photo", photo, photo.name);
     this.Blobimage.push(photo);
-    this.dataservice.blobToBase64(photo).then((res:any) => {
-      this.dataservice.event_base64img=res
-      this.view(res,showflag)
+    this.dataservice.blobToBase64(photo).then((res: any) => {
+      this.dataservice.event_base64img = res
+      this.view(res, showflag)
     });
     // const file = event.target.files[0];
 
     const reader = new FileReader();
     reader.readAsArrayBuffer(photo);
     reader.onload = () => {
-    // get the blob of the image:
+      // get the blob of the image:
       let blob: Blob = new Blob([new Uint8Array((reader.result as ArrayBuffer))]);
 
-    // create blobURL, such that we could use it in an image element:
+      // create blobURL, such that we could use it in an image element:
       let blobURL: string = URL.createObjectURL(blob);
-      // console.log(blob);
-      if(showflag == "eventmap"){
+      if (showflag == "eventmap") {
         this.mapsUrls.unshift(
           this.sanitizer.bypassSecurityTrustUrl(blobURL)
-          );
-      }else if (showflag == "event"){
+        );
+      } else if (showflag == "event") {
         this.imageUrls.unshift(
           this.sanitizer.bypassSecurityTrustUrl(blobURL)
-          );
-      }else{
+        );
+      } else {
         this.menuUrls.unshift(
           this.sanitizer.bypassSecurityTrustUrl(blobURL)
-          );
+        );
       }
     };
-    console.log(this.Blobimage);
     reader.onerror = (error) => { };
   };
 
-  goToNextSegment(){
+  goToNextSegment() {
     const segments = ['1', '2', '3', '4'];
-
     const currentIndex = segments.indexOf(this.segment);
-
-    console.log(currentIndex,"cur idx ");
-
     if (currentIndex < segments.length - 1) {
       this.segment = segments[currentIndex + 1];
-    } else if (currentIndex === segments.length - 1){
+    } else if (currentIndex === segments.length - 1) {
       this.segment = segments[currentIndex];
     }
-    console.log(this.segment);
   }
 
-
-  updatePage(homeSegment:any){
-    console.log("homeSegment ",homeSegment)
+  updatePage(homeSegment: any) {
   }
 
   goToPreviousSegment() {
@@ -745,49 +709,43 @@ export class CreateEventPage implements OnInit {
 
   values: any[] = [];
 
-  removevalue(i: number){
-    this.values.splice(i,1);
+  removevalue(i: number) {
+    this.values.splice(i, 1);
   }
 
-  async SkipNow(){
+  async SkipNow() {
     const modal = await this.createv4omdal.create({
       component: CreatePermPage,
       cssClass: 'pindialog-container',
       handle: true,
-      componentProps: { 
+      componentProps: {
         pass_code: true
       },
     });
-    modal.onDidDismiss().then((data:any) => {
-      console.log("DATA HERE --->",data)
-      if(data.data!= undefined){
-        this.is_event_permission_skipped=true;
-        // this.common.show("Please Wait");
-        // this.dataservice.emergency_contact=this.ionicForm.value.emergency_contact
-        // this.dataservice.event_food_type=this.ionicForm.value.food_name
-        this.dataservice.event_food_type=this.LocalFoodItem.filter((item:any)=> { return   this.ionicForm.value.food_name.indexOf(item.id) !== -1 });
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data != undefined) {
+        this.is_event_permission_skipped = true;
+        this.dataservice.event_food_type = this.LocalFoodItem.filter((item: any) => { return this.ionicForm.value.food_name.indexOf(item.id) !== -1 });
         this.dataservice.events_form.push(this.ionicForm.value);
-        console.log(this.dataservice.events_form, "kaleem");
         this.ContactPageModal();
       }
     });
     return await modal.present();
   }
 
-  addvalue(){
-    this.values.push({value: ""});
+  addvalue() {
+    this.values.push({ value: "" });
   }
 
-  async ContactPageModal(){
+  async ContactPageModal() {
     this.common.hide();
     const modal = await this.contactpagemodal.create({
       component: CreateContactPage,
       cssClass: 'pindialog-container',
       handle: true,
     });
-    modal.onDidDismiss().then((data:any) => {
-      console.log("DATA HERE --->",data)
-      if(data.data!= undefined){
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data != undefined) {
       }
     });
     return await modal.present();
@@ -796,13 +754,13 @@ export class CreateEventPage implements OnInit {
   async ionViewWillLeave() {
     if (!this.isSubmitted) {
       const isSegOneValid = this.ionicForm.controls['title'].valid &&
-      this.ionicForm.controls['description'].valid &&
-      this.ionicForm.controls['category'].valid &&
-      this.ionicForm.controls['age_group'].valid
+        this.ionicForm.controls['description'].valid &&
+        this.ionicForm.controls['category'].valid &&
+        this.ionicForm.controls['age_group'].valid
 
       if (isSegOneValid) {
         const alert = await this.alertController.create({
-          header: 'Confirm',    
+          header: 'Confirm',
           message: 'Save This into Draft?',
           buttons: [
             {
@@ -828,7 +786,7 @@ export class CreateEventPage implements OnInit {
                 formData.append('event_cusine_type', JSON.stringify(this.dataservice.event_cusine_type));
                 formData.append('event_food_type', JSON.stringify(this.dataservice.event_food_type));
                 formData.append('original_event_images', this.dataservice.orginalImage);
-                formData.append('event_type','paid_event');
+                formData.append('event_type', 'paid_event');
 
                 const eventImages = localStorage.getItem('event_images');
                 if (eventImages !== null && !this.dataservice.isNullOrUndefined(eventImages)) {
@@ -840,7 +798,6 @@ export class CreateEventPage implements OnInit {
                 });
 
                 formData.append('events_data', JSON.stringify(this.dataservice.events_form));
-                console.log(formData);
                 this.chatconnect.postFormData(formData, "draft_event").then((result: any) => {
                   this.common.hide();
                   if (result.Response.status == 1) {
@@ -861,5 +818,5 @@ export class CreateEventPage implements OnInit {
         await alert.present();
       }
     }
-  } 
+  }
 }

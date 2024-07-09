@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { RegisterPageRoutingModule } from './register-routing.module';
 
 import { RegisterPage } from './register.page';
+import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { RegisterPage } from './register.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    RegisterPageRoutingModule
+    RegisterPageRoutingModule,
+    NgxIntlTelInputModule
     ],
   declarations: [RegisterPage]
 })

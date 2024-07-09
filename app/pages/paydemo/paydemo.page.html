@@ -33,6 +33,9 @@
             <ion-card-content>
               <p>On {{list.payment_date}}</p>
             </ion-card-content>
+            <ion-card-footer>
+              <ion-button size="small" shape="round" color="tertiary" style="float: right;margin: 10px;" (click)="sendPayPdf(list)"> Send On Mail</ion-button>
+            </ion-card-footer>
           </ion-card>
         </ng-container>
       </ion-row> 

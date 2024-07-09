@@ -1,0 +1,128 @@
+ion-icon {
+  font-size: 1.6rem;
+}
+
+.ios .header {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  right: 0;
+  left: 0;
+  padding: 15px 4px;
+  z-index: 5;
+}
+.ios .header ion-icon {
+  color: white;
+}
+.ios .header ion-icon.ios {
+  position: relative;
+  top: 35px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  right: 0;
+  left: 0;
+  padding: 15px 4px;
+  z-index: 5;
+}
+.header ion-icon {
+  color: white;
+}
+.header ion-icon.ios {
+  position: relative;
+  top: 35px;
+}
+
+.container {
+  background: #2c5409;
+  border-radius: 0 0 20px 20px;
+  position: relative;
+  top: -15px;
+}
+
+ion-card.ios {
+  margin: 15px;
+}
+
+ion-card {
+  margin-bottom: 0;
+  --background:transparent;
+  box-shadow: none;
+}
+ion-card ion-icon {
+  color: black;
+  padding: 5px;
+  border-radius: 5px;
+}
+ion-card ion-card-header {
+  display: flex;
+  justify-content: center;
+}
+ion-card ion-card-header ion-avatar {
+  width: 100px;
+  height: 100px;
+  border: 5px solid #cfdcc4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-size: 60px;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+ion-card ion-card-content .center {
+  text-align: center;
+}
+ion-card ion-card-content .foot {
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+  height: 90px;
+  display: flex;
+  margin-top: 9px;
+  align-items: center;
+  padding-bottom: 0px;
+}
+ion-card ion-card-content .foot h3 {
+  font-size: 13px;
+  text-align: center;
+}
+ion-card h3 {
+  font-size: 18px;
+  font-weight: bolder;
+  color: white;
+  letter-spacing: 2px;
+  text-transform: capitalize;
+}
+ion-card h5 {
+  font-weight: bolder;
+  text-align: center;
+  color: white;
+}
+ion-card h6 {
+  color: white;
+}
+
+.menus {
+  margin-bottom: 80px;
+}
+.menus ion-item {
+  margin: 15px 8px;
+  border-bottom: 1px solid;
+}
+.menus ion-label {
+  padding-left: 15px;
+}
+
+.fixed-container {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.card-content-md {
+  padding-bottom: 8px;
+}

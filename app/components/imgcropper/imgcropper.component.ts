@@ -89,7 +89,8 @@ export class ImgcropperComponent implements OnInit {
 
 
   zoomOut() {
-    this.scale -= .1;
+    const minScale = 0.1;
+    this.scale = Math.max(minScale, this.scale - 0.1);
     this.transform = {
       ...this.transform,
       scale: this.scale
@@ -97,11 +98,12 @@ export class ImgcropperComponent implements OnInit {
   }
 
   zoomIn() {
-    this.scale += .1;
+    const maxScale = 3.0;
+    this.scale = Math.min(maxScale, this.scale + 0.1);
+      
     this.transform = {
       ...this.transform,
       scale: this.scale
     };
   }
-
 }

@@ -104,8 +104,6 @@ var DashboardPage = /** @class */ (function () {
                         return [4 /*yield*/, contacts_1.Contacts.requestPermissions()];
                     case 2:
                         contactPermResult = _a.sent();
-                        console.log('Geolocation Permission request result:', geoPermResult);
-                        console.log('Contacts Permission request result:', contactPermResult);
                         if (geoPermResult) {
                             this.getCurrentCoordinate();
                         }
@@ -215,7 +213,6 @@ var DashboardPage = /** @class */ (function () {
         this._router.navigate(['/pages/notification']);
     };
     DashboardPage.prototype.toggleChanged = function (event) {
-        console.log("This is Toggle Value=>", event);
         if (event.detail.checked) {
             this._router.navigate(['/buzwel']);
         }
@@ -243,7 +240,6 @@ var DashboardPage = /** @class */ (function () {
                 user_fcm_token: _this.dataservice.user_fcmpush_token
             };
             _this.chatconnect.postData(apidata, "user_dashboard").then(function (result) {
-                console.log(result);
                 _this.loaded = true;
                 console.log("Value Updated==>", _this.loaded);
                 if (result.Response.status == 1) {
@@ -307,9 +303,9 @@ var DashboardPage = /** @class */ (function () {
                 search_params: ev.detail.value
             };
             this.chatconnect.postData(apidata, "search").then(function (result) {
-                console.log(result);
                 if (result.Response.status == 1) {
                     _this.lists = result.Response.search_result;
+                    console.log("search result ==>", _this.lists);
                 }
                 else {
                     _this.commonservice.presentToast("Oops", result.Response.message);
@@ -336,18 +332,14 @@ var DashboardPage = /** @class */ (function () {
     };
     DashboardPage.prototype.SearchResult = function (params) {
         var _this = this;
-        console.log("This is Search Result ==> ", params);
         if (params.flag == 1) {
             var apidata = {
                 user_token: this.dataservice.getUserData(),
                 event_id: params.id
             };
-            console.log(apidata);
             this.chatconnect.postData(apidata, "view_events_by_id").then(function (result) {
-                console.log("This is result", result.Response.events_data);
                 if (result.Response.status == 1) {
                     _this.dataservice.setEventData(result.Response.events_data);
-                    console.log(_this.dataservice.user_event_data);
                     _this._router.navigate(['/detailseve']);
                 }
                 else {
@@ -365,7 +357,6 @@ var DashboardPage = /** @class */ (function () {
                 community_id: params.id
             };
             this.chatconnect.postData(apidata, "view_community_by_id").then(function (result) {
-                console.log("This is result", result.Response.community_data);
                 if (result.Response.status == 1) {
                     _this.dataservice.setCommunityData(result.Response.community_data);
                     _this._router.navigate(['/community-details']);
@@ -389,7 +380,6 @@ var DashboardPage = /** @class */ (function () {
         return formattedTime || time;
     };
     DashboardPage.prototype.view_details = function (params) {
-        console.log("This is Event Details ==> ", params);
         if (params.event_for == 'multiple_event') {
             this._router.navigate(['pages/multieventdetails', { multievent_id: params.id }]);
         }
@@ -400,7 +390,14 @@ var DashboardPage = /** @class */ (function () {
     };
     DashboardPage.prototype.view_event_details = function (params) {
         this.dataservice.setEventData(params);
-        this._router.navigate(['/detailseve']);
+        if (!params.is_premium) {
+            console.log("If free event");
+            this._router.navigate(['/detailseve']);
+        }
+        else {
+            console.log("If paid event");
+            this._router.navigate(['/event-details']);
+        }
     };
     DashboardPage.prototype.view_community_details = function (params) {
         this.dataservice.setCommunityData(params);

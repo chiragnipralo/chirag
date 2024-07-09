@@ -6,7 +6,7 @@ ion-buttons{
     text-align: center;
 
     ion-img{
-        height: 28vh;
+        height: 25vh;
     }
     .otpsec{
         margin-top: 10px;
@@ -23,10 +23,10 @@ ion-buttons{
         }
 
         ion-input{
-            background: rgb(241, 241, 241);
-            border: 1px solid #285500;
+            // background: rgb(241, 241, 241);
+            border-bottom: 1px solid #285500;
             height: 50px;
-            width: 50px;
+            width: 200px;
             font-size: 1.5rem;
             text-align: center;
             border-radius: 5px;
@@ -37,14 +37,21 @@ ion-buttons{
         }
     }
 }
-
-ion-footer{
-    position: relative;
-    bottom: 11px;
-
-    ion-button{
-        margin: auto;
-        height: 40px;
-        max-width: 222px;
-    }
+.sub-btn{
+    width: 55%;
+    margin: auto;
 }
+.res_btn{
+    color: orange !important;
+    margin: 15px 0;
+}
+// ion-footer{
+//     position: relative;
+//     bottom: 11px;
+
+//     ion-button{
+//         margin: auto;
+//         height: 40px;
+//         max-width: 222px;
+//     }
+// }

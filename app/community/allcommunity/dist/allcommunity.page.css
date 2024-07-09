@@ -1,0 +1,136 @@
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.top ion-title {
+  text-align: center;
+  text-transform: capitalize;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+.top ion-icon {
+  padding-right: 10px;
+}
+
+/*.header-md::after {
+    background:none;
+}*/
+ion-buttons {
+  width: 0%;
+}
+
+ion-title {
+  width: 100%;
+}
+
+ion-searchbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.category_style {
+  position: relative;
+  top: -23px;
+  right: 0;
+  border-radius: 0 0 7px 7px;
+  left: 0;
+  background: #469c27;
+  color: white;
+  padding: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* max-width: 100%; */
+  text-wrap: nowrap;
+  text-align: center;
+}
+
+ion-row ion-card {
+  background: #f8f8f8;
+  padding: 0;
+  box-shadow: 2px 4px 4px 0px #929191;
+  border-radius: 10px;
+  height: 100%;
+  width: 100%;
+}
+ion-row ion-card ion-card-content {
+  color: black;
+  padding: 3px;
+}
+ion-row ion-card ion-card-content .img_eve {
+  height: 120px;
+}
+ion-row ion-card ion-card-content .img_eve ion-img {
+  width: 100%;
+  background-size: cover;
+  padding: 0;
+  height: 100%;
+}
+ion-row ion-card ion-card-content .img_eve ion-img::part(image) {
+  border-radius: 10px;
+  object-fit: cover;
+}
+ion-row ion-card ion-card-content .img_eve .heart {
+  font-size: 20px;
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  color: white;
+}
+ion-row ion-card ion-card-content p {
+  font-size: 13px;
+}
+ion-row ion-card ion-card-content .img_commu {
+  height: 120px;
+  padding: 2px;
+}
+ion-row ion-card ion-card-content .img_commu ion-img {
+  width: 100%;
+  background-size: cover;
+}
+ion-row ion-card ion-card-content .img_commu ion-img::part(image) {
+  border-radius: 10px;
+  object-fit: cover;
+  position: relative;
+  top: -20px;
+}
+ion-row ion-card ion-card-content .eve_content {
+  padding: 5px;
+  width: 100%;
+}
+ion-row ion-card ion-card-content .eve_content p {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+}
+ion-row ion-card ion-card-content .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 10px 10px 0;
+}
+ion-row ion-card ion-card-content .title h2 {
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+ion-row ion-card ion-card-content .title ion-icon {
+  font-size: 20px;
+}
+ion-row ion-card ion-card-content .title .ion-icon-checked {
+  background: #a7a7a7;
+}
+ion-row ion-card ion-card-content .venue ion-icon {
+  font-size: 1rem;
+}
+ion-row ion-card ion-card-content .venue div {
+  display: flex;
+  align-items: center;
+}

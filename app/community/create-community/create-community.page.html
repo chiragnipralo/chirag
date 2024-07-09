@@ -15,7 +15,7 @@
         <div class="container">
           <p class="images">
             <ng-template ngFor let-imageUrl [ngForOf]="imageUrls">
-              <img [src]="imageUrl" class="image" />
+              <img [src]="imageUrl" class="image" style="border-radius: 10px;width: 100%;" />
               <ion-icon name="add-circle" slot="end" (click)="fileInput.click()" style="font-size: 45px;color:seagreen;position: absolute;
             right: 0;"></ion-icon>
             <input type="file" style="display:none" #fileInput (change)="loadImageFromDevice($event,'event')" id="file-input" accept="image/png, image/jpg, image/jpeg">
@@ -23,7 +23,7 @@
           </p>
 
           <ng-container *ngIf="!imageUrls.length">
-            <ion-row>
+            <ion-row class="main_img">
               <ion-input type="file" (change)="loadImageFromDevice($event,'event')" class="custom-file-input" id="file-input" accept="image/png, image/jpeg" class="custom-file-input"></ion-input>
               <h5 align="center">Upload Community Image <span class="asct">*</span></h5>
             </ion-row>
@@ -41,12 +41,12 @@
 
           <div class="form-input">
             <h4>Description</h4>
-            <ion-textarea formControlName="description" placeholder="Write Description About Community"></ion-textarea>
+            <ion-textarea formControlName="description" placeholder="Write Description About Community" autoGrow="true"></ion-textarea>
           </div>
 
           <div class="form-input">
             <h4>Category <span class="asct">*</span></h4>
-            <ion-select formControlName="category" interface="alert" placeholder="Select Category">
+            <ion-select formControlName="category" interface="alert" [interfaceOptions]="customAlertOptions" placeholder="Select Category">
               <ng-container  *ngFor="let item of dataservice.events_categories">
                 <ion-select-option [value]="item.id">{{item.name}}</ion-select-option>
               </ng-container>
@@ -61,7 +61,7 @@
 
           <div class="form-input">
             <h4>Community Type <span class="asct">*</span></h4>
-            <ion-select formControlName="community_type" interface="alert" placeholder="Select Community Type">
+            <ion-select formControlName="community_type" interface="alert" [interfaceOptions]="EventOptions" placeholder="Select Community Type">
               <ion-select-option value="0">Public</ion-select-option>
               <ion-select-option value="1">Private</ion-select-option>
             </ion-select>

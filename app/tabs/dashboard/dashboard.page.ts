@@ -11,6 +11,7 @@ import { IonSearchbar, LoadingController } from '@ionic/angular';
 import { AppComponent } from '../../app.component';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { NotificationService } from '../../pages/notification/notification.service';
 
 @Component({
 	selector: 'app-dashboard',
@@ -59,6 +60,7 @@ export class DashboardPage implements OnInit {
 		private activatedRoute: ActivatedRoute,
 		private datePipe: DatePipe,
 		public loadingController: LoadingController,
+		private notificationService: NotificationService,
 	) {
 		this.segment_one = "Popular";
 		this.free_paid = "Paid";
@@ -72,7 +74,16 @@ export class DashboardPage implements OnInit {
 		console.log('Refreshing page ionViewWillEnter...');
 		this.loaded = false;
 		this.GetDashboard();
+		this.updateNotifyCount();
 	}
+	async updateNotifyCount() {
+		try {
+		  const notifications = await this.notificationService.fetchNotifications();
+		  this.notifyCount = this.notificationService.getNotifyCount();
+		} catch (error) {
+		  console.error('Error fetching notifications:', error);
+		}
+	  }
 
 	async ngOnInit() {
 		this.activatedRoute.url.subscribe(() => {
@@ -82,8 +93,6 @@ export class DashboardPage implements OnInit {
 		if (Capacitor.isNativePlatform()) {
 			const geoPermResult = await Geolocation.requestPermissions();
 			const contactPermResult = await Contacts.requestPermissions();
-			console.log('Geolocation Permission request result:', geoPermResult);
-			console.log('Contacts Permission request result:', contactPermResult);
 
 			if (geoPermResult) {
 				this.getCurrentCoordinate();
@@ -157,11 +166,12 @@ export class DashboardPage implements OnInit {
 	}
 
 	GoToNotification() {
+		this.notifyCount = 0; // Reset the count when navigating to the notification page
 		this._router.navigate(['/pages/notification']);
+
 	}
 
 	toggleChanged(event: any) {
-		console.log("This is Toggle Value=>", event)
 		if (event.detail.checked) {
 			this._router.navigate(['/buzwel']);
 		}
@@ -190,7 +200,6 @@ export class DashboardPage implements OnInit {
 			};
 
 			this.chatconnect.postData(apidata, "user_dashboard").then((result: any) => {
-				console.log(result);
 				this.loaded = true;
 				console.log("Value Updated==>", this.loaded)
 				if (result.Response.status == 1) {
@@ -258,9 +267,9 @@ export class DashboardPage implements OnInit {
 				search_params: ev.detail.value,
 			};
 			this.chatconnect.postData(apidata, "search").then((result: any) => {
-				console.log(result);
 				if (result.Response.status == 1) {
 					this.lists = result.Response.search_result;
+					console.log("search result ==>", this.lists)
 				} else {
 					this.commonservice.presentToast("Oops", result.Response.message);
 				}
@@ -289,18 +298,14 @@ export class DashboardPage implements OnInit {
 	}
 
 	SearchResult(params: any) {
-		console.log("This is Search Result ==> ", params)
 		if (params.flag == 1) {
 			let apidata = {
 				user_token: this.dataservice.getUserData(),
 				event_id: params.id
 			}
-			console.log(apidata);
 			this.chatconnect.postData(apidata, "view_events_by_id").then((result: any) => {
-				console.log("This is result", result.Response.events_data);
 				if (result.Response.status == 1) {
 					this.dataservice.setEventData(result.Response.events_data);
-					console.log(this.dataservice.user_event_data)
 					this._router.navigate(['/detailseve'])
 				} else {
 					this.commonservice.presentToast("Oops", result.Response.message)
@@ -316,7 +321,6 @@ export class DashboardPage implements OnInit {
 				community_id: params.id
 			}
 			this.chatconnect.postData(apidata, "view_community_by_id").then((result: any) => {
-				console.log("This is result", result.Response.community_data);
 				if (result.Response.status == 1) {
 					this.dataservice.setCommunityData(result.Response.community_data);
 					this._router.navigate(['/community-details'])
@@ -342,7 +346,6 @@ export class DashboardPage implements OnInit {
 	}
 
 	view_details(params: any) {
-		console.log("This is Event Details ==> ", params)
 		if (params.event_for == 'multiple_event') {
 			this._router.navigate(['pages/multieventdetails', { multievent_id: params.id }])
 		} else {
@@ -353,7 +356,13 @@ export class DashboardPage implements OnInit {
 
 	view_event_details(params: any) {
 		this.dataservice.setEventData(params);
-		this._router.navigate(['/detailseve'])
+		if (!params.is_premium) {
+			console.log("If free event")
+			this._router.navigate(['/detailseve'])
+		} else {
+			console.log("If paid event")
+			this._router.navigate(['/event-details'])
+		}
 	}
 
 	view_community_details(params: any) {

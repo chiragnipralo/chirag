@@ -4,22 +4,31 @@ ion-toolbar{
         text-align: center;
     }
 
-    ion-icon{
-        font-size: 1.3rem;
-        padding: 10px;
-    }
+    // ion-icon{
+    //     font-size: 1.3rem;
+    //     padding: 10px;
+    // }
 }
 
 .header-md::after {
     background:none;
 }
-
 ion-content{
     --background: linear-gradient(to bottom, #ffffff, #e2fbcc);
 
     ion-icon{
         font-size: 1.3rem;
         padding: 10px;
+    }
+    .back-icon{
+        padding: 20px 10px!important;
+        font-size: 32px!important;
+        font-weight: 500!important;
+    }
+    .ios.back-icon{
+        padding: 40px 10px!important;
+        font-size: 32px!important;
+        font-weight: 500!important;
     }
 }
 

@@ -23,10 +23,14 @@
         <ng-template #noImage>
           <ion-label class="avatar-label">{{ dataservice.user_profile_data?.user_name[0] }}</ion-label>
         </ng-template>
-        
-        <ion-icon name="pencil" (click)="fileInput.click()" style="font-size: 25px; color: var(--ion-color-primary)"></ion-icon>
-        <input type="file" style="display: none" #fileInput (change)="onFileSelected($event)" accept="image/png, image/jpg, image/jpeg">
       </ion-avatar>
+      <div class="prof-icon">
+        <ion-icon name="camera" color="success" (click)="fileInput.click()"></ion-icon>
+        <input type="file" style="display: none" #fileInput (change)="onFileSelected($event)" accept="image/png, image/jpg, image/jpeg">
+        <ng-container *ngIf="profile_img[0]">
+          <ion-icon name="trash" color="danger" (click)="remove_profile()"></ion-icon> 
+        </ng-container>
+      </div>
       <h2>{{dataservice.user_profile_data?.user_name}}</h2>
       <p>{{dataservice.user_profile_data?.user_unique_name}}</p>
     </div>
@@ -40,7 +44,7 @@
 
       <ion-item>
         <ion-icon name="card-outline"></ion-icon>
-        <ion-input type="text" formControlName="user_unique_name" placeholder="User ID" readonly></ion-input>
+        <ion-input type="text" formControlName="user_unique_name" placeholder="User ID"></ion-input>
       </ion-item> 
 
       <ion-item>
@@ -50,7 +54,7 @@
 
       <ion-item>
         <ion-icon name="call-outline"></ion-icon>
-        <ion-input type="number" formControlName="mobile" placeholder="Contact No"></ion-input>
+        <ion-input type="number" formControlName="mobile" placeholder="Contact No" readonly></ion-input>
       </ion-item>
     </ion-list>
     <ion-button color="secondary" shape="round" type="submit" class="update_btn">Save</ion-button>

@@ -39,6 +39,13 @@ export class ContactPage implements OnInit{
     this.totalCheckedCount = this.contactss.filter(c => c.checked).length;
   }
   
+  doRefresh(refresher:any) {
+		this.getContacts();
+		setTimeout(() => {
+			refresher.target.complete();
+		}, 2000);
+  }
+  
   checkboxClick(event: any, contact: { checked: boolean }): void {
     contact.checked = !contact.checked;
     this.totalCheckedCount = contact.checked ? this.totalCheckedCount + 1 : this.totalCheckedCount - 1;
@@ -204,7 +211,7 @@ export class ContactPage implements OnInit{
          res.present();
           var retrievedObject = JSON.parse(localStorage.getItem('cust_contacts') || 'null');
 
-         if(!this.dataservice.ValidateArray(retrievedObject)){
+         if(this.dataservice.ValidateArray(retrievedObject)){
           const projection = {
             name: true,
             phones: true,

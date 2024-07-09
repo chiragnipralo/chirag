@@ -1,13 +1,4 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
-    </ion-buttons>
-    <ion-img src="assets/images/logo.png"></ion-img>
-  </ion-toolbar>
-</ion-header> -->
-
-<ion-content>
+<ion-content scroll-y="true">
   <div class="container ion-padding">
     <div class="img_box">
       <ion-img src="../../../assets/images/login.png"></ion-img>
@@ -19,11 +10,16 @@
     <form (ngSubmit)="submit()" [formGroup]="ionicForm">
       <div class="login">
         <div class="form-input">
-          <ion-icon name="call"></ion-icon>
-          <ion-input formControlName="mobile_number" pattern="[0-9]*" maxlength="10" class="ion-padding-start" type="tel" placeholder="Mobile Number"></ion-input>
+          <ion-input
+            formControlName="mobile_number"
+            type="number"
+            placeholder="Please enter phone number"
+            clearInput
+          ></ion-input>
         </div>
         <ng-container *ngFor="let error of error_messages.mobile_number">
-          <div class="error-message" *ngIf="ionicForm?.get('mobile_number')?.hasError(error.type) && (ionicForm?.get('mobile_number')?.dirty || ionicForm?.get('mobile_number')?.touched)">
+          <div class="error-message"
+            *ngIf="ionicForm?.get('mobile_number')?.hasError(error.type) && (ionicForm?.get('mobile_number')?.dirty || ionicForm?.get('mobile_number')?.touched)">
             {{ error.message }}
           </div>
         </ng-container>

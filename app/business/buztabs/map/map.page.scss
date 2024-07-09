@@ -31,6 +31,10 @@ ion-toolbar{
     }  
 }
 
+.avatar-label{
+    color: #469c27;
+}
+
 ion-menu{
     --width:80%;
     .profile_des{
@@ -287,18 +291,15 @@ ion-card{
         top: 4px;
         left: 5px;
     }
-    .category_style{
-        position: relative;
-        bottom: 25px;
-        right: 0;
-        border-radius: 0 0 7px 7px;
-        left: 0;
-        z-index: 0;
-        background: #469c27;
-        color: white;
-        padding: 2px 7px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+    
+}
+.category_style{
+    position: absolute;
+    bottom: 3px;
+    right: 5px;
+    border-radius: 0 0 7px 7px;
+    left: 5px;
+    background: #469c27;
+    color: white;
+    padding: 2px;
 }

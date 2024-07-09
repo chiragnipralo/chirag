@@ -1,4 +1,4 @@
-cheion-title{
+ion-title{
     text-align: center;
     position: absolute;
     top:0;
@@ -15,6 +15,7 @@ ion-toolbar.ios{
 ion-fab.ios{
     top: 40px;
 }
+
 
 ion-back-button.ios{
     color: #fff;
@@ -54,6 +55,10 @@ ion-back-button.ios{
 
 .swiper-zoom-container{
     text-align: left!important;
+}
+
+.message11{
+    height: 70%;
 }
 
 .head{
@@ -121,8 +126,8 @@ ion-popover{
         margin-left: 10px;
 
         .ionfab{
-            width: 30px;
-            height: 30px;
+            width: 33px;
+            height: 33px;
             margin: 3px;
     
             ion-icon{
@@ -745,3 +750,70 @@ p{
     width: 91%;
     margin: auto;
 }
+.logo{
+    width: 40%;
+    margin: auto;
+    height: 25%;
+}
+.share-options-alert .alert-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .alert-button.icon-whatsapp::before {
+    content: '\f232';
+    font-family: 'FontAwesome';
+    font-size: 24px;
+    color: #25D366;
+  }
+  
+  .alert-button.icon-linkedin::before {
+    content: '\f08c';
+    font-family: 'FontAwesome';
+    font-size: 24px;
+    color: #0077B5;
+  }
+  
+  .alert-button.icon-twitter::before {
+    content: '\f099';
+    font-family: 'FontAwesome';
+    font-size: 24px;
+    color: #1DA1F2;
+  }
+  
+  .alert-button.icon-facebook::before {
+    content: '\f09a';
+    font-family: 'FontAwesome';
+    font-size: 24px;
+    color: #4267B2;
+  }
+  
+  .alert-button.icon-instagram::before {
+    content: '\f16d';
+    font-family: 'FontAwesome';
+    font-size: 24px;
+    color: #C13584;
+  }
+  
+  .alert-button.icon-snapchat::before {
+    content: '\f2ac';
+    font-family: 'FontAwesome';
+    font-size: 24px;
+    color: #FFFC00;
+  }
+  
+  .alert-button.icon-copy::before {
+    content: '\f0c5';
+    font-family: 'FontAwesome';
+    font-size: 24px;
+    color: #000000;
+  }
+  
+  .alert-button.icon-email::before {
+    content: '\f0e0';
+    font-family: 'FontAwesome';
+    font-size: 24px;
+    color: #D44638;
+  }
+  

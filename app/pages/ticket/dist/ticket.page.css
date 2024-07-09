@@ -1,0 +1,90 @@
+ion-toolbar ion-title {
+  text-align: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.container ion-card {
+  height: 233px;
+  max-width: 388px;
+  position: relative;
+  border-radius: 15px;
+  margin: 15px;
+}
+.container ion-card ion-card-header {
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  background: #f3f3f3;
+}
+.container ion-card ion-card-header img {
+  height: 33px;
+  width: 66px;
+}
+.container ion-card ion-row {
+  height: 100%;
+}
+.container ion-card ion-row ion-col {
+  height: 100%;
+}
+.container ion-card ion-img {
+  height: 150px;
+  width: 150px;
+  margin: auto;
+}
+@media (max-width: 280px) {
+  .container ion-card ion-img {
+    height: 100px;
+    width: 100px;
+  }
+}
+.container ion-card ion-img::part(image) {
+  object-fit: cover;
+}
+.container ion-card .share_icon {
+  font-size: 20px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.container ion-card .delete_icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 23px;
+  color: red;
+}
+.container ion-card .cancel_ticket {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+.container ion-card .cancel_ticket ion-icon {
+  font-size: 25px;
+  color: red;
+}
+
+.scanned {
+  backdrop-filter: blur(5px);
+}
+
+.scanned_title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.scanned_title p {
+  background: #85ca69;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  font-size: 16px;
+}

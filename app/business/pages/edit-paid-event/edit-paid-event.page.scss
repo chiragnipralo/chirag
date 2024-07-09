@@ -2,6 +2,11 @@ ion-toolbar{
     --border-style: none;
     ion-title{
         text-align: center;
+        position:absolute;
+        top: 0;
+        bottom:0;
+        right: 0;
+        left: 0;
     }
 
     ion-icon{
@@ -14,6 +19,12 @@ ion-toolbar{
     color: red;
     text-align: center;
     padding-bottom:10px ;
+}
+
+.event_paid_free{
+    border-radius: 5px;
+    --background: #efebeb;
+    margin: 20px 0;
 }
 
 .custom-file-input{

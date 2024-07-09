@@ -1,14 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormArray,FormBuilder, Validators } from "@angular/forms";
-import { NavController,LoadingController,ModalController,AlertController, IonTextarea, IonInput } from '@ionic/angular';
-import { DomSanitizer } from "@angular/platform-browser";
-import { SafeUrl } from "@angular/platform-browser";
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { NavController, LoadingController, ModalController, AlertController } from '@ionic/angular';
+import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 import { CommonService } from '../../services/common.service';
 import { ImgcropperComponent } from '../../components/imgcropper/imgcropper.component';
 import { DataService } from '../../services/data.service';
 import { HttpService } from '../../services/http.service';
-import { Router,ActivatedRoute } from '@angular/router';
-import { SuccessPage } from 'src/app/events/success/success.page';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-multi-event',
@@ -17,39 +15,29 @@ import { SuccessPage } from 'src/app/events/success/success.page';
 })
 
 export class MultiEventPage implements OnInit {
-
   ionicForm!: FormGroup;
   isSubmitted = false;
-  file_uploaddata=''
-  public showMoreBar : boolean = false;
-  private sanitizer: DomSanitizer;
+  file_uploaddata = '';
   public imageUrls: SafeUrl[];
-  // public Blobimage=[];
-  Blobimage: any[] = [];
+  currentDate: string;
 
-  showSubmitButton = false;
-  public accountType!: number;
-
-  constructor(sanitizer: DomSanitizer,
-    public formBuilder: FormBuilder,
-    public common:CommonService,
-    public dataservice: DataService,
-    public navCtrl: NavController,
-    public chatconnect: HttpService,
-    public modalController: ModalController,
-    public createv4omdal: ModalController,
-    public successmodal: ModalController,
-    public contactpagemodal: ModalController,
-    public router: Router,
+  constructor(
+    private sanitizer: DomSanitizer,
+    private formBuilder: FormBuilder,
+    private common: CommonService,
+    private dataservice: DataService,
+    private navCtrl: NavController,
+    private chatconnect: HttpService,
+    private modalController: ModalController,
+    private router: Router,
     private route: ActivatedRoute,
-    public alertController: AlertController){
-    this.sanitizer = sanitizer;
+    private alertController: AlertController
+  ) {
     this.imageUrls = [];
-    this.route.queryParams.subscribe(params => {
-      this.accountType = +params['value'];
-      console.log(this.accountType);
-    });
-  }  
+    const today = new Date();
+    today.setDate(today.getDate());
+    this.currentDate = today.toISOString().split('T')[0];
+  }
 
   error_messages = {
     'title': [
@@ -57,89 +45,113 @@ export class MultiEventPage implements OnInit {
     ],
     'description': [
       { type: 'required', message: 'Description is required.' },
+    ],
+    'start_date': [
+      { type: 'required', message: 'Start date is required.' },
+    ],
+    'end_date': [
+      { type: 'required', message: 'End date is required.' },
     ]
-  }
+  };
 
   async ngOnInit() {
     this.ionicForm = this.formBuilder.group({
       title: ['', [Validators.required]],
-      description: [''],
-      start_date: [''],
-      end_date: [''],
-    })
-    await this.GetDashboard()
+      description: ['', [Validators.required]],
+      start_date: ['', Validators.required],
+      end_date: ['', Validators.required]
+    });
+  
+    await this.GetDashboard();
   }
-
-  GetDashboard(){    
+  
+  GetDashboard() {
     return new Promise<any>((resolve, reject) => {
-      let apidata={
-        user_token:this.dataservice.getUserData()
-      }
-      this.chatconnect.postData(apidata,"user_dashboard").then((result:any)=>{
-        console.log(result);
-        if(result.Response.status ==1){
-          this.dataservice.events_categories =result.Response.all_categories;
+      let apidata = {
+        user_token: this.dataservice.getUserData()
+      };
+      this.chatconnect.postData(apidata, "user_dashboard").then((result: any) => {
+        if (result.Response.status == 1) {
+          this.dataservice.events_categories = result.Response.all_categories;
           resolve(true);
-        }else{
-          this.common.presentToast("Oops",result.Response.message)
+        } else {
+          this.common.presentToast("Oops", result.Response.message);
         }
-      },(err)=>{
-        console.log("Connection failed Messge");
+      }, (err) => {
+        console.log("Connection failed Message");
         reject(err);
-      });    
+      });
     });
   }
 
-  async submit(){
+  async submit() {
     this.isSubmitted = true;
     this.ionicForm.markAllAsTouched();
-    console.log(this.ionicForm)
-    if (!this.ionicForm.valid){
+    
+    let alertMessage = '';
+  
+    if (!this.ionicForm.valid) {
+      if (this.ionicForm.get('title')?.hasError('required')) {
+        alertMessage += 'Title is required.\n';
+      }
+      if (this.ionicForm.get('description')?.hasError('required')) {
+        alertMessage += 'Description is required.\n';
+      }
+      if (this.ionicForm.get('start_date')?.hasError('required')) {
+        alertMessage += 'Start date is required.\n';
+      }
+      if (this.ionicForm.get('end_date')?.hasError('required')) {
+        alertMessage += 'End date is required.\n';
+      }
+      if (!this.imageUrls.length) {
+        alertMessage += 'Please upload an image.\n';
+      }
+  
       let alert = await this.alertController.create({
-        header: '',
-        subHeader: 'Please Enter Details',
+        header: 'Please Enter Details',
+        subHeader: alertMessage,
         buttons: ['Dismiss']
       });
       alert.present();
+      return;
+    } 
+    
+    this.common.show("Please wait...");
+    var formData = new FormData();
+    formData.append('user_token', this.dataservice.getUserData()?.toString() ?? '');
+  
+    const eventImages: string = localStorage.getItem('event_images') ?? '';
+    if (eventImages) {
+      formData.append('event_images', this.dataservice.convertBase64ToBlob(eventImages));
     } else {
-      var formData = new FormData();
-      formData.append('user_token', this.dataservice.getUserData()?.toString() ?? '');
-      
-      const eventImages: string = localStorage.getItem('event_images') ?? '';
-      if (!this.dataservice.isNullOrUndefined(eventImages)) {
-        formData.append('event_images', this.dataservice.convertBase64ToBlob(eventImages));
-      } else {
-        formData.append('event_images', '');
-      }
-
-      const titleValue = this.ionicForm.get('title')?.value ?? '';
-      formData.append('title', titleValue);
-
-      const descriptionValue = this.ionicForm.get('description')?.value ?? '';
-      formData.append('description', descriptionValue);
-
-      const startDateValue = this.ionicForm.get('start_date')?.value ?? '';
-      formData.append('start_date', startDateValue);
-
-      const endDateValue = this.ionicForm.get('end_date')?.value ?? '';
-      formData.append('end_date', endDateValue);
-
-      console.log(formData);
-      this.chatconnect.postFormData(formData,"multiple_event").then((result:any)=>{
-        this.common.hide();
-        if (result.Response.status == 1) {
-          this.router.navigate(['pages/successmul',{multievent_id:result.Response.last_id}])
-        }else{
-          this.common.presentToast("Oops",result.Response.message)
-        }
-      },(err)=>{
-        this.common.hide();
-        console.log("Connection failed Messge");
-      });
+      formData.append('event_images', '');
     }
+  
+    formData.append('title', this.ionicForm.get('title')?.value ?? '');
+    formData.append('description', this.ionicForm.get('description')?.value ?? '');
+    formData.append('start_date', this.ionicForm.get('start_date')?.value ?? '');
+    formData.append('end_date', this.ionicForm.get('end_date')?.value ?? '');
+  
+    console.log('Form Data:', formData);
+    
+    this.chatconnect.postFormData(formData, "multiple_event").then((result: any) => {
+      this.common.hide();
+      console.log('Response:', result);
+      if (result.Response.status == 1) {
+        this.ionicForm.reset();
+        localStorage.removeItem('event_images');
+        this.imageUrls = [];
+        this.router.navigate(['pages/successmul', { multievent_id: result.Response.last_id }]);
+      } else {
+        this.common.presentToast("Oops", result.Response.message);
+      }
+    }, (err) => {
+      this.common.hide();
+      console.log("Connection failed:", err);
+    });
   }
-
-  async view(img: any,showflag: string) {
+  
+  async view(img: any, showflag: string) {
     const modal = await this.modalController.create({
       component: ImgcropperComponent,
       cssClass: 'my-menubar',
@@ -147,42 +159,41 @@ export class MultiEventPage implements OnInit {
     modal.onDidDismiss().then((data: any) => {
       if (data.data != undefined) {
         if (data.data.cropped_image) {
-          this.dataservice.convertBase64ToBlob(data.data.cropped_image)
-          if (showflag == "event"){
-            this.imageUrls=[]
+          this.dataservice.convertBase64ToBlob(data.data.cropped_image);
+          if (showflag == "event") {
+            this.imageUrls = [];
             this.imageUrls.unshift(data.data.cropped_image);
             localStorage.setItem("event_images", data.data.cropped_image);
           }
         }
       } else {
-        this.imageUrls=[]
+        this.imageUrls = [];
       }
     });
     return await modal.present();
   }
 
-  loadImageFromDevice(event: { target: { files: any[]; }; },showflag: string) {
+  loadImageFromDevice(event: { target: { files: any[]; }; }, showflag: string) {
     const photo = event.target.files[0];
-    this.file_uploaddata=photo;
+    this.file_uploaddata = photo;
     let formData = new FormData();
     formData.append("photo", photo, photo.name);
-    this.Blobimage.push(photo);
-    this.dataservice.blobToBase64(photo).then((res:any) => {
-      this.dataservice.event_base64img=res
-      this.view(res,showflag)
+    this.dataservice.blobToBase64(photo).then((res: any) => {
+      this.dataservice.event_base64img = res;
+      this.view(res, showflag);
     });
- 
+
     const reader = new FileReader();
     reader.readAsArrayBuffer(photo);
     reader.onload = () => {
       let blob: Blob = new Blob([new Uint8Array((reader.result as ArrayBuffer))]);
       let blobURL: string = URL.createObjectURL(blob);
-     if (showflag == "event"){
+      if (showflag == "event") {
         this.imageUrls.unshift(
           this.sanitizer.bypassSecurityTrustUrl(blobURL)
         );
       }
     };
     reader.onerror = (error) => { };
-  };
+  }
 }

@@ -168,7 +168,7 @@ export class EventPaymentPage implements OnInit {
         console.log("Connection failed Messge");
       });
     } else {
-      this.common.show("Please Wait Dont Press Back Button");
+      this.common.show("Please wait, don't press the back button.");
       console.log("Event Invitation")
       var formData = new FormData();
       if (userToken !== null) {

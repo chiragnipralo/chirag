@@ -66,11 +66,12 @@ export class AboutPage implements OnInit {
 	ngOnInit() {
 	}
 
-	GetData(){
+	GetData() {
+		const id = this.dataservice.GetAccountuser();
 		this.commonservice.show("Please Wait");
 		let apidata={
 			user_token:this.dataservice.getUserData(),
-			account_id:this.dataservice.user_account_data.id,
+			account_id:id,
 		}
 		this.chatconnect.postData(apidata,"paid_user_profile").then((result:any)=>{
 			this.commonservice.hide();

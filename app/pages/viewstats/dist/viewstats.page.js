@@ -119,7 +119,7 @@ var ViewstatsPage = /** @class */ (function () {
         this.event_male_user = this.dataservice.events_guests.usersGender;
         this.poll_section = this.dataservice.events_guests.poll_section_stats;
         this.foodCount = this.dataservice.events_guests.foodselected;
-        console.log("User Comings ==>", this.coming_guests);
+        console.log("User Comings ==>", this.poll_section);
     };
     ViewstatsPage.prototype.getGuestCount = function (guests) {
         return guests ? guests.length : 0;

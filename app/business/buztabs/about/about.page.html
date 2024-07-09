@@ -17,10 +17,15 @@
 	<div class="container">
 		<ion-card>
 			<ion-card-header>
-				<!-- <ion-icon name="qr-code-outline" routerLink="/qrcode"></ion-icon> -->
 				<ion-avatar>
-					<ion-label class="avatar-label">{{ user_data?.account_name[0] }}</ion-label>
-				</ion-avatar>
+					<ng-container *ngIf="user_data?.account_image !== null; else noImage">
+					  <img [src]="user_data?.account_image" style="height: 100%;width: 100%;">
+					</ng-container>
+					<ng-template #noImage>
+					  <ion-label class="avatar-label">{{user_data?.account_name[0]}}</ion-label>
+					</ng-template>
+					</ion-avatar>
+
 				<!-- <ion-icon name="pencil" routerLink="/editprof"></ion-icon> -->
 			</ion-card-header>
 			<ion-card-content>

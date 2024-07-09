@@ -27,6 +27,7 @@ export class CreateCommunityPage implements OnInit {
   public Blobimage:any =[];
   public accountType: number | undefined;
   showSubmitButton = false;
+  sortedCategories!: any[];
 
   constructor(sanitizer: DomSanitizer,
     public formBuilder: FormBuilder,
@@ -48,6 +49,16 @@ export class CreateCommunityPage implements OnInit {
       console.log(this.accountType);
     });
   }  
+
+  customAlertOptions = {
+    header: 'Select Category',
+    translucent: true,
+  };
+
+  EventOptions = {
+    header: 'Select Type',
+    translucent: true,
+  };
 
   error_messages = {
     'title': [
@@ -82,7 +93,8 @@ export class CreateCommunityPage implements OnInit {
       this.chatconnect.postData(apidata,"user_dashboard").then((result:any)=>{
         console.log(result);
         if(result.Response.status ==1){
-          this.dataservice.events_categories =result.Response.all_categories;
+          this.dataservice.events_categories = result.Response.all_categories;
+          this.sortedCategories = this.dataservice.events_categories.sort((a: any, b: any) => a.name.localeCompare(b.name));
           resolve(true);
         }else{
           this.common.presentToast("Oops",result.Response.message)
@@ -106,6 +118,7 @@ export class CreateCommunityPage implements OnInit {
       });
       alert.present();
     } else {
+      this.common.show("Please wait");
       const userToken = this.dataservice.getUserData()
       var formData = new FormData();
       if (userToken !== null) {

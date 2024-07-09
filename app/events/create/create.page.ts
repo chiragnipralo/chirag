@@ -1,16 +1,16 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormArray,FormBuilder, FormControl, Validators } from "@angular/forms";
-import { NavController,LoadingController,ModalController,AlertController, IonTextarea, IonInput } from '@ionic/angular';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { FormGroup, FormArray, FormBuilder, FormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { NavController, LoadingController, ModalController, AlertController, IonTextarea } from '@ionic/angular';
 import { DomSanitizer } from "@angular/platform-browser";
 import { SafeUrl } from "@angular/platform-browser";
 import { CommonService } from '../../services/common.service';
 import { ImgcropperComponent } from '../../components/imgcropper/imgcropper.component';
 import { DataService } from '../../services/data.service';
 import { HttpService } from '../../services/http.service';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Createv4Page } from '../createv4/createv4.page';
 import { ContactPage } from '../contact/contact.page';
- 
+
 declare var google: any;
 
 @Component({
@@ -33,34 +33,31 @@ export class CreatePage implements OnInit {
   segment = '1';
   food_others = '';
   showSubmitButton = false;
-  extra_food_name: any;
-  drinks_name: any;
-  contact_name:any;
-  contact_role:any;
-  contact_number:any;
-  food_name: any;
-  cuisine_name: any;
-  activity_name:any;
-  activity_details:any;
-  contacts= [];
-  paidEventBar: boolean | undefined;
-  isToggled: boolean = true;
-  isActivityAdded: boolean = false;
   customOptionSelected = false;
   termsAndConditionsList: any;
-  file_uploaddata=''
-  public showMoreBar : boolean = false;
-  public is_custom_food_show : boolean = false;
-  public is_event_permission_skipped : boolean = false;
+  file_uploaddata = '';
+  public showMoreBar: boolean = false;
+  public is_custom_food_show: boolean = false;
+  public is_event_permission_skipped: boolean = false;
   private sanitizer: DomSanitizer;
   public imageUrls: SafeUrl[];
   public mapsUrls: SafeUrl[];
   public menuUrls: SafeUrl[];
-  public Blobimage:any=[];
+  public Blobimage: any = [];
   public LocalFoodItem = [];
-  public LocalCusineItem=[];
+  public LocalCusineItem = [];
   public eventFlag: number | undefined;
   public communityId: number | undefined;
+  public currentDate: string;
+  private currentDateTime: Date = new Date();
+  sortedCategories!: any[];
+
+  ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const fromAge = control.get('age_group_from')?.value;
+    const toAge = control.get('age_group_to')?.value;
+  
+    return fromAge !== null && toAge !== null && fromAge > toAge ? { ageGroupInvalid: true } : null;
+  };
 
   customAlertOptions = {
     header: 'Select Category',
@@ -78,42 +75,42 @@ export class CreatePage implements OnInit {
   };
 
   error_messages = {
-    'title':[
+    'title': [
       { type: 'required', message: 'Title is required.' },
-      ],
-    'description':[
+    ],
+    'description': [
       { type: 'required', message: 'Description is required.' },
-      ],
-    'category':[
+    ],
+    'category': [
       { type: 'required', message: 'Category is required.' },
     ],
-    'selectedAge':[
+    'selectedAge': [
       { type: 'required', message: 'Age is required.' },
-      ],
-    'event_date':[
+    ],
+    'event_date': [
       { type: 'required', message: 'Date is required.' },
-      ],
-    'start_time':[
-      { type: 'required', message: 'Title is required.' },
-      ],
-    'end_time':[
-      { type: 'required', message: 'Title is required.' },
-      ],
-    'location_name':[
+    ],
+    'start_time': [
+      { type: 'required', message: 'Start time is required.' },
+    ],
+    'end_time': [
+      { type: 'required', message: 'End time is required.' },
+    ],
+    'location_name': [
       { type: 'required', message: 'Venue location is required.' },
-      ],  
-    'event_typecate':[
+    ],
+    'event_typecate': [
       { type: 'required', message: 'Event type is required.' },
-      ],   
+    ],
   }
-  
+
   @ViewChild('autocomplete') autocomplete: any;
-  @ViewChild('moreBar') moreBar: { setFocus: () => void; } | undefined ; 
+  @ViewChild('moreBar') moreBar: { setFocus: () => void; } | undefined;
   age_group: FormGroup<{ age_group_to: FormControl<string>; age_group_from: FormControl<string>; }> | undefined;
 
   constructor(sanitizer: DomSanitizer,
     public formBuilder: FormBuilder,
-    public common:CommonService,
+    public common: CommonService,
     public dataservice: DataService,
     public navCtrl: NavController,
     public chatconnect: HttpService,
@@ -123,7 +120,8 @@ export class CreatePage implements OnInit {
     public contactpagemodal: ModalController,
     public router: Router,
     private route: ActivatedRoute,
-    public alertController: AlertController){
+    public alertController: AlertController,
+  ) {
     this.sanitizer = sanitizer;
     this.segment = "1";
     this.imageUrls = [];
@@ -138,7 +136,11 @@ export class CreatePage implements OnInit {
       activity_name: [''],
       activity_details: [''],
     });
-  }  
+
+    const today = new Date();
+    today.setDate(today.getDate());
+    this.currentDate = today.toISOString().split('T')[0];
+  }
 
   @ViewChild(IonTextarea)
   textarea!: IonTextarea;
@@ -148,7 +150,7 @@ export class CreatePage implements OnInit {
       const selectedItems = this.termsAndConditionsList
         .filter((item: { selected: any; }) => item.selected)
         .map((item: { text: any; }) => item.text);
-   
+
       const termsAndConditionsControl = this.ionicForm.get('terms_and_conditions');
       if (termsAndConditionsControl) {
         termsAndConditionsControl.setValue(selectedItems.join('\n'));
@@ -215,8 +217,20 @@ export class CreatePage implements OnInit {
       }
     });
   }
+  timeRangeValidator(group: FormGroup): ValidationErrors | null {
+    const startTime = group.get('start_time')?.value;
+    const endTime = group.get('end_time')?.value;
+    return startTime !== null && endTime !== null && startTime >= endTime ? { timeRangeInvalid: true } : null;
+  }
 
-  async ngOnInit(){
+  async ngOnInit() {
+    this.dataservice.events_form = [];
+    this.dataservice.foodImages = [];
+    this.dataservice.locationn = null;
+    this.dataservice.emergency_contact = [];
+    this.dataservice.event_cusine_type = null;
+    this.dataservice.foodImages = [];
+  
     this.ionicForm = this.formBuilder.group({
       title: ['', [Validators.required]],
       description: [''],
@@ -225,48 +239,67 @@ export class CreatePage implements OnInit {
       event_typecate: ['', [Validators.required]],
       location_name: ['', [Validators.required]],
       food_name: [''],
-      cuisine_name:[''],
+      cuisine_name: [''],
       terms_and_conditions: [''],
       event_activities: this.formBuilder.array([]),
       emergency_contact: this.formBuilder.array([]),
       poll_section: this.formBuilder.array([]),
       food_section: this.formBuilder.array([]),
       drink_section: this.formBuilder.array([]),
-      event_dates: this.formBuilder.array([]),
+      event_dates: this.formBuilder.array([], { validators: this.timeRangeValidator }),
       age_group: this.formBuilder.group({
-        age_group_from: [''],  
-        age_group_to: ['']
+        age_group_from: [''],
+        age_group_to: [''],
       })
-    })
-
+    });
+  
+    // Subscribe to selectedAge changes
+    this.ionicForm.get('selectedAge')?.valueChanges.subscribe((value) => {
+      const ageGroup = this.ionicForm.get('age_group');
+      if (value === '1') {
+        // Custom age group selected, make fields required and add age range validator
+        ageGroup?.setValidators(this.ageRangeValidator);
+        this.ionicForm.get('age_group.age_group_from')?.setValidators([Validators.required]);
+        this.ionicForm.get('age_group.age_group_to')?.setValidators([Validators.required]);
+      } else {
+        // Any age group selected, clear validators
+        ageGroup?.clearValidators();
+        this.ionicForm.get('age_group.age_group_from')?.clearValidators();
+        this.ionicForm.get('age_group.age_group_to')?.clearValidators();
+      }
+      ageGroup?.updateValueAndValidity();
+      this.ionicForm.get('age_group.age_group_from')?.updateValueAndValidity();
+      this.ionicForm.get('age_group.age_group_to')?.updateValueAndValidity();
+    });
+  
     this.dataservice.eventFlag = this.eventFlag;
     this.dataservice.communityId = this.communityId;
-    
+  
     const piece = this.formBuilder.group({
       event_date: ['', [Validators.required]],
       start_time: ['', [Validators.required]],
       end_time: ['', [Validators.required]],
     });
- 
+  
     const activity = this.formBuilder.group({
       activity_name: [''],
       activity_details: [''],
     });
-
+  
     const econtact = this.formBuilder.group({
       contact_name: [''],
       contact_role: [''],
       contact_number: [''],
     });
-
+  
     const mulfood = this.formBuilder.group({
       extra_food_name: [''],
     });
-
+  
     const drinks = this.formBuilder.group({
       drinks_name: [''],
     });
-
+  
     const poll = this.formBuilder.group({
       poll_question: [''],
       poll_option1: [''],
@@ -274,48 +307,60 @@ export class CreatePage implements OnInit {
       poll_option3: [''],
       poll_option4: [''],
     });
-
+  
     this.getPiecesArray.push(piece);
     this.getActivityArray.push(activity);
     this.getfoodArray.push(mulfood);
     this.getdrinkArray.push(drinks);
     this.getEcontactArray.push(econtact);
     this.getPollArray.push(poll);
-
-    await this.GetDashboard()
+  
+    await this.GetDashboard();
   }
+  
+ 
+  
+  
+  ageRangeValidator(group: FormGroup): ValidationErrors | null {
+    const fromAge = group.get('age_group_from')?.value;
+    const toAge = group.get('age_group_to')?.value;
+    return fromAge !== null && toAge !== null && fromAge >= toAge ? { ageRangeInvalid: true } : null;
+  }
+  
 
-  GetDashboard(){    
+  GetDashboard() {
     return new Promise<any>((resolve, reject) => {
-      let apidata={
-        user_token:this.dataservice.getUserData()
+      let apidata = {
+        user_token: this.dataservice.getUserData()
       }
-      this.chatconnect.postData(apidata,"user_dashboard").then((result:any)=>{
-        if(result.Response.status ==1){
-          this.dataservice.events_categories =result.Response.all_categories;
-          this.dataservice.age_groups =result.Response.age_group;
-          this.dataservice.events_languages =result.Response.languages;
+      this.chatconnect.postData(apidata, "user_dashboard").then((result: any) => {
+        if (result.Response.status == 1) {
+          this.dataservice.events_categories = result.Response.all_categories;
+          this.dataservice.age_groups = result.Response.age_group;
+          this.dataservice.events_languages = result.Response.languages;
           this.dataservice.events_fooditems = result.Response.fooditems;
           this.dataservice.cusines_items = result.Response.cusinesitems;
           this.LocalFoodItem = result.Response.fooditems;
           this.LocalCusineItem = result.Response.cusinesitems;
+          this.sortedCategories = this.dataservice.events_categories.sort((a: any, b: any) => a.name.localeCompare(b.name));
+
           resolve(true);
-        }else{
-          this.common.presentToast("Oops",result.Response.message)
+        } else {
+          this.common.presentToast("Oops", result.Response.message)
         }
-      },(err)=>{
+      }, (err) => {
         console.log("Connection failed Messge");
         reject(err);
-      });    
+      });
     });
   }
 
   addPiece() {
     const piece = this.formBuilder.group({
-     event_date: ['', [Validators.required]],
-     start_time: ['', [Validators.required]],
-     end_time: ['', [Validators.required]],
-   });
+      event_date: ['', [Validators.required]],
+      start_time: ['', [Validators.required]],
+      end_time: ['', [Validators.required]],
+    });
 
     this.getPiecesArray.push(piece);
   }
@@ -323,12 +368,12 @@ export class CreatePage implements OnInit {
   deletePiece(i: number) {
     this.getPiecesArray.removeAt(i);
   }
- 
+
   addActivity() {
     const activity = this.formBuilder.group({
-     activity_name: ['', [Validators.required]],
-     activity_details: ['', [Validators.required]],
-   });
+      activity_name: ['', [Validators.required]],
+      activity_details: ['', [Validators.required]],
+    });
 
     this.getActivityArray.push(activity);
   }
@@ -337,47 +382,50 @@ export class CreatePage implements OnInit {
     this.getActivityArray.removeAt(i);
   }
 
+ 
   async Addacti() {
     const updatedActivities = [];
-  
     for (let i = 0; i < this.getActivityArray.length; i++) {
       const activityGroup = this.getActivityArray.at(i) as FormGroup;
       if (activityGroup) {
         const activity_name = activityGroup.get('activity_name')?.value;
         const activity_details = activityGroup.get('activity_details')?.value;
-  
+
         if (activity_name) {
           const existingActivityIndex = this.tempActivities.findIndex(activity => activity.activity_name === activity_name);
-  
+
           if (existingActivityIndex !== -1) {
             this.tempActivities[existingActivityIndex].activity_details = activity_details || '';
             updatedActivities.push(this.tempActivities[existingActivityIndex]);
           } else {
-            const existingActivity = this.tempActivities.find(activity => activity.activity_name === activity_name);
-            if (existingActivity) {
-              existingActivity.activity_details = activity_details || '';
-              updatedActivities.push(existingActivity);
-            } else {
-              const activity = {
-                activity_name,
-                activity_details: activity_details || ''
-              };
-              this.tempActivities.push(activity);
-              updatedActivities.push(activity);
-            }
+            const activity = {
+              activity_name,
+              activity_details: activity_details || ''
+            };
+            this.tempActivities.push(activity);
+            updatedActivities.push(activity);
           }
         }
       }
     }
+
+    for (let i = this.tempActivities.length - 1; i >= 0; i--) {
+      const activityName = this.tempActivities[i].activity_name;
+      const exists = this.getActivityArray.controls.some(control => control.get('activity_name')?.value === activityName);
+      if (!exists) {
+        this.tempActivities.splice(i, 1);
+      }
+    }
+
     await this.modalController.dismiss(updatedActivities);
   }
-  
+
   addContact() {
     const econtact = this.formBuilder.group({
-     contact_name: ['', [Validators.required]],
-     contact_role: ['', [Validators.required]],
-     contact_number: ['', [Validators.required,Validators.minLength(10),Validators.pattern('^[0-9]+$')]],
-   });
+      contact_name: ['', [Validators.required]],
+      contact_role: ['', [Validators.required]],
+      contact_number: ['', [Validators.required, Validators.minLength(10), Validators.pattern('^[0-9]+$')]],
+    });
     this.getEcontactArray.push(econtact);
   }
 
@@ -387,18 +435,18 @@ export class CreatePage implements OnInit {
 
   async addEmergencyContact() {
     const updatedEmergencyContacts = [];
-  
+
     for (let i = 0; i < this.getEcontactArray.length; i++) {
       const contactGroup = this.getEcontactArray.at(i) as FormGroup;
-  
+
       if (contactGroup) {
         const contact_name = contactGroup.get('contact_name')?.value;
         const contact_role = contactGroup.get('contact_role')?.value;
         const contact_number = contactGroup.get('contact_number')?.value;
-  
+
         if (contact_name && contact_number) {
           const existingContactIndex = this.tempEmergencyContact.findIndex(econtact => econtact.contact_name === contact_name);
-  
+
           if (existingContactIndex !== -1) {
             this.tempEmergencyContact[existingContactIndex].contact_role = contact_role || '';
             this.tempEmergencyContact[existingContactIndex].contact_number = contact_number || '';
@@ -415,9 +463,18 @@ export class CreatePage implements OnInit {
         }
       }
     }
+
+    for (let i = this.tempEmergencyContact.length - 1; i >= 0; i--) {
+      const contactName = this.tempEmergencyContact[i].contact_name;
+      const exists = this.getEcontactArray.controls.some(control => control.get('contact_name')?.value === contactName);
+      if (!exists) {
+        this.tempEmergencyContact.splice(i, 1);
+      }
+    }
+
     await this.modalController.dismiss(updatedEmergencyContacts);
   }
-  
+
   addPoll() {
     const poll = this.formBuilder.group({
       poll_question: [''],
@@ -425,13 +482,13 @@ export class CreatePage implements OnInit {
       poll_option2: [''],
       poll_option3: [''],
       poll_option4: [''],
-   });
+    });
     this.getPollArray.push(poll);
   }
 
   async addPollSection() {
     const updatedPolls = [];
-  
+
     for (let i = 0; i < this.getPollArray.length; i++) {
       const pollGroup = this.getPollArray.at(i) as FormGroup;
       const poll_question = pollGroup.get('poll_question')?.value;
@@ -439,9 +496,10 @@ export class CreatePage implements OnInit {
       const poll_option2 = pollGroup.get('poll_option2')?.value;
       const poll_option3 = pollGroup.get('poll_option3')?.value;
       const poll_option4 = pollGroup.get('poll_option4')?.value;
-  
+
       if (poll_question && poll_option1) {
         const existingPollIndex = this.tempoll.findIndex(poll => poll.poll_question === poll_question);
+
         if (existingPollIndex !== -1) {
           this.tempoll[existingPollIndex].poll_option1 = poll_option1 || '';
           this.tempoll[existingPollIndex].poll_option2 = poll_option2 || '';
@@ -461,6 +519,14 @@ export class CreatePage implements OnInit {
         }
       }
     }
+
+    for (let i = this.tempoll.length - 1; i >= 0; i--) {
+      const pollQuestion = this.tempoll[i].poll_question;
+      const exists = this.getPollArray.controls.some(control => control.get('poll_question')?.value === pollQuestion);
+      if (!exists) {
+        this.tempoll.splice(i, 1);
+      }
+    }
     await this.modalController.dismiss(updatedPolls);
   }
 
@@ -472,7 +538,7 @@ export class CreatePage implements OnInit {
     const mulfood = this.formBuilder.group({
       extra_food_name: [''],
     });
-     this.getfoodArray.push(mulfood);
+    this.getfoodArray.push(mulfood);
   }
 
   removefood(i: number) {
@@ -483,7 +549,7 @@ export class CreatePage implements OnInit {
     const drinks = this.formBuilder.group({
       drinks_name: [''],
     });
-     this.getdrinkArray.push(drinks);
+    this.getdrinkArray.push(drinks);
   }
 
   removeDrink(i: number) {
@@ -496,49 +562,54 @@ export class CreatePage implements OnInit {
     this.modalController.dismiss(this.foodItems);
   }
 
-  get   getPiecesArray() {
-    return (<FormArray>this.ionicForm.get('event_dates'));
+  get getPiecesArray() {
+    return this.ionicForm.get('event_dates') as FormArray;
   }
-  get   getActivityArray() {
+  get getActivityArray() {
     return (<FormArray>this.ionicForm.get('event_activities'));
   }
-  get   getEcontactArray() {
+  get getEcontactArray() {
     return (<FormArray>this.ionicForm.get('emergency_contact'));
   }
-  get   getfoodArray() {
+  get getfoodArray() {
     return (<FormArray>this.ionicForm.get('food_section'));
   }
-  get   getdrinkArray() {
+  get getdrinkArray() {
     return (<FormArray>this.ionicForm.get('drink_section'));
   }
-  get   getPollArray() {
+  get getPollArray() {
     return (<FormArray>this.ionicForm.get('poll_section'));
   }
 
   loadImagesFromDeviceMulti(event: any) {
     const files: File[] = event.target.files;
     if (files && files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.menuUrls.push(reader.result as string);
-            };
-            reader.readAsDataURL(files[i]);
-            this.selectedFiles.push(files[i]);
-        }
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.menuUrls.push(reader.result as string);
+        };
+        reader.readAsDataURL(files[i]);
+        this.selectedFiles.push(files[i]);
+      }
       this.dataservice.foodImages = this.selectedFiles;
     }
   }
-  
+
   removeImage(index: number) {
     this.menuUrls.splice(index, 1);
     this.selectedFiles.splice(index, 1);
     this.dataservice.foodImages = this.selectedFiles;
   }
 
-  async submit() {  
+  async submit() {
     this.isSubmitted = true;
     this.ionicForm.markAllAsTouched();
+    
+    console.log('Form Validity:', this.ionicForm.valid);
+    console.log('Form Values:', this.ionicForm.value);
+    console.log('Form Errors:', this.ionicForm.errors);
+  
     if (!this.ionicForm.valid || this.imageUrls.length == 0) {
       let alert = await this.alertController.create({
         subHeader: '* Please fill the required fields !!',
@@ -546,24 +617,25 @@ export class CreatePage implements OnInit {
       });
       alert.present();
     } else {
+      this.common.show("Please wait...");
       let termsAndConditionsValue;
       const termsAndConditionsControl = this.ionicForm.get('terms_and_conditions');
       if (termsAndConditionsControl) {
         termsAndConditionsValue = this.ionicForm.value.terms_and_conditions
-        .split('\n')
-        .map((line: string) => `<li>${line}</li>`)
-        .join('\n');
-        
+          .split('\n')
+          .map((line: string) => `<li>${line}</li>`)
+          .join('\n');
+  
         if (termsAndConditionsControl.value !== null) {
-
           if (termsAndConditionsValue != '<li></li>') {
             termsAndConditionsControl.setValue(`<ul>${termsAndConditionsValue}</ul>`);
           }
-
+  
           this.dataservice.event_cusine_type = this.LocalCusineItem.filter((item: any) => this.ionicForm.value.cuisine_name.indexOf(item.id) !== -1);
           this.dataservice.event_food_type = this.LocalFoodItem.filter((item: any) => this.ionicForm.value.food_name.indexOf(item.id) !== -1);
           this.dataservice.events_form.push(this.ionicForm.value);
           this.ContactPageModal();
+          this.common.hide();
         } else {
           console.error("terms_and_conditions form control value is null.");
         }
@@ -573,7 +645,8 @@ export class CreatePage implements OnInit {
     }
   }
   
-  async view(img: any,showflag: string) {
+
+  async view(img: any, showflag: string) {
     const modal = await this.modalController.create({
       component: ImgcropperComponent,
       cssClass: 'my-menubar',
@@ -582,16 +655,16 @@ export class CreatePage implements OnInit {
       if (data.data != undefined) {
         if (data.data.cropped_image) {
           this.dataservice.convertBase64ToBlob(data.data.cropped_image)
-          if(showflag == "eventmap"){
-            this.mapsUrls=[]
+          if (showflag == "eventmap") {
+            this.mapsUrls = []
             this.mapsUrls.unshift(data.data.cropped_image);
             localStorage.setItem("event_map_image", data.data.cropped_image);
-          }else if (showflag == "event"){
-            this.imageUrls=[]
+          } else if (showflag == "event") {
+            this.imageUrls = []
             this.imageUrls.unshift(data.data.cropped_image);
             localStorage.setItem("event_images", data.data.cropped_image);
-          }else{
-            this.menuUrls=[]
+          } else {
+            this.menuUrls = []
             this.menuUrls.unshift(data.data.cropped_image);
             localStorage.setItem("menu_imgData", data.data.cropped_image);
           }
@@ -607,64 +680,64 @@ export class CreatePage implements OnInit {
     return await modal.present();
   }
 
-  moveFocus(event: { target: { value: any; }; }){
+  moveFocus(event: { target: { value: any; }; }) {
     this.dataservice.events_fooditems.forEach((item: { id: number; name: any; }) => {
-      if(item.id ===0){
-        item.name=event.target.value
+      if (item.id === 0) {
+        item.name = event.target.value;
       }
     });
   }
 
-  ChangeFood(event: { detail: { value: any[]; }; }){
+  ChangeFood(event: { detail: { value: any[]; }; }) {
     event.detail.value.forEach(item => {
-      if(item ==0){
-        this.is_custom_food_show=true;
+      if (item == 0) {
+        this.is_custom_food_show = true;
       }
     });
   }
 
-  loadImageFromDevice(event: { target: { files: any[]; }; },showflag: string) {
+  loadImageFromDevice(event: { target: { files: any[]; }; }, showflag: string) {
     const photo = event.target.files[0];
-    if (showflag =="event") {
+    if (showflag == "event") {
       this.dataservice.orginalImage = photo;
     }
-    this.file_uploaddata=photo;
+    this.file_uploaddata = photo;
     let formData = new FormData();
     formData.append("photo", photo, photo.name);
     this.Blobimage.push(photo);
-    this.dataservice.blobToBase64(photo).then((res:any) => {
-      this.dataservice.event_base64img=res
-      this.view(res,showflag)
+    this.dataservice.blobToBase64(photo).then((res: any) => {
+      this.dataservice.event_base64img = res;
+      this.view(res, showflag);
     });
     const reader = new FileReader();
     reader.readAsArrayBuffer(photo);
     reader.onload = () => {
       let blob: Blob = new Blob([new Uint8Array((reader.result as ArrayBuffer))]);
       let blobURL: string = URL.createObjectURL(blob);
-      if(showflag == "eventmap"){
+      if (showflag == "eventmap") {
         this.mapsUrls.unshift(
           this.sanitizer.bypassSecurityTrustUrl(blobURL)
-          );
-      }else if (showflag == "event"){
+        );
+      } else if (showflag == "event") {
         this.imageUrls.unshift(
           this.sanitizer.bypassSecurityTrustUrl(blobURL)
-          );
-      }else{
+        );
+      } else {
         this.menuUrls.unshift(
           this.sanitizer.bypassSecurityTrustUrl(blobURL)
-          );
+        );
       }
     };
     reader.onerror = (error) => { };
-  };
+  }
 
-  goToNextSegment(){
+  goToNextSegment() {
     const segments = ['1', '2', '3', '4'];
     const currentIndex = segments.indexOf(this.segment);
 
     if (currentIndex < segments.length - 1) {
       this.segment = segments[currentIndex + 1];
-    } else if (currentIndex === segments.length - 1){
+    } else if (currentIndex === segments.length - 1) {
       this.segment = segments[currentIndex];
     }
   }
@@ -679,13 +752,13 @@ export class CreatePage implements OnInit {
 
   values: any[] = [];
 
-  removevalue(i: number){
-    this.values.splice(i,1);
+  removevalue(i: number) {
+    this.values.splice(i, 1);
   }
 
-  updatePage(homeSegment: any) {}
+  updatePage(homeSegment: any) { }
 
-  async SkipNow(){
+  async SkipNow() {
     const modal = await this.createv4omdal.create({
       component: Createv4Page,
       cssClass: 'pindialog-container',
@@ -694,11 +767,11 @@ export class CreatePage implements OnInit {
         pass_code: true
       },
     });
-    modal.onDidDismiss().then((data:any) => {
-      if(data.data!= undefined){
-        this.is_event_permission_skipped=true;
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data != undefined) {
+        this.is_event_permission_skipped = true;
         this.common.show("Please Wait");
-        this.dataservice.event_food_type=this.LocalFoodItem.filter((item:any)=> { return   this.ionicForm.value.food_name.indexOf(item.id) !== -1 });
+        this.dataservice.event_food_type = this.LocalFoodItem.filter((item: any) => this.ionicForm.value.food_name.indexOf(item.id) !== -1);
         this.dataservice.events_form.push(this.ionicForm.value);
         this.ContactPageModal();
       }
@@ -706,19 +779,19 @@ export class CreatePage implements OnInit {
     return await modal.present();
   }
 
-  addvalue(){
-    this.values.push({value: ""});
+  addvalue() {
+    this.values.push({ value: "" });
   }
 
-  async ContactPageModal(){
+  async ContactPageModal() {
     this.common.hide();
     const modal = await this.contactpagemodal.create({
       component: ContactPage,
       cssClass: 'pindialog-container',
       handle: true,
     });
-    modal.onDidDismiss().then((data:any) => {
-      if(data.data!= undefined){
+    modal.onDidDismiss().then((data: any) => {
+      if (data.data != undefined) {
       }
     });
     return await modal.present();
@@ -727,14 +800,14 @@ export class CreatePage implements OnInit {
   async ionViewWillLeave() {
     if (!this.isSubmitted) {
       const isSegOneValid = this.ionicForm.controls['title'].valid &&
-      this.ionicForm.controls['description'].valid &&
-      this.ionicForm.controls['category'].valid &&
-      this.ionicForm.controls['age_group'].valid &&
-      this.ionicForm.controls['event_typecate'].valid;
+        this.ionicForm.controls['description'].valid &&
+        this.ionicForm.controls['category'].valid &&
+        this.ionicForm.controls['age_group'].valid &&
+        this.ionicForm.controls['event_typecate'].valid;
 
       if (isSegOneValid) {
         const alert = await this.alertController.create({
-          header: 'Confirm',    
+          header: 'Confirm',
           message: 'Save This into Draft?',
           buttons: [
             {
@@ -767,10 +840,10 @@ export class CreatePage implements OnInit {
 
                 this.dataservice.foodImages.forEach((file: File) => {
                   formData.append('menu_imgData[]', file);
-                });  
+                });
 
                 formData.append('events_data', JSON.stringify(this.dataservice.events_form));
-                
+
                 console.log(formData);
                 this.chatconnect.postFormData(formData, "draft_event").then((result: any) => {
                   this.common.hide();
@@ -792,7 +865,7 @@ export class CreatePage implements OnInit {
         await alert.present();
       }
     }
-  } 
+  }
 
   onImageSelected(event: any) {
     this.selectedImage = event.target.files;

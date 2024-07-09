@@ -18,7 +18,9 @@
             <ion-img *ngIf="!modalData1" [class.card-not-created]="!modalData1" src="assets/images/qr.png"></ion-img>
             <ion-img *ngIf="modalData1 && modalData1.id" src="{{modalData1.qrimg}}" (click)="openModal(modalData1.qrimg)"></ion-img>
             <div *ngIf="modalData1 && modalData1.id">
-              <ion-button (click)="openModal(modalData1.qrimg)" size="small" shape="round" color="secondary" ><ion-icon slot="start" name="qr-code" style="font-size: 20px; color: white;"></ion-icon> Show</ion-button>
+              <ion-button (click)="openModal(modalData1.qrimg ? [modalData1.qrimg] : [], modalData1.user_name ? [modalData1.user_name] : [])" size="small" shape="round" color="secondary" >
+                <ion-icon slot="start" name="qr-code" style="font-size: 20px; color: white;"></ion-icon> Show
+              </ion-button>
             </div>
           </div>
           <div class="col-7">
@@ -42,7 +44,7 @@
             <ion-img *ngIf="!modalData2" [class.card-not-created]="!modalData2" src="assets/images/qr.png"></ion-img>
             <ion-img *ngIf="modalData2 && modalData2.id" src="{{modalData2.qrimg}}" (click)="openModal(modalData2.qrimg)"></ion-img>
             <div *ngIf="modalData2 && modalData2.id">
-              <ion-button (click)="openModal(modalData2.qrimg)" size="small" shape="round" color="secondary"><ion-icon slot="start" name="qr-code" style="font-size: 20px; color: white;"></ion-icon> Show</ion-button>
+              <ion-button (click)="openModal(modalData2.qrimg ? [modalData2.qrimg] : [], modalData2.user_name ? [modalData2.user_name] : [])" size="small" shape="round" color="secondary"><ion-icon slot="start" name="qr-code" style="font-size: 20px; color: white;"></ion-icon> Show</ion-button>
             </div>
           </div>
           <div class="col-7">

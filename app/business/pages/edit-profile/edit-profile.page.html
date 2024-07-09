@@ -1,0 +1,87 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Edit Profile</ion-title>
+    <ion-icon slot="end" name="close" routerLink="/buztabs/map"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form (ngSubmit)="submit()" [formGroup]="ionicForm">
+    <ion-list>
+      <div style="margin-top: 10px;">
+        <div class="container">
+          <p class="images">
+            <ng-template ngFor let-imageUrl [ngForOf]="imageUrls">
+              <img [src]="imageUrl" class="image" style="border-radius: 10px;" />
+              <ion-icon name="add-circle" slot="end" (click)="fileInput.click()" style="font-size: 45px; color: seagreen; position: absolute; right: 0;"></ion-icon>
+              <input type="file" style="display: none" #fileInput (change)="loadImageFromDevice($event, 'event')" id="file-input" accept="image/png, image/jpg, image/jpeg" />
+            </ng-template>
+          </p>
+
+          <ng-container *ngIf="!imageUrls || imageUrls.length === 0">
+            <ion-row>
+              <ion-input type="file" (change)="loadImageFromDevice($event, 'event')" class="custom-file-input" id="file-input" accept="image/png, image/jpeg" class="custom-file-input"></ion-input>
+              <h5 align="center">Upload Image</h5>
+            </ion-row>
+          </ng-container>
+
+          <div class="form-input">
+            <h4>Title</h4>
+            <ion-input formControlName="title" placeholder="Enter Community Title"></ion-input>
+          </div>
+          <ng-container *ngFor="let error of error_messages.title">
+            <div class="error-message" *ngIf="ionicForm.get('title').hasError(error.type) && (ionicForm.get('title').dirty || ionicForm.get('title').touched)">
+              {{ error.message }}
+            </div>
+          </ng-container>
+
+          <div class="form-input">
+            <h4>Category</h4>
+            <ion-select formControlName="category" interface="alert" placeholder="Select Category">
+              <ng-container *ngFor="let item of dataservice.events_categories">
+                <ion-select-option [value]="item.id">{{ item.name }}</ion-select-option>
+              </ng-container>
+            </ion-select>
+          </div>
+          <ng-container *ngFor="let error of error_messages.category">
+            <div class="error-message" *ngIf="ionicForm.get('category').hasError(error.type) && (ionicForm.get('category').dirty || ionicForm.get('category').touched)">
+              {{ error.message }}
+            </div>
+          </ng-container>
+
+          <div class="form-input">
+            <h4>Email</h4>
+            <ion-input formControlName="email" placeholder="Enter Your Email"></ion-input>
+          </div>
+          <ng-container *ngFor="let error of error_messages.email">
+            <div class="error-message" *ngIf="ionicForm.get('email').hasError(error.type) && (ionicForm.get('email').dirty || ionicForm.get('email').touched)">
+              {{ error.message }}
+            </div>
+          </ng-container>
+
+          <div class="form-input">
+            <h4>Contact</h4>
+            <ion-input formControlName="contact" placeholder="Enter Your Contact"></ion-input>
+          </div>
+          <ng-container *ngFor="let error of error_messages.contact">
+            <div class="error-message" *ngIf="ionicForm.get('contact').hasError(error.type) && (ionicForm.get('contact').dirty || ionicForm.get('contact').touched)">
+              {{ error.message }}
+            </div>
+          </ng-container>
+
+          <div class="form-input">
+            <h4>Address</h4>
+            <ion-textarea formControlName="address" placeholder="Enter Address"></ion-textarea>
+          </div>
+
+        </div>
+      </div>
+    </ion-list>
+    <div class="btn">
+      <ion-button expand="block" type="submit" color="secondary" shape="round">Update</ion-button>
+    </div>
+  </form>
+</ion-content>

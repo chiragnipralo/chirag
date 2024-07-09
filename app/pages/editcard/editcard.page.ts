@@ -232,6 +232,7 @@ export class EditcardPage implements OnInit {
           this.modalData.user_img
         )
 
+        console.log("This is image ==>",this.imageUrls)
         this.prevImage = this.modalData.user_img;
       } else {
         this.common.presentToast("", result.Response.message);

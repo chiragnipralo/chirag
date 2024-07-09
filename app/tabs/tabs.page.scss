@@ -20,6 +20,19 @@ ion-fab > ion-fab-button{
     }
 }
  
+ion-fab.ios > ion-fab-button.ios{
+    bottom: 1px;
+    left: 0px;
+    position: relative;
+    height: 4.5rem;
+    width: 4.5rem;
+    --background: var(--ion-color-secondary);
+
+    img{
+        padding: 15px;
+    }
+}
+
 ion-fab.md > ion-fab-button.md{
     bottom: 12px;
     left: 0;
@@ -141,7 +154,7 @@ ion-modal ion-toolbar {
     .second_tab{
         display: flex;
         justify-content: space-around;
-        padding: 20px 2px 10px 2px;
+        padding: 20px 0px 10px 0px;
  
         .section_one{
             width: 80px;

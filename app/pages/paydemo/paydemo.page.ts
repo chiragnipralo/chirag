@@ -60,6 +60,23 @@ export class PaydemoPage implements OnInit {
 		});
     }
   
+  sendPayPdf(params: any) {
+    console.log("pdf",params)
+    let apidata={
+      user_token: this.dataservice.getUserData(),
+      pdf_data:params
+    }
+    this.chatconnect.postData(apidata,"payment_pdf").then((result:any)=>{
+      if (result.Response.status == 1) {
+        this.commonservice.presentToast("",result.Response.message)
+      }else{
+        this.commonservice.presentToast("Oops",result.Response.message)
+      }
+    },(err)=>{ 
+      console.log("Connection failed Messge");
+    }); 
+  }
+  
   PaymentInfo(){
     this.commonservice.show();
     let apidata={

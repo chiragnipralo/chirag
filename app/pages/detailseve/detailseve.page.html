@@ -18,7 +18,7 @@
          </ion-fab-button>
       </ion-fab>
    </div>
-   
+
    <div class="rights">
       <ion-fab>
          <ion-fab-button id="qr-open-modal" color="secondary" class="ionfab">
@@ -26,7 +26,7 @@
          </ion-fab-button>
       </ion-fab>
       <ion-fab *ngIf="isEventDateValid()">
-         <ion-fab-button (click)='Share_Event()' color="secondary" class="ionfab">
+         <ion-fab-button (click)="Share_Event()" color="secondary" class="ionfab">
             <ion-icon name="share-social"></ion-icon>
          </ion-fab-button>
       </ion-fab>
@@ -91,7 +91,7 @@
    </ion-slides>
 
    <div class="category ion-padding-start ion-padding-end">
-      <ion-button color="dark" size="small">{{dataservice?.user_event_data?.event_category}}</ion-button>
+      <ion-button color="dark" size="small" mode="md">{{dataservice?.user_event_data?.event_category}}</ion-button>
       <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event && dataservice?.user_event_data?.is_live == 0">
          <ion-button shape="round" size="small" color="danger" (click)="live_event()" [disabled]="!isButtonEnabled">
             <ion-icon slot="start" name="caret-forward-circle-outline"></ion-icon>
@@ -147,15 +147,29 @@
                <ion-list class="prof">
                    
                   <ion-avatar style="text-transform: uppercase;">
-                     <ng-container *ngIf="dataservice?.user_event_data?.user_data?.profile_img !== null; else noImage">
-                        <img [src]="dataservice.user_event_data.user_data.profile_img" style="height: 100%;width: 100%;">
-                      </ng-container>
-                      <ng-template #noImage>
-                        {{dataservice?.user_event_data?.user_data?.user_name[0]}}
-                     </ng-template>
-                  </ion-avatar>
+                     <ng-container *ngIf="isDataLoaded; else loading">
+                       <ng-container *ngIf="dataservice?.user_event_data?.user_data?.profile_img !== null; else noImage">
+                         <img [src]="dataservice.user_event_data.user_data.profile_img" style="height: 100%; width: 100%;">
+                       </ng-container>
+                     </ng-container>
+                   </ion-avatar>
+                   
+                   <ng-template #loading>
 
+                  </ng-template>
+                   
+                   <ng-template #noImage>
+                     <h4 style="font-size: 23px; font-weight: bold; text-transform: uppercase;">
+                       {{dataservice?.user_event_data?.user_data?.user_name[0]}}
+                     </h4>
+                   </ng-template>
+                   
+                  <ng-container *ngIf="isDataLoaded; else loading">
                   <h4 style="text-transform: capitalize;">{{dataservice?.user_event_data?.user_data?.user_name}}</h4>
+                  </ng-container>
+                  <ng-template #loading>
+             
+                  </ng-template>
                   <div style="position: absolute; right: 0">
                      <ng-container *ngIf="dataservice?.user_event_data?.event_open_closed == 0; else Private">
                         <ion-label>Open Event</ion-label>
@@ -165,6 +179,7 @@
                      </ng-template>
                      <!-- <ion-label>{{dataservice?.user_event_data?.price}}</ion-label> -->
                   </div>
+                  
                </ion-list>
                <ng-container>
                   <ion-list class="date_pri" style="margin-top: 10px;">
@@ -220,11 +235,11 @@
                      <ion-button (click)="Viewstats()" style="position: absolute;right: 0;">Stats</ion-button>
                   </ng-container>
                </ion-list>
-               <ion-list>
+               <ion-list *ngIf="dataservice?.user_event_data?.description != ''">
                   <ion-list>
                      <h4 style="float: left;">Description</h4>
                   </ion-list>
-                  <p> {{dataservice?.user_event_data?.description}}</p>
+                  <p [innerHTML]="EventDescription"></p>
                </ion-list>
                <ion-list style="height: 250px;">
                   <div #map id="map" style="height: 100%;"></div>
@@ -246,14 +261,14 @@
 
          <ion-slide>
             <div class="mi" style="overflow: auto;">
-               <div class="message-wrap">
+               <div class="message-wrap" [class.message11]="dataservice?.user_event_data?.admin_post?.length === 0">
                   <div class="message" style="max-width: 100%;">
-                     <!-- <ng-container *ngIf="!dataservice?.user_event_data?.user_joined_event">
+                     <ng-container *ngIf="dataservice?.user_event_data?.admin_post?.length === 0">
                         <div class="if_not_joined">
-                           <h3>Join Event to See Admin Post..</h3>
+                           <h3>No Admin post...</h3>
                         </div>
                      </ng-container>
-                     <ng-container *ngIf="dataservice?.user_event_data?.user_joined_event"> -->
+                     <!--<ng-container *ngIf="dataservice?.user_event_data?.user_joined_event"> -->
                         <ng-container *ngFor="let admin of dataservice?.user_event_data?.admin_post; let i = index;">
                            <div class="msg-detail">
                               <div *ngIf="admin.msg != null">
@@ -329,6 +344,13 @@
          <ion-slide>
             <div class="rev"> 
                <ng-container *ngIf="dataservice?.user_event_data?.event_food_type &&
+               dataservice.user_event_data.event_food_type[0].food_type.length == 0 &&
+               dataservice.user_event_data.event_food_type[0].cusine_food.length == 0 && dataservice?.user_event_data?.event_food_type[0]?.extra_food[0]?.extra_food_name == '' && dataservice?.user_event_data?.emergency_contact[0]?.contact_number == '' && dataservice.user_event_data.event_food_type[0]?.drink[0].drinks_name == '' && dataservice?.user_event_data?.terms_condition == ''">
+                  <div class="if_not_joined">
+                      <h3>No Information</h3>
+                  </div>
+               </ng-container>
+               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type &&
                     dataservice.user_event_data.event_food_type.length > 0 &&
                     dataservice.user_event_data.event_food_type[0]?.food_type &&
                     dataservice.user_event_data.event_food_type[0].food_type.length > 0 &&
@@ -362,6 +384,26 @@
                         <ng-container *ngFor="let food of dataservice?.user_event_data?.event_food_type[0].cusine_food let i = index;">
                           <div class="cate">
                             <ion-label>{{i+1}} - {{food.name | titlecase}}</ion-label>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-accordion>
+                  </ion-accordion-group>
+               </ng-container>
+
+               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type &&
+               dataservice.user_event_data.event_food_type.length > 0 &&
+               dataservice.user_event_data.event_food_type[0]?.drink.length > 0 && dataservice.user_event_data.event_food_type[0]?.drink[0].drinks_name != ''">
+
+                  <ion-accordion-group color="tertiary" expand="inset">
+                    <ion-accordion value="third">
+                      <ion-item slot="header" color="tertiary">
+                        <ion-label>Drinks</ion-label>
+                      </ion-item>
+                      <div class="ion-padding" slot="content">
+                        <ng-container *ngFor="let food of dataservice?.user_event_data?.event_food_type[0].drink let i = index;">
+                          <div class="cate">
+                            <ion-label>{{i+1}} - {{food.drinks_name | titlecase}}</ion-label>
                           </div>
                         </ng-container>
                       </div>
@@ -481,33 +523,36 @@
 
             <ion-slide>
                <div class="mi" style="overflow:auto;">
-               <div class="message-wrap">
-               <div class="message">
-               <ng-container *ngFor="let review of jData; let i = index;">
-               <div class="msg-detail">
-               <div class="msg-content" style="color:#606060; background: #e0fcd6;">
-               <p class="cap_txt"><b>{{review.user_name}}</b></p>
-               <span class="triangle"></span>
-               <p style="user-select: auto !important" class="line-breaker" [innerHTML]="sanitizer.bypassSecurityTrustHtml(review.review)" #content></p>
-               <p class="rdate">{{review.datetime}}</p>
-               <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
-               <ion-icon name="close-circle" class="trash_photos_icon" (click)="deleteEventReviews(i)"></ion-icon>
-               </ng-container>
-               </div>
-               </div>
-               </ng-container>
-               </div>
-               </div>
+                 <div class="message-wrap">
+                   <div class="message">
+                     <ng-container *ngFor="let review of jData; let i = index;">
+                       <div class="msg-detail">
+                         <div class="msg-content" style="color:#606060; background: #e0fcd6;">
+                           <p class="cap_txt"><b>{{review.user_name}}</b></p>
+                           <span class="triangle"></span>
+                           <p style="user-select: auto !important" class="line-breaker" [innerHTML]="sanitizer.bypassSecurityTrustHtml(review.review)" #content></p>
+                           <p class="rdate">{{formatIndianDate(review.datetime)}}</p>
+                           <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
+                             <ion-icon name="close-circle" class="trash_photos_icon" (click)="deleteEventReviews(i)"></ion-icon>
+                           </ng-container>
+                         </div>
+                       </div>
+                     </ng-container>
+                   </div>
+                 </div>
                </div>
                <div class="chat-container">
-               <div class="chat-input-container">
-               <ion-input #chat_input class="chat-input-box" placeholder="Write your review here..." [(ngModel)]="senderMsg" (keyup.enter)="sendMessage()"></ion-input>
-               <ion-button class="chat-button" fill="clear" slot="end" (click)="sendMessage()">
-               <ion-icon name="send"></ion-icon>
-               </ion-button>
+                 <div class="chat-input-container">
+                   <ion-input #chat_input class="chat-input-box" placeholder="Write your review here..." [(ngModel)]="senderMsg" (keyup.enter)="sendMessage()"></ion-input>
+                   <ion-button class="chat-button" fill="clear" slot="end" (click)="sendMessage()">
+                     <ion-icon name="send"></ion-icon>
+                   </ion-button>
+                 </div>
                </div>
-               </div>
-               </ion-slide>
+             </ion-slide>
+             
+             
+             
             <!-- <ion-slide>
                <div class="mi">
                   <div class="message-wrap">
@@ -551,7 +596,9 @@
             </ion-toolbar>
          </ion-header>
          <ion-content class="ion-padding">
+            <ion-img class="logo" src="assets/images/logo.png"></ion-img>
             <ion-img [src]="dataservice?.user_event_data?.event_qr"></ion-img>
+            <h2 class="ion-text-center">{{dataservice?.user_event_data?.title}}</h2>
          </ion-content>
       </ng-template>
    </ion-modal>
@@ -649,4 +696,5 @@
          </ion-content>
       </ng-template>
    </ion-modal>
+  
 </ion-content>

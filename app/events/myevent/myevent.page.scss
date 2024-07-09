@@ -226,6 +226,10 @@ ion-card{
             ion-button{
                 font-size: 11px;
             }
+
+            ion-button.ios{
+                max-width: 80px;
+            }
         }
 
         .bookbtn{

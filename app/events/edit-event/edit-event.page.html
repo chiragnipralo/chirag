@@ -50,7 +50,7 @@
 
           <div class="form-input">
             <h4>Description </h4>
-            <ion-textarea formControlName="description"  placeholder="Write Description About Event"></ion-textarea>
+            <ion-textarea formControlName="description"  placeholder="Write Description About Event" autoGrow="true"></ion-textarea>
           </div>
 
           <ng-container *ngFor="let error of error_messages.description">
@@ -104,9 +104,9 @@
 
           <div class="form-input">
             <h4>Event Type <span class="asct">*</span></h4>
-            <ion-select formControlName="event_typecate" interface="alert" placeholder="Select Event Type">
-              <ion-select-option value="0">Public</ion-select-option>
-              <ion-select-option value="1">Private</ion-select-option>
+            <ion-select formControlName="event_typecate" placeholder="Select Event Type">
+              <ion-select-option value="0" disabled="true">Public</ion-select-option>
+              <ion-select-option value="1" disabled="true">Private</ion-select-option>
             </ion-select>
           </div>
           
@@ -129,17 +129,32 @@
                   <ion-icon (click)="deletePiece(i)" name="remove-circle-outline"></ion-icon>
                 </ng-container>
               </div>
-              <ion-input formControlName="event_date" type="date"></ion-input>
+              <ion-input formControlName="event_date" type="date" [min]="currentDate"></ion-input>
             </div>
+            <ng-container *ngFor="let error of error_messages.event_date">
+              <div class="error-message" *ngIf="piece.get('event_date')?.hasError(error.type) && (piece.get('event_date')?.dirty || piece.get('event_date')?.touched)">
+                {{ error.message }}
+              </div>
+            </ng-container>
             <div class="form-input">
               <div class="time">
                 <ion-col>
                   <h4>Start Time <span class="asct">*</span></h4>
                   <ion-input formControlName="start_time" type="time"></ion-input>
+                  <ng-container *ngFor="let error of error_messages.start_time">
+                    <div class="error-message" *ngIf="piece.get('start_time')?.hasError(error.type) && (piece.get('start_time')?.dirty || piece.get('start_time')?.touched)">
+                      {{ error.message }}
+                    </div>
+                  </ng-container>
                 </ion-col>
                 <ion-col>
                   <h4>End Time <span class="asct">*</span></h4>
                   <ion-input formControlName="end_time" type="time"></ion-input>
+                  <ng-container *ngFor="let error of error_messages.end_time">
+                    <div class="error-message" *ngIf="piece.get('end_time')?.hasError(error.type) && (piece.get('end_time')?.dirty || piece.get('end_time')?.touched)">
+                      {{ error.message }}
+                    </div>
+                  </ng-container>
                 </ion-col>
               </div>
             </div>

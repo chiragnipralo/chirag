@@ -56,7 +56,7 @@ var share_1 = require("@capacitor/share");
 var viewstats_page_1 = require("../viewstats/viewstats.page");
 var image_modal_component_1 = require("../../components/image-modal/image-modal.component");
 var DetailsevePage = /** @class */ (function () {
-    function DetailsevePage(alertController, formBuilder, datePipe, sanitizer, commonservice, dataservice, modalController, popoverController, mapmodal, chatconnect, _router, navCtrl, location) {
+    function DetailsevePage(alertController, formBuilder, datePipe, sanitizer, commonservice, dataservice, modalController, popoverController, mapmodal, chatconnect, _router, navCtrl, platform, location) {
         this.alertController = alertController;
         this.formBuilder = formBuilder;
         this.datePipe = datePipe;
@@ -69,6 +69,7 @@ var DetailsevePage = /** @class */ (function () {
         this.chatconnect = chatconnect;
         this._router = _router;
         this.navCtrl = navCtrl;
+        this.platform = platform;
         this.location = location;
         this.isSubmitted = false;
         this.count = 1;
@@ -164,7 +165,6 @@ var DetailsevePage = /** @class */ (function () {
         var dummyDate = new Date();
         var _a = time.split(':'), hours = _a[0], minutes = _a[1];
         dummyDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
-        // Format the dummy date using DatePipe
         var formattedTime = this.datePipe.transform(dummyDate, 'h:mm a');
         return formattedTime || time;
     };
@@ -192,7 +192,6 @@ var DetailsevePage = /** @class */ (function () {
                     case 1:
                         modal = _b.sent();
                         modal.onDidDismiss().then(function (data) {
-                            console.log("DATA HERE --->", data);
                         });
                         return [4 /*yield*/, modal.present()];
                     case 2: return [2 /*return*/, _b.sent()];
@@ -303,7 +302,8 @@ var DetailsevePage = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.modalController.create({
                             component: image_modal_component_1.ImageModalComponent,
                             componentProps: {
-                                originalEventImages: originalEventImages
+                                originalEventImages: originalEventImages,
+                                is_qr: false
                             }
                         })];
                     case 1:
@@ -346,7 +346,6 @@ var DetailsevePage = /** @class */ (function () {
         }
     };
     DetailsevePage.prototype.ionViewDidEnter = function () {
-        console.log("Enter in Page..");
         this.listReview();
         this.All_events();
     };
@@ -358,14 +357,15 @@ var DetailsevePage = /** @class */ (function () {
             event_id: this.dataservice.user_event_data.id
         };
         this.chatconnect.postData(apidata, "view_events_by_id").then(function (result) {
-            var _a;
+            var _a, _b, _c;
             //this.commonservice.hide();
             if (result.Response.status == 1) {
                 _this.dataservice.setEventData(result.Response.events_data);
                 _this.MultiMenuImgs = result.Response.events_data.menu_img_filename;
                 _this.loadMap();
                 _this.checkConditionforlive();
-                _this.eventDate = new Date((_a = _this.dataservice) === null || _a === void 0 ? void 0 : _a.user_event_data.event_dates[0]['event_date']);
+                _this.formatDescription((_b = (_a = _this.dataservice) === null || _a === void 0 ? void 0 : _a.user_event_data) === null || _b === void 0 ? void 0 : _b.description);
+                _this.eventDate = new Date((_c = _this.dataservice) === null || _c === void 0 ? void 0 : _c.user_event_data.event_dates[0]['event_date']);
                 _this.isEventDateValid();
             }
             else {
@@ -374,6 +374,10 @@ var DetailsevePage = /** @class */ (function () {
         }, function (err) {
             console.log("Connection failed Messge");
         });
+    };
+    DetailsevePage.prototype.formatDescription = function (description) {
+        var convertedDescription = description.replace(/\n/g, '<br>');
+        this.EventDescription = this.sanitizer.bypassSecurityTrustHtml(convertedDescription);
     };
     DetailsevePage.prototype.isEventDateValid = function () {
         var currentDate = new Date();
@@ -393,6 +397,8 @@ var DetailsevePage = /** @class */ (function () {
                 zoom: 10,
                 center: latlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
+                // fullscreenControl: true,
+                streetViewControl: false,
                 draggable: false
             };
             this.map = new google.maps.Map(document.getElementById("map"), myOptions);
@@ -401,9 +407,9 @@ var DetailsevePage = /** @class */ (function () {
                 map: this.map,
                 title: "Marker Title"
             });
+            console.log("ios", this.platform.is('ios'));
             var handleFullscreenChange = function () {
                 var isFullscreen = document.fullscreenElement !== null;
-                console.log("Fullscreen change detected: ", isFullscreen);
                 _this.map.setOptions({ draggable: isFullscreen });
             };
             // Add event listener for changes in fullscreen mode
@@ -425,7 +431,6 @@ var DetailsevePage = /** @class */ (function () {
             var eventDateTimeString = firstEventDate + "T" + eventTime;
             var eventDateTime = new Date(eventDateTimeString);
             var currentDate = new Date();
-            // Corrected calculation for eventEndTime
             var eventEndTime = new Date(eventDateTime.getTime() - 30 * 60 * 1000);
             if (currentDate >= eventEndTime) {
                 this.isButtonEnabled = true;
@@ -498,7 +503,6 @@ var DetailsevePage = /** @class */ (function () {
                 return false;
             }
             if (uniqueUserNumbers.has(participant.value.participent_number)) {
-                console.log('duplicateNumber');
                 this.commonservice.presentToast('Error', 'User already joined ' + (i + 1));
                 return false;
             }
@@ -518,7 +522,6 @@ var DetailsevePage = /** @class */ (function () {
                     this.commonservice.presentToast("Error", "Please Fill filled");
                 }
                 else {
-                    console.log("This Is Form Data ==> ", this.ionicForm.value.user_details);
                     this.commonservice.show("Please Wait");
                     userToken = this.dataservice.getUserData();
                     formData = new FormData();
@@ -770,7 +773,6 @@ var DetailsevePage = /** @class */ (function () {
     DetailsevePage.prototype.onFileSelectedAdminPost = function (event) {
         var _a;
         this.selectedAdminFile = event.target.files[0];
-        // this.fileAdminName = this.selectedAdminFile.name;
         this.fileAdminName = ((_a = this.selectedAdminFile) === null || _a === void 0 ? void 0 : _a.name) || '';
     };
     DetailsevePage.prototype.onFileSelected = function (event) {
@@ -874,7 +876,6 @@ var DetailsevePage = /** @class */ (function () {
                                 {
                                     text: 'Yes',
                                     handler: function () {
-                                        // this.commonservice.show("Please Wait");
                                         var apidata = {
                                             user_token: _this.dataservice.getUserData(),
                                             event_id: _this.dataservice.user_event_data.id,
@@ -885,7 +886,6 @@ var DetailsevePage = /** @class */ (function () {
                                             command_Type: "delete"
                                         };
                                         _this.chatconnect.postData(apidata, "event_operations").then(function (result) {
-                                            // this.commonservice.hide();
                                             if (result.Response.status == 1) {
                                                 _this.commonservice.presentToast("", result.Response.message);
                                                 _this.All_events();
@@ -928,7 +928,6 @@ var DetailsevePage = /** @class */ (function () {
                                 {
                                     text: 'Yes',
                                     handler: function () {
-                                        // this.commonservice.show("Please Wait");
                                         var apidata = {
                                             user_token: _this.dataservice.getUserData(),
                                             event_id: _this.dataservice.user_event_data.id,
@@ -938,7 +937,6 @@ var DetailsevePage = /** @class */ (function () {
                                             command_Type: "delete"
                                         };
                                         _this.chatconnect.postData(apidata, "event_operations").then(function (result) {
-                                            // this.commonservice.hide();
                                             if (result.Response.status == 1) {
                                                 _this.commonservice.presentToast("", result.Response.message);
                                                 _this.All_events();
@@ -981,7 +979,6 @@ var DetailsevePage = /** @class */ (function () {
                                 {
                                     text: 'Yes',
                                     handler: function () {
-                                        // this.commonservice.show("Please Wait");
                                         var apidata = {
                                             user_token: _this.dataservice.getUserData(),
                                             event_id: _this.dataservice.user_event_data.id,
@@ -991,7 +988,6 @@ var DetailsevePage = /** @class */ (function () {
                                             command_Type: "delete"
                                         };
                                         _this.chatconnect.postData(apidata, "event_operations").then(function (result) {
-                                            // this.commonservice.hide();
                                             if (result.Response.status == 1) {
                                                 _this.commonservice.presentToast("", result.Response.message);
                                                 _this.ionViewDidEnter();
@@ -1018,7 +1014,7 @@ var DetailsevePage = /** @class */ (function () {
     };
     DetailsevePage.prototype.formatIndianDate = function (dateString) {
         if (!dateString) {
-            return ''; // Handle the case where the date string is undefined
+            return '';
         }
         var options = {
             day: 'numeric',

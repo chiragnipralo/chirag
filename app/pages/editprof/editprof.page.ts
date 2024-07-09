@@ -109,6 +109,7 @@ export class EditprofPage implements OnInit {
       }
       formData.append('idd', this.userDetails.id);
       formData.append('user_name', this.ionicForm.value.user_name || '');
+      formData.append('user_unique_name', this.ionicForm.value.user_unique_name || '');
       formData.append('user_email', this.ionicForm.value.user_email || '');
       if (this.selectedFile) {
         formData.append('profile_img', this.selectedFile, this.selectedFile.name);
@@ -123,6 +124,8 @@ export class EditprofPage implements OnInit {
           if (result.Response.status == 1) {
             this.commonservice.presentToast('', result.Response.message);
             this.location.back();
+          }else{
+            this.commonservice.presentToast("", result.Response.message);
           }
         },
         (err) => {
@@ -132,6 +135,39 @@ export class EditprofPage implements OnInit {
       );
       console.log(this.ionicForm.value);
     }
+  }
+
+  async remove_profile() {
+    const alert = await this.alertController.create({
+      header: 'Confirm',
+      message: 'Are you sure want to remove profile picture?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Yes',
+          handler: () => {
+            let apidata = {
+              user_token: this.dataservice.getUserData(),
+            }
+            this.chatconnect.postData(apidata, "user_img_delete").then((result: any) => {
+              if (result.Response.status == 1) {
+                this.commonservice.presentToast("", result.Response.message)
+                this.location.back();
+              } else {
+                this.commonservice.presentToast("Oops", result.Response.message)
+              }
+            }, (err) => {
+              console.log("Connection failed Messge");
+            });
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
   // async presentAlert() {
   //   const alert = await this.alertController.create({

@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ModalController, AlertController, PopoverController, IonSlides, NavController, IonPopover } from '@ionic/angular';
+import { ModalController, AlertController, PopoverController, IonSlides, NavController, IonPopover, Platform } from '@ionic/angular';
 import { ChatPage } from '../chat/chat.page';
 import { MapActivityPage } from 'src/app/events/map-activity/map-activity.page';
 import { CommonService } from '../../services/common.service';
@@ -7,24 +7,25 @@ import { DataService } from '../../services/data.service';
 import { HttpService } from '../../services/http.service';
 import { Share } from '@capacitor/share';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DatePipe, Location } from '@angular/common';
 import { ViewstatsPage } from '../viewstats/viewstats.page';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ImageModalComponent } from '../../components/image-modal/image-modal.component';
+import { ChangeDetectorRef } from '@angular/core';
 
 // declare var google: { maps: { LatLng: new (arg0: any, arg1: any) => any; MapTypeId: { ROADMAP: any; }; Map: new (arg0: HTMLElement | null, arg1: { zoom: number; center: any; mapTypeId: any; }) => any; Marker: new (arg0: { position: any; map: any; title: string; }) => any; }; };
 
 declare var google: {
   maps: {
-      ControlPosition: any;
-      LatLng: new (arg0: any, arg1: any) => any;
-      MapTypeId: { ROADMAP: any };
-      Map: new (arg0: HTMLElement | null, arg1: { zoom: number; center: any; mapTypeId: any }) => any;
-      Marker: new (arg0: { position: any; map: any; title: string }) => any;
-      event: {
-          addListener: (object: any, event: string, callback: () => void) => void;
-      };
+    ControlPosition: any;
+    LatLng: new (arg0: any, arg1: any) => any;
+    MapTypeId: { ROADMAP: any };
+    Map: new (arg0: HTMLElement | null, arg1: { zoom: number; center: any; mapTypeId: any }) => any;
+    Marker: new (arg0: { position: any; map: any; title: string }) => any;
+    event: {
+      addListener: (object: any, event: string, callback: () => void) => void;
+    };
   };
 };
 
@@ -63,14 +64,8 @@ export class DetailsevePage implements OnInit {
   isValid!: boolean;
   isModalOpen = false;
   user_data: any = [];
-  //private isDragging = false; // Flag to track dragging state
-
-  @ViewChild('slider', { static: true })
-  private slider!: IonSlides;
-  segment = 0;
-
-  @ViewChild('map', { static: false })
-  mapElement!: ElementRef;
+  EventDescription!: SafeHtml;
+  isDataLoaded = false;
 
   // doRefresh(refresher: { target: { complete: () => void; }; }) {
   //   this.ionViewDidEnter();
@@ -78,6 +73,13 @@ export class DetailsevePage implements OnInit {
   //     refresher.target.complete();
   //   }, 2000);
   // }
+
+  @ViewChild('slider', { static: true })
+  private slider!: IonSlides;
+  segment = 0;
+
+  @ViewChild('map', { static: false })
+  mapElement!: ElementRef;
 
   @ViewChild('popover', { static: false })
   popover!: IonPopover;
@@ -118,12 +120,24 @@ export class DetailsevePage implements OnInit {
     public chatconnect: HttpService,
     private _router: Router,
     private navCtrl: NavController,
-    private location: Location) {
+    private platform: Platform,
+    private location: Location,
+    private cd: ChangeDetectorRef // Inject ChangeDetectorRef
+  ) {
   }
 
   goBack() {
-    this.navCtrl.pop();
+    // Check if there is no data for timeline and admin post
+    if ((!this.dataservice?.user_community_data?.community_timeline || this.dataservice.user_community_data.community_timeline.length === 0) &&
+        (!this.dataservice?.user_community_data?.admin_post || this.dataservice.user_community_data.admin_post.length === 0)) {
+      // Navigate to the home page
+      this.navCtrl.navigateRoot('/tabs/dashboard');
+    } else {
+      // Pop the current page
+      this.navCtrl.pop();
+    }
   }
+  
 
   increment() {
     if (this.count < 7) {
@@ -165,15 +179,124 @@ export class DetailsevePage implements OnInit {
     }
   }
 
-  formatTime(time: string): string {
-    const dummyDate = new Date();
-    const [hours, minutes] = time.split(':');
-    dummyDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
-
-    // Format the dummy date using DatePipe
-    const formattedTime = this.datePipe.transform(dummyDate, 'h:mm a');
-    return formattedTime || time;
+  async Share_Event() {
+    const eventDescription = this.dataservice?.user_community_data?.community_description || 'Join this community!';
+    const eventDetailsUrl = this.dataservice?.user_community_data.community_url || 'https://example.com/community'; // Replace with your actual URL
+    const eventName = this.dataservice?.user_community_data?.community_name || 'Community';
+    const shareText = `Join this community: ${eventName}\n\n${eventDescription}\n\n${eventDetailsUrl}`;
+  
+    this.showFallbackShareOptions(eventDetailsUrl, eventName, eventDescription);
   }
+  
+
+  async showFallbackShareOptions(url: string, name: string, description: string) {
+    const fallbackMessage = `Join this community: ${name}\n\n${description}\n\n${url}`;
+    const mailtoLink = `mailto:?subject=${encodeURIComponent(name)}&body=${encodeURIComponent(fallbackMessage)}`;
+
+    const alert = await this.alertController.create({
+      header: 'Share',
+      message: `Invite your friend to join ${name} via the following options:`,
+      cssClass: 'share-options-alert',
+      buttons: [
+        {
+          text: '',
+          cssClass: 'icon-whatsapp',
+          handler: () => {
+            window.open(`https://wa.me/?text=${encodeURIComponent(fallbackMessage)}`, '_blank');
+          }
+        },
+        {
+          text: '',
+          cssClass: 'icon-linkedin',
+          handler: () => {
+            window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+          }
+        },
+        {
+          text: '',
+          cssClass: 'icon-twitter',
+          handler: () => {
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(fallbackMessage)}`, '_blank');
+          }
+        },
+        {
+          text: '',
+          cssClass: 'icon-facebook',
+          handler: () => {
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+          }
+        },
+        {
+          text: '',
+          cssClass: 'icon-instagram',
+          handler: () => {
+            this.copyToClipboard(fallbackMessage);
+          }
+        },
+        {
+          text: '',
+          cssClass: 'icon-snapchat',
+          handler: () => {
+            this.copyToClipboard(fallbackMessage);
+          }
+        },
+        {
+          text: '',
+          cssClass: 'icon-copy',
+          handler: async () => {
+            try {
+              await this.copyToClipboard(fallbackMessage);
+              this.commonservice.presentToast('Success', 'Link copied to clipboard!');
+            } catch (err) {
+              console.error('Failed to copy link:', err);
+              this.commonservice.presentToast('Failed to copy link.', 'Please try again.');
+            }
+          }
+        },
+        {
+          text: '',
+          cssClass: 'icon-email',
+          handler: () => {
+            window.open(mailtoLink, '_blank');
+          }
+        },
+        {
+          text: '',
+          cssClass: 'icon-cancel',
+          role: 'cancel'
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async copyToClipboard(text: string): Promise<void> {
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+    } catch (err) {
+      throw new Error('Failed to copy text');
+    }
+  }
+
+ 
+
+formatTime(time: string): string {
+  const dummyDate = new Date();
+  const [hours, minutes] = time.split(':');
+  dummyDate.setHours(parseInt(hours, 10), parseInt(minutes, 10));
+  const formattedTime = this.datePipe.transform(dummyDate, 'h:mm a');
+  return formattedTime || time;
+}
 
   Viewguest() {
     this.dataservice.events_guests = this.dataservice?.user_event_data;
@@ -191,7 +314,6 @@ export class DetailsevePage implements OnInit {
       },
     });
     modal.onDidDismiss().then((data: any) => {
-      console.log("DATA HERE --->", data)
     });
     return await modal.present();
   }
@@ -218,14 +340,7 @@ export class DetailsevePage implements OnInit {
     this.popoverController.dismiss();
   }
 
-  async Share_Event() {
-    await Share.share({
-      title: 'Event Invitation Link',
-      text: `${this.user_data.user_name} shared ${this.dataservice?.user_event_data?.title} Event`,
-      url: this.dataservice?.user_event_data.event_url,
-      dialogTitle: 'Share with buddies',
-    });
-  }
+  
 
   ngOnInit() {
     this.ionicForm = this.formBuilder.group({
@@ -275,7 +390,8 @@ export class DetailsevePage implements OnInit {
     const modal = await this.modalController.create({
       component: ImageModalComponent,
       componentProps: {
-        originalEventImages: originalEventImages
+        originalEventImages: originalEventImages,
+        is_qr: false
       }
     });
     return await modal.present();
@@ -314,7 +430,6 @@ export class DetailsevePage implements OnInit {
   }
 
   ionViewDidEnter() {
-    console.log("Enter in Page..")
     this.listReview();
     this.All_events();
   }
@@ -332,15 +447,21 @@ export class DetailsevePage implements OnInit {
         this.MultiMenuImgs = result.Response.events_data.menu_img_filename;
         this.loadMap();
         this.checkConditionforlive();
-
+        this.formatDescription(this.dataservice?.user_event_data?.description)
         this.eventDate = new Date(this.dataservice?.user_event_data.event_dates[0]['event_date']);
         this.isEventDateValid();
+        this.isDataLoaded = true; 
       } else {
         this.commonservice.presentToast("Oops", result.Response.message)
       }
     }, (err) => {
       console.log("Connection failed Messge");
     });
+  }
+
+  formatDescription(description: string) {
+    const convertedDescription = description.replace(/\n/g, '<br>');
+    this.EventDescription = this.sanitizer.bypassSecurityTrustHtml(convertedDescription);
   }
 
   isEventDateValid(): boolean {
@@ -362,19 +483,21 @@ export class DetailsevePage implements OnInit {
         zoom: 10,
         center: latlng,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
+        // fullscreenControl: true,
+        streetViewControl: false,
         draggable: false,
       };
-      
+
       this.map = new google.maps.Map(document.getElementById("map"), myOptions);
       var marker = new google.maps.Marker({
         position: latlng,
         map: this.map,
         title: "Marker Title"
       });
-      
+
+      console.log("ios",this.platform.is('ios'))
       const handleFullscreenChange = () => {
         const isFullscreen = document.fullscreenElement !== null;
-        console.log("Fullscreen change detected: ", isFullscreen);
         this.map.setOptions({ draggable: isFullscreen });
       };
 
@@ -388,7 +511,7 @@ export class DetailsevePage implements OnInit {
       console.error("No coordinates available or invalid data format.");
     }
   }
-  
+
   checkConditionforlive() {
     const eventDates = this.dataservice?.user_event_data.event_dates;
     if (eventDates && eventDates.length > 0) {
@@ -397,7 +520,6 @@ export class DetailsevePage implements OnInit {
       const eventDateTimeString = `${firstEventDate}T${eventTime}`;
       const eventDateTime = new Date(eventDateTimeString);
       const currentDate = new Date();
-      // Corrected calculation for eventEndTime
       const eventEndTime = new Date(eventDateTime.getTime() - 30 * 60 * 1000);
 
       if (currentDate >= eventEndTime) {
@@ -491,7 +613,6 @@ export class DetailsevePage implements OnInit {
       }
 
       if (uniqueUserNumbers.has(participant.value.participent_number)) {
-        console.log('duplicateNumber');
         this.commonservice.presentToast('Error', 'User already joined ' + (i + 1));
         return false;
       }
@@ -506,7 +627,6 @@ export class DetailsevePage implements OnInit {
     } else if (!this.validateForm()) {
       this.commonservice.presentToast("Error", "Please Fill filled");
     } else {
-      console.log("This Is Form Data ==> ", this.ionicForm.value.user_details)
       this.commonservice.show("Please Wait");
       const userToken = this.dataservice.getUserData();
       var formData = new FormData();
@@ -675,7 +795,7 @@ export class DetailsevePage implements OnInit {
                 this.commonservice.presentToast("Oops", result.Response.message)
               }
             }, (err) => {
-              console.log("Connection failed Messge");
+              console.log("Connection failed Messge", err);
             });
           },
         },
@@ -689,40 +809,49 @@ export class DetailsevePage implements OnInit {
       user_token: this.dataservice.getUserData(),
       event_id: this.dataservice?.user_event_data.id,
       type: 'free'
-    }
+    };
     this.chatconnect.postData(apidata, "event_review").then((result: any) => {
       this.jData = result.Response.event_review;
     }, (err) => {
-      console.log("Connection failed Messge");
+      console.log("Connection failed Message");
     });
   }
 
   sendMessage() {
-    if (this.senderMsg === '') {
-      let smsg = "Enter Some Message";
-      this.commonservice.presentToast("Oops", smsg);
-    } else {
-      if (!this.jData) {
-        this.jData = [];
-      }
-      //this.jData.push({ "request": "admin","user_name": "You", "review": this.senderMsg });
-      let apidata = {
-        user_token: this.dataservice.getUserData(),
-        event_id: this.dataservice?.user_event_data.id,
-        review: this.senderMsg,
-        event_type: 1,
-      };
-      this.chatconnect.postData(apidata, "event_feedback").then((result: any) => {
-        this.ionViewDidEnter();
-      }, (err) => {
-      });
-      this.senderMsg = '';
+    if (this.senderMsg.trim() === '') {
+      this.commonservice.presentToast("Oops", "Enter some message");
+      return;
     }
+  
+    const apidata = {
+      user_token: this.dataservice.getUserData(),
+      event_id: this.dataservice?.user_event_data.id,
+      review: this.senderMsg,
+      event_type: 1,
+    };
+  
+    this.chatconnect.postData(apidata, "event_feedback").then((result: any) => {
+      if (result.Response.status === 1) {
+        const newReview = result.Response.review;
+  
+        // Update the local message list immediately
+        this.jData.push(newReview);
+        this.senderMsg = ''; // Clear the input after sending the message
+  
+        // Manually trigger change detection
+        this.cd.detectChanges();
+      } else {
+        this.commonservice.presentToast("Oops", result.Response.message);
+      }
+    }, (err) => {
+      console.log("Connection failed Message");
+    });
   }
+  
+  
 
   onFileSelectedAdminPost(event: any) {
     this.selectedAdminFile = event.target.files[0];
-    // this.fileAdminName = this.selectedAdminFile.name;
     this.fileAdminName = this.selectedAdminFile?.name || '';
   }
 
@@ -761,7 +890,6 @@ export class DetailsevePage implements OnInit {
   }
 
   adminPost() {
-
     if (!this.message && !this.selectedAdminFile) {
       return;
     }
@@ -774,7 +902,7 @@ export class DetailsevePage implements OnInit {
     }
     formData.append('event_id', this.dataservice?.user_event_data.id);
     formData.append('type', 'free');
-
+  
     if (this.selectedAdminFile) {
       const isImage = this.selectedAdminFile.type.startsWith('image/');
       if (isImage && this.selectedAdminFile) {
@@ -788,7 +916,7 @@ export class DetailsevePage implements OnInit {
       formData.append('message', this.message);
     }
     formData.append('event_flag', '1');
-
+  
     this.chatconnect.postFormData(formData, 'admin_post').then(
       (result: any) => {
         this.selectedAdminFile = null;
@@ -811,7 +939,7 @@ export class DetailsevePage implements OnInit {
     );
     this.message = '';
   }
-
+  
   add_staff() {
     this.dataservice.staff_data = this.dataservice?.user_event_data;
     this._router.navigate(['events/add-staff', { event_type: "free_event" }]);
@@ -831,8 +959,6 @@ export class DetailsevePage implements OnInit {
         {
           text: 'Yes',
           handler: () => {
-            // this.commonservice.show("Please Wait");
-
             let apidata = {
               user_token: this.dataservice.getUserData(),
               event_id: this.dataservice.user_event_data.id,
@@ -844,7 +970,6 @@ export class DetailsevePage implements OnInit {
             }
 
             this.chatconnect.postData(apidata, "event_operations").then((result: any) => {
-              // this.commonservice.hide();
               if (result.Response.status == 1) {
                 this.commonservice.presentToast("", result.Response.message);
                 this.All_events();
@@ -874,8 +999,6 @@ export class DetailsevePage implements OnInit {
         {
           text: 'Yes',
           handler: () => {
-            // this.commonservice.show("Please Wait");
-
             let apidata = {
               user_token: this.dataservice.getUserData(),
               event_id: this.dataservice.user_event_data.id,
@@ -886,7 +1009,6 @@ export class DetailsevePage implements OnInit {
             }
 
             this.chatconnect.postData(apidata, "event_operations").then((result: any) => {
-              // this.commonservice.hide();
               if (result.Response.status == 1) {
                 this.commonservice.presentToast("", result.Response.message);
                 this.All_events();
@@ -916,8 +1038,6 @@ export class DetailsevePage implements OnInit {
         {
           text: 'Yes',
           handler: () => {
-            // this.commonservice.show("Please Wait");
-
             let apidata = {
               user_token: this.dataservice.getUserData(),
               event_id: this.dataservice.user_event_data.id,
@@ -928,7 +1048,6 @@ export class DetailsevePage implements OnInit {
             }
 
             this.chatconnect.postData(apidata, "event_operations").then((result: any) => {
-              // this.commonservice.hide();
               if (result.Response.status == 1) {
                 this.commonservice.presentToast("", result.Response.message);
                 this.ionViewDidEnter();
@@ -947,7 +1066,7 @@ export class DetailsevePage implements OnInit {
 
   formatIndianDate(dateString: string | undefined): string {
     if (!dateString) {
-      return ''; // Handle the case where the date string is undefined
+      return '';
     }
 
     const options: Intl.DateTimeFormatOptions = {
@@ -956,19 +1075,24 @@ export class DetailsevePage implements OnInit {
       year: 'numeric',
       hour: 'numeric',
       minute: 'numeric',
-      second: 'numeric',
-      timeZone: 'Asia/Kolkata', // Set the timezone to Indian Standard Time
+      timeZone: 'Asia/Kolkata',
     };
-
+  
     const indianDate = new Date(dateString).toLocaleString('en-IN', options);
-    return indianDate;
+      return indianDate;
   }
 
+  cFormatTime(dateString: string): string {
+    const dummyDate = new Date(dateString);
+    const formattedTime = this.datePipe.transform(dummyDate, 'h:mm a');
+    return formattedTime || dateString;
+  }
+  
+ 
   async dismissPopover() {
     const popover = await this.popoverController.getTop();
     if (popover) {
       await popover.dismiss();
     }
   }
-
 }

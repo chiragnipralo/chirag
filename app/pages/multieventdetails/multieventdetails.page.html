@@ -1,9 +1,9 @@
 <ion-header class="top_header">
-  <ion-toolbar style="background-color: transparent !important;">
+  <!-- <ion-toolbar style="background-color: transparent !important;">
      <ion-buttons slot="start">
         <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
      </ion-buttons>
-  </ion-toolbar>
+  </ion-toolbar> -->
 </ion-header>
 
 <ion-content scroll-y="false">
@@ -14,7 +14,13 @@
         refreshingSpinner="circles"
      ></ion-refresher-content>
   </ion-refresher>
-
+  <div class="left">
+    <ion-fab>
+      <ion-fab-button color="secondary" class="ionfab" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
   <div class="rights" *ngIf="user_multievent_data?.my_events == null">
     <ion-fab>
       <ion-fab-button id="click-event" color="secondary" class="ionfab">
@@ -72,6 +78,9 @@
                       <ng-container *ngIf = "ui.premium == 1">
                         <ion-icon name="shield-checkmark"></ion-icon>
                       </ng-container>
+                      <p class="category_style">
+                        {{ui.event_category}}
+                      </p>
                     </div>
                     <div class="eve_content">
                       <div class="title">

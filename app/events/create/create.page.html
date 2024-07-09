@@ -29,61 +29,71 @@
     <ion-list [ngSwitch]="segment">
       <div *ngSwitchCase="'1'" style="margin-top: 10px;">
         <div class="container">
-            <p class="images">
-              <ng-template ngFor let-imageUrl [ngForOf]="imageUrls">
-                <img [src]="imageUrl" class="image" style="border-radius: 10px;width: 100%;"/>
-                <ion-icon name="add-circle" slot="end" (click)="fileInput.click()" style="font-size: 45px;color:seagreen;position: absolute;
+          <p class="images">
+            <ng-template ngFor let-imageUrl [ngForOf]="imageUrls">
+              <img [src]="imageUrl" class="image" style="border-radius: 10px;width: 100%;" />
+              <ion-icon name="add-circle" slot="end" (click)="fileInput.click()" style="font-size: 45px;color:seagreen;position: absolute;
               right: 0;"></ion-icon>
-              <input type="file" style="display:none" #fileInput (change)="loadImageFromDevice($event,'event')" id="file-input" accept="image/png, image/jpg, image/jpeg">
-              </ng-template>
-            </p>
+              <input type="file" style="display:none" #fileInput (change)="loadImageFromDevice($event,'event')"
+                id="file-input" accept="image/png, image/jpg, image/jpeg">
+            </ng-template>
+          </p>
 
-            <ng-container *ngIf="!imageUrls.length">
-              <ion-row class="main_img">
-                <ion-input type="file" (change)="loadImageFromDevice($event,'event')" class="custom-file-input" id="file-input" accept="image/png, image/jpeg" class="custom-file-input"></ion-input>
-                <h5 align="center">Upload Event Image <span class="asct">*</span></h5>
-              </ion-row>
-            </ng-container>
-
-            <ng-container *ngIf="!imageUrls.length && isSubmitted">
-              <div class="error-message">
-                Please upload an image.
+          <ng-container *ngIf="!imageUrls.length">
+            <ion-row class="main_img">
+              <div class="down_icon" (click)="fileInput.click()">
+                <ion-icon name="download-outline"></ion-icon>
               </div>
-            </ng-container>
+              <input type="file" style="display:none" #fileInput (change)="loadImageFromDevice($event,'event')"
+                id="file-input" accept="image/png, image/jpeg">
+              <h5 align="center">Upload Event Image <span class="asct">*</span></h5>
+            </ion-row>
+          </ng-container>
+          <!-- class="custom-file-input" -->
+          <ng-container *ngIf="!imageUrls.length && isSubmitted">
+            <div class="error-message">
+              Please upload an image.
+            </div>
+          </ng-container>
 
           <div class="form-input">
             <h4>Title <span class="asct">*</span></h4>
-            <ion-input formControlName="title" placeholder="Enter Event Title"></ion-input>
+            <ion-input formControlName="title" placeholder="Enter Event Title" appCapitalizeFirst></ion-input>
           </div>
 
           <ng-container *ngFor="let error of error_messages.title">
-            <div class="error-message" *ngIf="ionicForm.get('title').hasError(error.type) && (ionicForm.get('title').dirty || ionicForm.get('title').touched)">
+            <div class="error-message"
+              *ngIf="ionicForm.get('title').hasError(error.type) && (ionicForm.get('title').dirty || ionicForm.get('title').touched)">
               {{ error.message }}
             </div>
           </ng-container>
 
           <div class="form-input">
             <h4>Description </h4>
-            <ion-textarea formControlName="description"  placeholder="Write Description About Event"></ion-textarea>
+            <ion-textarea formControlName="description" placeholder="Write Description About Event" autoGrow="true" appCapitalizeFirst>
+            </ion-textarea>
           </div>
 
           <ng-container *ngFor="let error of error_messages.description">
-            <div class="error-message" *ngIf="ionicForm.get('description').hasError(error.type) && (ionicForm.get('description').dirty || ionicForm.get('description').touched)">
+            <div class="error-message"
+              *ngIf="ionicForm.get('description').hasError(error.type) && (ionicForm.get('description').dirty || ionicForm.get('description').touched)">
               {{ error.message }}
             </div>
           </ng-container>
 
           <div class="form-input">
             <h4>Category <span class="asct">*</span></h4>
-            <ion-select label="Select Category" formControlName="category" (ionChange)="onCategoryChange($event)" interface="alert" [interfaceOptions]="customAlertOptions" placeholder="Select Category">
-              <ng-container  *ngFor="let item of dataservice.events_categories">
+            <ion-select label="Select Category" formControlName="category" (ionChange)="onCategoryChange($event)"
+              interface="alert" [interfaceOptions]="customAlertOptions" placeholder="Select Category">
+              <ng-container *ngFor="let item of sortedCategories">
                 <ion-select-option [value]="item.id">{{item.name}}</ion-select-option>
               </ng-container>
             </ion-select>
-          </div> 
+          </div>
 
           <ng-container *ngFor="let error of error_messages.category">
-            <div class="error-message" *ngIf="ionicForm.get('category').hasError(error.type) && (ionicForm.get('category').dirty || ionicForm.get('category').touched)">
+            <div class="error-message"
+              *ngIf="ionicForm.get('category').hasError(error.type) && (ionicForm.get('category').dirty || ionicForm.get('category').touched)">
               {{ error.message }}
             </div>
           </ng-container>
@@ -94,33 +104,48 @@
               <ion-select-option value="0">Any</ion-select-option>
               <ion-select-option value="1">Custom</ion-select-option>
             </ion-select>
-            <div *ngIf="age.value === '1'">
-              <div formGroupName="age_group">
-                <div class="form-input">
-                  <div class="time">
-                    <ion-col style="padding-left: 0;">
-                      <h4>Age group From : </h4>
-                      <ion-input formControlName="age_group_from" pattern="[0-9]*" maxlength="2" type="tel" placeholder="Age group from"></ion-input>
-                    </ion-col>
-                    <ion-col style="padding-right: 0;">
-                      <h4>To</h4>
-                      <ion-input formControlName="age_group_to" pattern="[0-9]*" maxlength="3" type="tel" placeholder="Age group To"></ion-input>
-                    </ion-col>
-                  </div>
+            <ng-container *ngFor="let error of error_messages.selectedAge">
+              <div class="error-message" *ngIf="ionicForm.get('selectedAge').hasError(error.type) && (ionicForm.get('selectedAge').dirty || ionicForm.get('selectedAge').touched)">
+                {{ error.message }}
+              </div>
+            </ng-container>
+            <div *ngIf="selectedAge === '1'" formGroupName="age_group">
+              <div class="form-input">
+                <div class="time">
+                  <ion-col style="padding-left: 0;">
+                    <h4>Age group From :</h4>
+                    <ion-input formControlName="age_group_from" pattern="[0-9]*" maxlength="2" type="tel" placeholder="Age group from"></ion-input>
+                    <div class="error-message" *ngIf="ionicForm.get('age_group.age_group_from')?.hasError('required') && (ionicForm.get('age_group.age_group_from')?.dirty || ionicForm.get('age_group.age_group_from')?.touched)">
+                      From age is required.
+                    </div>
+                  </ion-col>
+                  <ion-col style="padding-right: 0;">
+                    <h4>To</h4>
+                    <ion-input formControlName="age_group_to" pattern="[0-9]*" maxlength="3" type="tel" placeholder="Age group To"></ion-input>
+                    <div class="error-message" *ngIf="ionicForm.get('age_group.age_group_to')?.hasError('required') && (ionicForm.get('age_group.age_group_to')?.dirty || ionicForm.get('age_group.age_group_to')?.touched)">
+                      To age is required.
+                    </div>
+                  </ion-col>
+                </div>
+                <div *ngIf="ionicForm.get('age_group').errors?.ageRangeInvalid" class="error-message">
+                  'From' age must be less than 'To' age.
                 </div>
               </div>
             </div>
-          </div> 
+          </div>
+          
 
           <ng-container *ngFor="let error of error_messages.selectedAge">
-            <div class="error-message" *ngIf="ionicForm.get('selectedAge').hasError(error.type) && (ionicForm.get('selectedAge').dirty || ionicForm.get('selectedAge').touched)">
+            <div class="error-message"
+              *ngIf="ionicForm.get('selectedAge').hasError(error.type) && (ionicForm.get('selectedAge').dirty || ionicForm.get('selectedAge').touched)">
               {{ error.message }}
             </div>
           </ng-container>
-          
+
           <div class="form-input">
             <h4>Event Type <span class="asct">*</span></h4>
-            <ion-select formControlName="event_typecate" (ionChange)="onEventTypeChange($event)" [interfaceOptions]="EventOptions" interface="alert" placeholder="Select Event Type">
+            <ion-select formControlName="event_typecate" (ionChange)="onEventTypeChange($event)"
+              [interfaceOptions]="EventOptions" interface="alert" placeholder="Select Event Type">
               <ion-select-option value="0">Public</ion-select-option>
               <ion-select-option value="1">Private</ion-select-option>
             </ion-select>
@@ -137,7 +162,8 @@
             </div> -->
           </div>
           <ng-container *ngFor="let error of error_messages.event_typecate">
-            <div class="error-message" *ngIf="ionicForm.get('event_typecate').hasError(error.type) && (ionicForm.get('event_typecate').dirty || ionicForm.get('event_typecate').touched)">
+            <div class="error-message"
+              *ngIf="ionicForm.get('event_typecate').hasError(error.type) && (ionicForm.get('event_typecate').dirty || ionicForm.get('event_typecate').touched)">
               {{ error.message }}
             </div>
           </ng-container>
@@ -151,60 +177,78 @@
         <div formArrayName="event_dates">
           <ng-container *ngFor="let piece of getPiecesArray.controls; let i=index" [formGroupName]="i">
             <div class="form-input">
-                <ng-container *ngIf="i == 0">
-                  <h4>Date <span class="asct">*</span></h4>
+              <ng-container *ngIf="i == 0">
+                <h4>Date <span class="asct">*</span></h4>
+              </ng-container>
+              <div class="sub_header">
+                <ng-container *ngIf="i > 0">
+                  <h4>Date {{i + 1}} </h4>
+                  <ion-icon (click)="deletePiece(i)" name="remove-circle-outline"></ion-icon>
                 </ng-container>
-                <div class="sub_header">
-                  <ng-container *ngIf="i > 0">
-                    <h4>Date {{i + 1}} </h4>
-                    <ion-icon (click)="deletePiece(i)" name="remove-circle-outline"></ion-icon>
-                  </ng-container>
-                </div>
-              <ion-input formControlName="event_date" type="date"></ion-input>
+              </div>
+              <ion-input formControlName="event_date" type="date" [min]="currentDate" class="date-input"></ion-input>
             </div>
-            <!-- <ng-container *ngFor="let error of error_messages.event_date">
-              <div class="error-message" *ngIf="ionicForm.get('event_date').hasError(error.type) && (ionicForm.get('event_date').dirty || ionicForm.get('event_date').touched)">
+            <ng-container *ngFor="let error of error_messages.event_date">
+              <div class="error-message"
+                *ngIf="piece.get('event_date')?.hasError(error.type) && (piece.get('event_date')?.dirty || piece.get('event_date')?.touched)">
                 {{ error.message }}
               </div>
-            </ng-container> -->
+            </ng-container>
             <div class="form-input">
               <div class="time">
                 <ion-col style="padding-left: 0;">
                   <h4>Start Time <span class="asct">*</span></h4>
                   <ion-input formControlName="start_time" type="time"></ion-input>
+                  <ng-container *ngFor="let error of error_messages.start_time">
+                    <div class="error-message"
+                      *ngIf="piece.get('start_time')?.hasError(error.type) && (piece.get('start_time')?.dirty || piece.get('start_time')?.touched)">
+                      {{ error.message }}
+                    </div>
+                  </ng-container>
                 </ion-col>
                 <ion-col style="padding-right: 0;">
                   <h4>End Time <span class="asct">*</span></h4>
                   <ion-input formControlName="end_time" type="time"></ion-input>
+                  <ng-container *ngFor="let error of error_messages.end_time">
+                    <div class="error-message"
+                      *ngIf="piece.get('end_time')?.hasError(error.type) && (piece.get('end_time')?.dirty || piece.get('end_time')?.touched)">
+                      {{ error.message }}
+                    </div>
+                  </ng-container>
                 </ion-col>
+              </div>
+              <div *ngIf="piece.errors?.timeRangeInvalid" class="error-message">
+                End time must be greater than start time.
               </div>
             </div>
           </ng-container>
         </div>
-
+      
         <div class="venue">
           <div class="venue_flex">
             <h4>Venue Location <span class="asct">*</span></h4>
           </div>
-          <ion-input [(ngModel)]="locationName" class="location_name" formControlName="location_name" type="text" Placeholder="Venue" id="autocomplete" (click)="GetCords()"></ion-input>
-
+          <ion-input [(ngModel)]="locationName" class="location_name" formControlName="location_name" type="text"
+            Placeholder="Venue" id="autocomplete" (click)="GetCords()"></ion-input>
+      
           <ng-container *ngFor="let error of error_messages.location_name">
-            <div class="error-message" *ngIf="ionicForm.get('location_name').hasError(error.type) && (ionicForm.get('location_name').dirty || ionicForm.get('location_name').touched)">
+            <div class="error-message"
+              *ngIf="ionicForm.get('location_name').hasError(error.type) && (ionicForm.get('location_name').dirty || ionicForm.get('location_name').touched)">
               {{ error.message }}
             </div>
           </ng-container>
-
+      
         </div>
-
+      
         <ion-list class="act_design">
-          <h4>Activity</h4> 
+          <h4>Activity</h4>
           <ion-item id="act-open-modal">
             <ion-icon slot="start" name="folder-open"></ion-icon>
-              <h4> Add Activities</h4>
+            <h4> Add Activities</h4>
             <ion-icon slot="end" name="add"></ion-icon>
           </ion-item>
         </ion-list>
-        
+      
         <ion-accordion-group class="draft_accrodian">
           <ng-container *ngFor="let activity of tempActivities; let i = index">
             <ion-accordion value="activity-{{i}}">
@@ -219,10 +263,10 @@
             </ion-accordion>
           </ng-container>
         </ion-accordion-group>
-
-        <ion-modal #modal trigger="act-open-modal" [initialBreakpoint]="0.75" [breakpoints]="[0,0.75,1]" style="overflow: scroll;">
+      
+        <ion-modal #modal trigger="act-open-modal" [initialBreakpoint]="0.75" [breakpoints]="[0,0.75,1]">
           <ng-template>
-            <ion-list class="modalcss" style="overflow: scroll;">
+            <ion-list class="modalcss" style="overflow: auto;">
               <div class="main_modal_header">
                 <h4 style="text-align: left;padding-left: 10;">Activity</h4>
                 <ion-icon name="add" (click)="addActivity()" color="secondary"></ion-icon>
@@ -248,6 +292,7 @@
           </ng-template>
         </ion-modal>
       </div>
+      
 
       <div *ngSwitchCase="'3'" style="margin-bottom: 35px;">
         <div class="thrid_container">
@@ -260,14 +305,15 @@
               <ion-icon slot="end" name="add"></ion-icon>
             </ion-item>
           </ion-list>
-          <ion-modal #modal trigger="open-modalfod" [initialBreakpoint]="0.75" [breakpoints]="[0,0.75,1]" style="overflow: scroll;">
+          <ion-modal #modal trigger="open-modalfod" [initialBreakpoint]="0.75" [breakpoints]="[0,0.75,1]">
             <ng-template>
               <ion-list class="modalcss" style="overflow: scroll;">
                 <h4 style="text-align: left;">Select Food Type</h4>
 
                 <div class="form-input">
-                  <ion-select formControlName="food_name"  [multiple]="true" (ionChange)="ChangeFood($event)" placeholder="Select Food Item">
-                    <ng-container  *ngFor="let item of dataservice.events_fooditems">
+                  <ion-select formControlName="food_name" [multiple]="true" (ionChange)="ChangeFood($event)"
+                    placeholder="Select Food Item">
+                    <ng-container *ngFor="let item of dataservice.events_fooditems">
                       <ion-select-option [value]="item.id">{{item.name | titlecase}}</ion-select-option>
                     </ng-container>
                   </ion-select>
@@ -281,7 +327,7 @@
                     </ng-container>
                   </ion-select>
                 </div>
-                
+
                 <!-- <div class="form-input">
                   <div *ngIf="is_custom_food_show">
                     <ion-label floating color="primary">Others</ion-label>
@@ -296,7 +342,8 @@
                     <ng-container *ngFor="let activity of getfoodArray.controls; let i=index" [formGroupName]="i">
                       <ion-row>
                         <ion-col size="9" style="padding: 0;">
-                          <ion-input formControlName="extra_food_name" type="text" placeholder="Enter Food Name"></ion-input>
+                          <ion-input formControlName="extra_food_name" type="text" placeholder="Enter Food Name">
+                          </ion-input>
                         </ion-col>
                         <ion-col size="3" style="display: flex;align-items: center;margin-top: 6px;">
                           <ion-icon name="add" (click)="addfood()" fill="none" color="secondary"></ion-icon>
@@ -314,7 +361,8 @@
                     <ng-container *ngFor="let activity of getdrinkArray.controls; let i=index" [formGroupName]="i">
                       <ion-row>
                         <ion-col size="9" style="padding: 0;">
-                          <ion-input formControlName="drinks_name" type="text" placeholder="Enter Drinks Name"></ion-input>
+                          <ion-input formControlName="drinks_name" type="text" placeholder="Enter Drinks Name">
+                          </ion-input>
                         </ion-col>
                         <ion-col size="3" style="display: flex;align-items: center;margin-top: 6px;">
                           <ion-icon name="add" (click)="addDrink()" fill="none" color="secondary"></ion-icon>
@@ -326,14 +374,17 @@
                     </ng-container>
                   </div>
                 </div>
-                
+
                 <div class="thrid_container">
                   <h4>Upload Images</h4>
                   <ion-row class="main_img">
-                    <input type="file" (change)="loadImagesFromDeviceMulti($event)" class="custom-file-input" multiple
+                    <div class="down_icon" (click)="fileInputMulti.click()">
+                      <ion-icon name="download-outline"></ion-icon>
+                    </div>
+                    <input type="file" style="display:none" #fileInputMulti (change)="loadImagesFromDeviceMulti($event)" multiple
                       accept="image/png, image/jpeg" />
                   </ion-row>
-                
+
                   <ng-container *ngIf="menuUrls.length > 0">
                     <ion-row class="img_container">
                       <ng-container *ngFor="let menuUrl of menuUrls; let i = index">
@@ -354,7 +405,7 @@
 
         <div class="thrid_container">
           <ion-list class="cont_design">
-            <h4>Emergency Contact</h4> 
+            <h4>Emergency Contact</h4>
             <ion-item id="open-modal_em">
               <ion-icon slot="start" name="call"></ion-icon>
               <h4> Add Contact</h4>
@@ -380,45 +431,50 @@
             </ng-container>
           </ion-accordion-group>
 
-          <ion-modal #modal trigger="open-modal_em" [initialBreakpoint]="0.75" [breakpoints]="[0,0.75,1]" style="overflow: scroll;">
+          <ion-modal #modal trigger="open-modal_em" [initialBreakpoint]="0.75" [breakpoints]="[0,0.75,1]">
             <ng-template>
-                <ion-list class="modalcss" style="overflow: scroll;">
-                  <div class="main_modal_header">
-                    <h4 style="text-align: left;">Emergency Contact</h4>
-                    <ion-icon name="add" (click)="addContact()" color="secondary"></ion-icon>
-                  </div>
-                  <div formArrayName="emergency_contact">
-                    <ng-container *ngFor="let econtact of getEcontactArray.controls; let i=index" [formGroupName]="i">
-                      <ng-container *ngIf="i > 0">
-                        <div class="sub_header">
-                          <h4 style="text-align: left;padding-left: 10;">Emergency Contact {{i + 1}}</h4>
-                          <ion-icon name="remove-circle-outline" (click)="deleteContact(i)"></ion-icon>
-                        </div>
-                      </ng-container>
-                      <div class="form-input">
-                        <ion-input formControlName="contact_name" type="text" placeholder="Contact person name"></ion-input>
-                      </div>
-                      <div class="form-input">
-                        <ion-input formControlName="contact_role" type="text" placeholder="Contact person role"></ion-input>
-                      </div>
-                      <div class="form-input">
-                        <ion-input formControlName="contact_number" pattern="[0-9]*" maxlength="10" type="tel" placeholder="Contact number"></ion-input>
+              <ion-list class="modalcss" style="overflow: scroll;">
+                <div class="main_modal_header">
+                  <h4 style="text-align: left;">Emergency Contact</h4>
+                  <ion-icon name="add" (click)="addContact()" color="secondary"></ion-icon>
+                </div>
+                <div formArrayName="emergency_contact">
+                  <ng-container *ngFor="let econtact of getEcontactArray.controls; let i=index" [formGroupName]="i">
+                    <ng-container *ngIf="i > 0">
+                      <div class="sub_header">
+                        <h4 style="text-align: left;padding-left: 10;">Emergency Contact {{i + 1}}</h4>
+                        <ion-icon name="remove-circle-outline" (click)="deleteContact(i)"></ion-icon>
                       </div>
                     </ng-container>
-                  </div>
-                  <ng-container *ngFor="let error of error_messages.emergency_contact">
-                    <div class="error-message" *ngIf="ionicForm.get('emergency_contact').hasError(error.type) && (ionicForm.get('emergency_contact').dirty || ionicForm.get('emergency_contact').touched)">
-                      {{ error.message }}
+                    <div class="form-input">
+                      <ion-input formControlName="contact_name" type="text" placeholder="Contact person name">
+                      </ion-input>
+                    </div>
+                    <div class="form-input">
+                      <ion-input formControlName="contact_role" type="text" placeholder="Contact person role">
+                      </ion-input>
+                    </div>
+                    <div class="form-input">
+                      <ion-input formControlName="contact_number" pattern="[0-9]*" maxlength="10" type="tel"
+                        placeholder="Contact number"></ion-input>
                     </div>
                   </ng-container>
-                  <ion-button style="margin-top:20px;" (click)="addEmergencyContact()" shape="round" color="secondary">Save</ion-button>
-                </ion-list>
+                </div>
+                <ng-container *ngFor="let error of error_messages.emergency_contact">
+                  <div class="error-message"
+                    *ngIf="ionicForm.get('emergency_contact').hasError(error.type) && (ionicForm.get('emergency_contact').dirty || ionicForm.get('emergency_contact').touched)">
+                    {{ error.message }}
+                  </div>
+                </ng-container>
+                <ion-button style="margin-top:20px;" (click)="addEmergencyContact()" shape="round" color="secondary">
+                  Save</ion-button>
+              </ion-list>
             </ng-template>
           </ion-modal>
         </div>
         <div class="thrid_container">
           <ion-list class="cont_design">
-            <h4>Poll</h4> 
+            <h4>Poll</h4>
             <ion-item id="open_modal_for_poll">
               <ion-icon slot="start" name="reader"></ion-icon>
               <h4> Add Poll</h4>
@@ -444,37 +500,38 @@
             </ng-container>
           </ion-accordion-group>
 
-          <ion-modal #modal trigger="open_modal_for_poll" [initialBreakpoint]="0.75" [breakpoints]="[0,0.75,1]" style="overflow: scroll;">
+          <ion-modal #modal trigger="open_modal_for_poll" [initialBreakpoint]="0.75" [breakpoints]="[0,0.75,1]">
             <ng-template>
-                <ion-list class="modal_poll" style="overflow: scroll;">
-                  <div class="main_modal_header">
-                    <h4 style="text-align: left;">Poll</h4>
-                    <ion-icon name="add" (click)="addPoll()" color="secondary"></ion-icon>
-                  </div>
-                  <div formArrayName="poll_section">
-                    <ng-container *ngFor="let econtact of getPollArray.controls; let i=index" [formGroupName]="i">
-                      <ng-container *ngIf="i > 0">
-                        <div class="sub_header">
-                          <h4 style="text-align: left;padding-left: 10;">Poll {{i + 1}}</h4>
-                          <ion-icon name="remove-circle-outline" (click)="deletePoll(i)"></ion-icon>
-                        </div>
-                      </ng-container>
-                      <div class="form-input">
-                        <ion-input formControlName="poll_question" type="text" placeholder="Enter Question"></ion-input>
-                      </div>
-                      <div class="form-input">
-                        <div class="option">
-                          <h4 style="text-align: left;padding-left: 10;">Options</h4>
-                        </div>
-                        <ion-input formControlName="poll_option1" type="text" placeholder="Enter Option"></ion-input>
-                        <ion-input formControlName="poll_option2" type="text" placeholder="Enter Option"></ion-input>
-                        <ion-input formControlName="poll_option3" type="text" placeholder="Enter Option"></ion-input>
-                        <ion-input formControlName="poll_option4" type="text" placeholder="Enter Option"></ion-input>
+              <ion-list class="modal_poll" style="overflow: scroll;">
+                <div class="main_modal_header">
+                  <h4 style="text-align: left;">Poll</h4>
+                  <ion-icon name="add" (click)="addPoll()" color="secondary"></ion-icon>
+                </div>
+                <div formArrayName="poll_section">
+                  <ng-container *ngFor="let econtact of getPollArray.controls; let i=index" [formGroupName]="i">
+                    <ng-container *ngIf="i > 0">
+                      <div class="sub_header">
+                        <h4 style="text-align: left;padding-left: 10;">Poll {{i + 1}}</h4>
+                        <ion-icon name="remove-circle-outline" (click)="deletePoll(i)"></ion-icon>
                       </div>
                     </ng-container>
-                  </div>
-                  <ion-button style="margin-top:20px;" (click)="addPollSection()" shape="round" color="secondary">Save</ion-button>
-                </ion-list>
+                    <div class="form-input">
+                      <ion-input formControlName="poll_question" type="text" placeholder="Enter Question"></ion-input>
+                    </div>
+                    <div class="form-input">
+                      <div class="option">
+                        <h4 style="text-align: left;padding-left: 10;">Options</h4>
+                      </div>
+                      <ion-input formControlName="poll_option1" type="text" placeholder="Enter Option"></ion-input>
+                      <ion-input formControlName="poll_option2" type="text" placeholder="Enter Option"></ion-input>
+                      <ion-input formControlName="poll_option3" type="text" placeholder="Enter Option"></ion-input>
+                      <ion-input formControlName="poll_option4" type="text" placeholder="Enter Option"></ion-input>
+                    </div>
+                  </ng-container>
+                </div>
+                <ion-button style="margin-top:20px;" (click)="addPollSection()" shape="round" color="secondary">Save
+                </ion-button>
+              </ion-list>
             </ng-template>
           </ion-modal>
         </div>
@@ -489,7 +546,8 @@
             <ion-textarea formControlName="terms_and_conditions" autoGrow="true"></ion-textarea>
           </div>
 
-          <ion-modal #modal trigger="open-modal_use_default" [initialBreakpoint]="1" [breakpoints]="[0,1]" style="overflow: scroll;padding-bottom: 35px;">
+          <ion-modal #modal trigger="open-modal_use_default" [initialBreakpoint]="1" [breakpoints]="[0,1]"
+            style="padding-bottom: 35px;">
             <ng-template>
               <ion-list style="overflow: scroll;">
                 <div class="termss">
@@ -497,16 +555,18 @@
                     <li *ngFor="let item of termsAndConditionsList" style="text-align: justify;padding: 5px;">
                       <ion-checkbox [checked]="item.selected" (ionChange)="toggleSelection(item)"></ion-checkbox>
                       {{ item.text }}
-                    </li>                    
+                    </li>
                   </ul>
                 </div>
                 <div class="btnn">
-                  <ion-button fill="outline" shape="round" style="margin-top:20px;" (click)="dismissModal()">Cancel</ion-button>
-                  <ion-button shape="round" style="margin-top:20px;" (click)="populateTextarea()" color="secondary">Use</ion-button>
+                  <ion-button fill="outline" shape="round" style="margin-top:20px;" (click)="dismissModal()">Cancel
+                  </ion-button>
+                  <ion-button shape="round" style="margin-top:20px;" (click)="populateTextarea()" color="secondary">Use
+                  </ion-button>
                 </div>
               </ion-list>
             </ng-template>
-          </ion-modal>          
+          </ion-modal>
         </div>
 
         <!-- <div class="thrid_container">
@@ -533,16 +593,18 @@
         <!-- <ng-container *ngIf="!is_event_permission_skipped">
           <ion-button class="right" fill="outline" color="secondary" size="small" (click)="SkipNow()">Skip for Now</ion-button>
         </ng-container> -->
-      </div> 
+      </div>
 
-    </ion-list> 
+    </ion-list>
     <ion-footer class="ion-no-border">
       <div style="display: flex; justify-content: space-between;">
         <ion-button *ngIf="segment == '1'" fill="clear" shape="round"></ion-button>
-        <ion-button *ngIf="segment !== '1'" (click)="goToPreviousSegment()" color="secondary" shape="round">Previous</ion-button>
-        <ion-button *ngIf="segment !== '3'" (click)="goToNextSegment()"color="secondary" shape="round">Next</ion-button>
+        <ion-button *ngIf="segment !== '1'" (click)="goToPreviousSegment()" color="secondary" shape="round">Previous
+        </ion-button>
+        <ion-button *ngIf="segment !== '3'" (click)="goToNextSegment()" color="secondary" shape="round">Next
+        </ion-button>
         <ion-button *ngIf="segment === '3'" type="submit" color="secondary" shape="round">Submit</ion-button>
       </div>
     </ion-footer>
-  </form> 
+  </form>
 </ion-content>

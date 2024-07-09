@@ -64,15 +64,22 @@ export class ProfilecardsPage implements OnInit {
     });
   }
 
-  async openModal(originalEventImages: string[]) {
-    console.log("This Is Image:",originalEventImages)
-    const modal = await this.modalController.create({
-      component: ImageModalComponent,
-      componentProps: {
-        originalEventImages: originalEventImages
-      }
-    });
-    return await modal.present();
+  async openModal(originalEventImages: string[], userName: string[]) {
+    try {
+      console.log("This Is Image:", originalEventImages);
+      const modal = await this.modalController.create({
+        component: ImageModalComponent,
+        componentProps: {
+          originalEventImages: originalEventImages,
+          userName: userName,
+          is_qr:true
+        }
+      });
+      await modal.present();
+    } catch (error) {
+      console.error('Error opening modal:', error);
+      // Handle the error, e.g., show an error message to the user
+    }
   }
   
   pageWillEnter(requestType: number) {

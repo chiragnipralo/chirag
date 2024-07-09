@@ -45,6 +45,7 @@ exports.__esModule = true;
 exports.RegisterPage = void 0;
 var core_1 = require("@angular/core");
 var forms_1 = require("@angular/forms");
+var ngx_intl_tel_input_1 = require("ngx-intl-tel-input");
 var RegisterPage = /** @class */ (function () {
     function RegisterPage(formBuilder, alertController, common, dataservice, chatconnect, router, navCtrl, loadingController) {
         this.formBuilder = formBuilder;
@@ -58,16 +59,19 @@ var RegisterPage = /** @class */ (function () {
         this.isModalOpen = false;
         this.isSubmitted = false;
         this.termss = false;
+        this.isUsernameValid = false;
+        this.separateDialCode = true;
+        this.SearchCountryField = ngx_intl_tel_input_1.SearchCountryField;
+        this.CountryISO = ngx_intl_tel_input_1.CountryISO;
+        this.PhoneNumberFormat = ngx_intl_tel_input_1.PhoneNumberFormat;
+        this.preferredCountries = [ngx_intl_tel_input_1.CountryISO.UnitedStates, ngx_intl_tel_input_1.CountryISO.UnitedKingdom];
         this.error_messages = {
             'email': [
                 { type: 'required', message: 'Email is required.' },
                 { type: 'pattern', message: 'Enter a valid Email address.' },
             ],
             'mobile_number': [
-                { type: 'required', message: 'Mobile number is required.' },
-                { type: 'minlength', message: 'Mobile number min 10 digit required.' },
-                { type: 'pattern', message: 'Please enter a valid, no special characters or text.' },
-                { type: 'required', message: 'Please enter a valid .' }
+                { type: 'required', message: 'Mobile number is required.' }
             ],
             'your_name': [
                 { type: 'required', message: 'First name is required.' },
@@ -80,15 +84,17 @@ var RegisterPage = /** @class */ (function () {
                 { type: 'minlength', message: 'minimum 2 characters is required.' },
                 { type: 'pattern', message: 'Only text Allowed .' },
                 { type: 'maxlength', message: 'Last name length.' },
+            ],
+            'username': [
+                { type: 'required', message: 'Username is required.' }
             ]
         };
         this.ionicForm = this.formBuilder.group({
             full_name: ['', [forms_1.Validators.required]],
             last_name: ['', [forms_1.Validators.required]],
-            mobile_number: ['', [forms_1.Validators.required, forms_1.Validators.minLength(10), forms_1.Validators.pattern('^[0-9]+$')]],
-            // email_id: ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
+            mobile_number: ['', [forms_1.Validators.required]],
+            username: ['', [forms_1.Validators.required]],
             email_id: ['', [forms_1.Validators.required, forms_1.Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+,[A-Z|a-z]{2,}$/)]],
-            // password: ['', [Validators.required,Validators.minLength(5),Validators.pattern('[a-zA-Z ]*')]],
             date_birth: [],
             gender: [],
             is_terms_checked: [false, [forms_1.Validators.requiredTrue]]
@@ -99,6 +105,11 @@ var RegisterPage = /** @class */ (function () {
         if (value) {
             input.value = value.charAt(0).toUpperCase() + value.slice(1);
         }
+    };
+    RegisterPage.prototype.getMaxDate = function () {
+        var today = new Date();
+        var fiveYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+        return fiveYearsAgo.toISOString().split('T')[0];
     };
     RegisterPage.prototype.setOpen = function (isOpen) {
         this.isModalOpen = isOpen;
@@ -113,27 +124,50 @@ var RegisterPage = /** @class */ (function () {
         this.ionicForm = this.formBuilder.group({
             full_name: ['', [forms_1.Validators.required]],
             last_name: ['', [forms_1.Validators.required]],
-            mobile_number: ['', [forms_1.Validators.required, forms_1.Validators.minLength(10), forms_1.Validators.pattern('^[0-9]+$')]],
+            username: ['', [forms_1.Validators.required]],
+            mobile_number: ['', [forms_1.Validators.required]],
             email_id: ['', [forms_1.Validators.required, forms_1.Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
-            // password: ['', [Validators.required,Validators.minLength(5),Validators.pattern('[a-zA-Z ]*')]],
             date_birth: [],
             gender: [],
             is_terms_checked: [false, [forms_1.Validators.requiredTrue]]
         });
     };
+    RegisterPage.prototype.onUsernameInput = function (username) {
+        var _this = this;
+        if (username.length > 3) {
+            var apidata = {
+                username: username
+            };
+            this.chatconnect.postData(apidata, "username_validator").then(function (result) {
+                if (result.Response.status == 1) {
+                    _this.isUsernameValid = true;
+                    _this.msgg = result.Response.message;
+                }
+                else {
+                    _this.isUsernameValid = false;
+                    _this.msgg = result.Response.message;
+                }
+            }, function (err) {
+                _this.common.hide();
+                console.log("Connection failed Messge");
+            });
+        }
+        else {
+            this.msgg = 'noMsg';
+        }
+    };
     RegisterPage.prototype.submit = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var alert, apidata;
+            var alert, phoneNumber1, phoneNumber, apidata;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.isSubmitted = true;
                         this.ionicForm.markAllAsTouched();
-                        console.log(this.ionicForm);
-                        if (!!this.ionicForm.valid) return [3 /*break*/, 2];
+                        console.log("Res==>", this.isUsernameValid);
+                        if (!(!this.ionicForm.valid || !this.isUsernameValid)) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.alertController.create({
-                                //header: 'Please Enter',
                                 subHeader: 'Please Enter all details',
                                 buttons: ['Dismiss']
                             })];
@@ -142,26 +176,28 @@ var RegisterPage = /** @class */ (function () {
                         alert.present();
                         return [3 /*break*/, 3];
                     case 2:
+                        phoneNumber1 = this.ionicForm.value.mobile_number.internationalNumber.replace(new RegExp("^\\" + this.ionicForm.value.mobile_number.dialCode + "\\s*"), '');
+                        phoneNumber = phoneNumber1.replace(/\s+/g, '');
                         this.common.show("Please Wait");
                         apidata = {
                             user_name: this.ionicForm.value.full_name,
                             last_name: this.ionicForm.value.last_name,
-                            mobile_number: this.ionicForm.value.mobile_number,
+                            username: this.ionicForm.value.username,
+                            mobile_number: phoneNumber,
+                            numberDetails: this.ionicForm.value.mobile_number,
                             email_id: this.ionicForm.value.email_id,
                             date_birth: this.ionicForm.value.date_birth,
                             gender: this.ionicForm.value.gender,
-                            // password:this.ionicForm.value.password,
                             request_type: "user_signup",
                             is_terms_checked: this.ionicForm.value.is_terms_checked
                         };
+                        console.log("This is Api data ==>", apidata);
                         this.chatconnect.postData(apidata, "sendregisterotp").then(function (result) {
-                            console.log(result);
                             _this.common.hide();
                             if (result.Response.status == 1) {
                                 _this.dataservice.is_user_login_or_signup = result.Response.request_type;
                                 _this.dataservice.set_user_signup = _this.ionicForm.value;
                                 _this.dataservice.setOtp(result.Response.code);
-                                //this.router.navigate(['/res-otp'])
                                 _this.router.navigate(['/res-otp'], { queryParams: { requestType: 'user_signup' } });
                                 if (result.Response.request_type == 'user_login') {
                                     _this.dataservice.setUserData(result.Response.userdata.user_token);
@@ -169,20 +205,19 @@ var RegisterPage = /** @class */ (function () {
                             }
                             else {
                                 _this.common.presentToast("", result.Response.message);
-                                // if(result.Response.message=="user not found"){
-                                //   this.dataservice.clearUserData();
-                                // }
                             }
                         }, function (err) {
                             _this.common.hide();
                             console.log("Connection failed Messge");
                         });
-                        console.log(this.ionicForm.value);
                         _a.label = 3;
                     case 3: return [2 /*return*/];
                 }
             });
         });
+    };
+    RegisterPage.prototype.ionViewWillLeave = function () {
+        this.dataservice.mobile_number = null;
     };
     RegisterPage = __decorate([
         core_1.Component({

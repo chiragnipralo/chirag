@@ -1,0 +1,56 @@
+.img_box {
+  height: 300px;
+  width: 300px;
+  margin: auto;
+}
+
+.login ion-input {
+  background: rgba(241, 241, 241, 0.79);
+  border: 1px solid #285500;
+  border-radius: 5px;
+  height: 50px;
+  padding-left: 30px !important;
+  font-size: 14px;
+}
+.login ion-icon {
+  font-size: 25px;
+  position: relative;
+  color: #00000b;
+  top: 42px;
+  left: 8px;
+  z-index: 5;
+  font-weight: bolder;
+}
+.login .form-input {
+  margin-bottom: 15px;
+}
+
+.header-md::after {
+  background: none;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+p {
+  font-size: 14px;
+}
+
+.center {
+  text-align: center;
+}
+.center ion-icon {
+  font-size: 1.6rem;
+  background-color: grey;
+  padding: 6px;
+  margin: 10px;
+  border-radius: 25px;
+}
+
+ion-button {
+  margin-bottom: 15px;
+  height: 45px;
+}

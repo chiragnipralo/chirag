@@ -60,14 +60,30 @@ export class AppComponent {
           FirebaseMessaging.addListener('notificationActionPerformed', (event:any) => {
             console.log(`notificationActionPerformed`, { event });
             if(event.actionId =="tap"){
-              console.log(`event.notification alert ==============>`,event.notification);
-              if (event.notification.data.type == 'create_event') {
-                console.log("If Here1...")
-                // this.commonservice.EventInvitationAlert(event.notification.data.event_id,event.notification.data.type,
-                // event.notification.title,event.notification.body)
-              } else if (event.notification.data.type == 'community_invite') {
-                // this.commonservice.communityInvitationAlert(event.notification.data.event_id,event.notification.data.type,
-                //   event.notification.title,event.notification.body)
+              console.log(`event.notification alert ==============>`, event.notification);
+              if (event.notification.data.type == 'event_chat') {
+                this.router.navigate(['tabs/chat'])
+              }
+              else if (event.notification.data.type == 'create_event' || event.notification.data.type == 'free_event') {
+                this.dataservice.user_event_data.id = event.notification.data.event_id
+                this.router.navigate(['/detailseve'])
+              }
+              else if (event.notification.data.type == 'paid_event') {
+                this.dataservice.user_event_data.id = event.notification.data.event_id
+                this.router.navigate(['/event-details'])
+              }
+              else if (event.notification.data.type == 'community_invite' || event.notification.data.type == 'free_community') {
+                this.dataservice.user_community_data.id = event.notification.data.event_id;
+                this.dataservice.user_community_data.account_type = 1;
+                this.router.navigate(['/community-details'])
+              }
+              else if (event.notification.data.type == 'paid_community') {
+                this.dataservice.user_community_data.id = event.notification.data.event_id;
+                this.dataservice.user_community_data.account_type = 1;
+                this.router.navigate(['/premium-community-details'])
+              }
+              else {
+                console.log("Notification Not Working")
               }
             }
           });

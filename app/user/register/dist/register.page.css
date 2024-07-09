@@ -1,0 +1,131 @@
+.register ion-input, .register ion-select {
+  background: #f1f1f1;
+  border: 1px solid #285500;
+  border-radius: 5px;
+  height: 50px;
+  padding-left: 30px !important;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.register ion-icon {
+  font-size: 20px;
+  position: absolute;
+  color: #00000b;
+  padding: 15px 10px 10px 10px;
+  z-index: 10;
+  font-weight: bolder;
+}
+
+.header-md::after {
+  background: none;
+}
+
+h5 {
+  font-size: 16px;
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.main_flex {
+  display: flex;
+}
+
+.center {
+  text-align: center;
+}
+.center ion-icon {
+  font-size: 1.6rem;
+  background-color: #a2b4aa;
+  padding: 6px;
+  margin: 10px;
+  border-radius: 25px;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  padding-bottom: 10px;
+  font-size: 14px;
+}
+
+.ion-invalid.ion-touched {
+  border: 1px solid red !important;
+}
+
+ion-checkbox[mode=ios].ion-invalid.ion-touched {
+  border: 1px solid red !important;
+  border-radius: 50%;
+}
+
+.asct {
+  font-size: 16px;
+  color: #d60a0a;
+}
+
+.condition .sc-ion-label-ios-h {
+  text-align: justify !important;
+  position: relative;
+  top: -28px;
+  margin-left: 20px;
+  display: block;
+  font-size: 12px;
+}
+.condition .sc-ion-label-ios-h b {
+  color: rgba(37, 128, 233, 0.849);
+  font-family: "Montserrat-Bold" !important;
+}
+.condition .sc-ion-label-md-h {
+  text-align: justify !important;
+  position: relative;
+  top: -27px;
+  margin-left: 20px;
+  display: block;
+  font-size: 12px;
+}
+.condition .sc-ion-label-md-h b {
+  color: rgba(37, 128, 233, 0.849);
+  font-family: "Montserrat-Bold" !important;
+}
+
+ion-button {
+  margin-bottom: 20px;
+  padding: auto;
+  height: 45px;
+}
+
+.modal {
+  display: flex;
+  align-items: center;
+}
+.modal ion-icon {
+  color: black;
+  position: absolute;
+  top: 10px;
+  font-size: 1.4rem;
+}
+.modal ion-button {
+  margin: 0px 12px 0 0;
+}
+
+.modal_title {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  text-align: center;
+}
+
+.username_msg {
+  font-size: 13px;
+  color: red;
+  letter-spacing: 1px;
+  padding-bottom: 5px;
+}
+
+.isvalid {
+  color: green;
+}

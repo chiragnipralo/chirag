@@ -42,7 +42,6 @@ export class ChatPage implements OnInit {
   }
 
   filterItems(event:any){
-    console.log(event.detail.value)
     if(!this.dataservice.isNullOrUndefined(event.detail.value)){
       this.filterData = this.chat_events.filter((data) => {
         return (data.event_name.toLowerCase().indexOf(event.detail.value.toLowerCase()) > -1);
@@ -63,51 +62,14 @@ export class ChatPage implements OnInit {
   }
 
   ngOnInit() {
+    console.log("ENter 11")
   }
-
-  // listChats(){
-  //   let apidata={
-  //     user_token:this.dataservice.getUserData(),
-  //   }
-  //   this.chatconnect.postData(apidata, "get_all_event_chats").then((result:any) => {
-  //     console.log(result)
-
-  //     if (Array.isArray(result.Response.event_chats)) {
-  //       this.chat_events = [...result.Response.event_chats];
-        
-  //       if (Array.isArray(result.Response.community_chats)) {
-  //         this.chat_events = this.chat_events.concat(result.Response.community_chats);
-            
-  //         if (Array.isArray(result.Response.paid_community_chats)) {
-  //           this.chat_events = this.chat_events.concat(result.Response.paid_community_chats);
-  //         }
-  //       }
-  //     } else if (Array.isArray(result.Response.community_chats)) {
-  //       this.chat_events = [...result.Response.community_chats];
-        
-  //       if (Array.isArray(result.Response.paid_community_chats)) {
-  //           this.chat_events = this.chat_events.concat(result.Response.paid_community_chats);
-  //       }
-  //     } else if (Array.isArray(result.Response.paid_community_chats)) {
-  //         this.chat_events = [...result.Response.paid_community_chats];
-  //     } else {
-  //       this.chat_events = [];
-  //     }
-    
-  //     this.filterData = this.chat_events;
-  //     console.log("Final Result ==>", this.filterData);
-  //   }, (err) => {
-  //     console.log("Connection failed Messge");
-  //   });
-  // } 
 
   listChats() {
     let apidata = {
       user_token: this.dataservice.getUserData(),
     };
     this.chatconnect.postData(apidata, "get_all_event_chats").then((result: any) => {
-      console.log(result);
-
       this.chat_events = [];
 
       if (Array.isArray(result.Response.event_chats)) {
@@ -122,7 +84,13 @@ export class ChatPage implements OnInit {
         this.chat_events = this.chat_events.concat(result.Response.paid_community_chats);
       }
 
-      this.filterData = this.chat_events;
+      //this.filterData = this.chat_events;
+      this.filterData = this.chat_events.sort((a: any, b: any) => {
+        const dateA = new Date(a.latest_chat_date);
+        const dateB = new Date(b.latest_chat_date);
+        return dateB.getTime() - dateA.getTime();
+      });
+    
       console.log("Final Result ==>", this.filterData);
     }, (err) => {
       console.log("Connection failed Messge");
@@ -131,7 +99,6 @@ export class ChatPage implements OnInit {
 
   navigatetoChat(params:any){
     this.dataservice.user_event_chat_data=params;
-    console.log("If Here ==>",this.dataservice.user_event_chat_data)
     this._router.navigate(['chat-detail'])
   }
   
@@ -140,10 +107,11 @@ export class ChatPage implements OnInit {
   }
 
   ionViewDidEnter(){
+    console.log("ENter")
     this.listChats();
   }
+
   async openModal(originalEventImages: string[]) {
-    console.log("This Is Image:",originalEventImages)
     const modal = await this.modalController.create({
       component: ImageModalComponent,
       componentProps: {

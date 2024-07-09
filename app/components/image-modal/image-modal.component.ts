@@ -14,7 +14,8 @@ export class ImageModalComponent  implements OnInit {
 
   @Input()
   originalEventImages!: string[];
-
+  @Input() userName!: string[];
+  is_qr: boolean = false;
   constructor(public commonservice: CommonService,
     public dataservice: DataService,
     private modalController: ModalController) {}

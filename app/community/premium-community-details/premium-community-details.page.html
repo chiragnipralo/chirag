@@ -116,7 +116,7 @@
             <ion-list>
               <h4 style="float: left">Description</h4>
             </ion-list>
-            <p>{{dataservice?.user_community_data?.community_description}}</p>
+            <p [innerHTML]="communityDescription"></p>
           </ion-list>
           <ion-list>
             <br />
@@ -147,7 +147,7 @@
                     </div>
                     <div>
                       <ion-list><ion-icon name="location-outline"></ion-icon><p>{{ui.event_venues}}</p></ion-list>
-                      <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list>
+                      <!-- <ion-list><ion-icon name="card-outline"></ion-icon><p>Free</p></ion-list> -->
                       <ng-container *ngIf="ui.user_joined_event">
                         <ion-button shape="round" size="small" color="secondary" style="font-size: 9px;">
                           <ion-icon slot="start" name="checkmark-done-circle-outline" style="font-size: 9px;"></ion-icon>

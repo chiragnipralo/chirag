@@ -27,6 +27,21 @@
     text-align: left!important;
 }
 
+.category_style{
+    position: absolute;
+    bottom: -2px;
+    right: 0;
+    border-radius: 0 0 7px 7px;
+    left: 0;
+    background: #469c27;
+    color: white;
+    padding: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+}
+
 .head{
     padding: 0;
     display: flex;
@@ -57,7 +72,36 @@ ion-popover{
     height: 10rem;
     border-radius: 15px;
 }
+ion-fab.ios{
+    top: 40px;
+}
 
+ion-back-button.ios{
+    color: #fff;
+}
+.left{
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 0;
+ 
+    ion-fab{
+        position: relative;
+        left: 10px;
+        z-index: 100;
+        margin-left: 10px;
+ 
+        .ionfab{
+            width: 30px;
+            height: 30px;
+            margin: 3px;
+
+            ion-icon{
+                font-size: 20px;
+            }
+        }
+    }
+}
 .rights{
     display: flex;
     align-items: center;
@@ -105,6 +149,7 @@ ion-row{
 
             .img_eve{
                 height: 120px;
+                position: relative;
                 ion-img{
                     width: 100%;
                     background-size: cover;

@@ -11,6 +11,9 @@
   <div class="container">
     <ng-container *ngFor="let ui of ticket_data let i = index;">
       <ion-card class="modal-content" [ngClass]="{'scanned': ui.scan_count == 0}">
+        <ion-card-header>
+            <img src="../../../assets/images/logo.png">
+        </ion-card-header>
         <ion-row>
           <ion-col size="6">
             <ion-img [src]="ui.qr"></ion-img>
@@ -25,7 +28,7 @@
             <p>Scanned</p>
           </div>
           <div *ngIf="ui.scan_count > 0 && ticketType =='free'" class="cancel_ticket" (click)="deleteTicket(ui)">
-            <ion-label>Cancel Ticket</ion-label>
+            <ion-icon name="close-circle-outline"></ion-icon>
           </div>
         </ion-row>
       </ion-card>

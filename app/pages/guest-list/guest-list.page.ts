@@ -79,6 +79,12 @@ export class GuestListPage implements OnInit {
     console.log("ionViewDidEnter Refreshing page...")
     this.All_events();
   }
+  isAdmin(userId: number): boolean {
+    const eventManagers = this.dataservice.events_guests.event_managers;
+    const adminUserId = this.dataservice.events_guests.user_id;
+    return eventManagers.some((manager: any) => manager.user_id === userId) || userId === adminUserId;
+  }
+  
 
   All_events(){
     this.commonservice.show();

@@ -182,6 +182,8 @@ export class EditPaidCommunityPage implements OnInit {
           formData.append('title', this.ionicForm.get('title')?.value);
           formData.append('description', this.ionicForm.get('description')?.value);
           formData.append('category', this.ionicForm.get('category')?.value);
+          formData.append('email', this.ionicForm.get('email')?.value);
+          formData.append('contact', this.ionicForm.get('contact')?.value);
           //formData.append('community_type', this.ionicForm.get('category').value);
           formData.append('open_for', this.ionicForm.get('open_for')?.value);
           formData.append('member_status', this.ionicForm.get('member_status')?.value);

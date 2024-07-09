@@ -32,6 +32,11 @@
 		<ion-searchbar #searchBar placeholder="Search here..." (ionChange)="filterItems($event)" [(ngModel)]="searchQuery" (ionCancel)="toggleSearchBar()" [hidden]="!showSearchBar" id="search-input"></ion-searchbar>
 		<div class="serach_res">
 			<div class="search_result" *ngIf="showSearch">
+				<ng-container *ngIf="lists.length == 0;">
+					<div class="result">
+						<div class="ion-padding-start" style="margin: auto;">No results found...</div>
+					</div>
+				</ng-container>
 				<ng-container *ngFor="let di of lists let i = index;">
 					<div class="result">
 						<ion-avatar><ion-img [src]="di.event_images"></ion-img></ion-avatar>
@@ -414,6 +419,8 @@
 											Live
 										 </ion-button>
 										 <p class="category_style">
+											<ion-icon *ngIf="ui.is_premium" name="star" style="position: absolute;top: 4px;color: gold;
+											left: 11px;right: 10px;font-size: 15px;"></ion-icon>
 											{{ui.event_category}}
 										</p>
 									</div>

@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content scroll-y="true">
   <div class="container">
     <h3>OTP</h3>
 
@@ -15,14 +15,14 @@
     <div class="otpsec">
       <h3>Verification Code</h3>
       <h6>We have sent the Verification code to your mobile.</h6>
-      <p>+91 {{dataservice.set_user_signup.mobile_number}}</p>
+      <p>{{dataservice.set_user_signup.mobile_number.internationalNumber}}</p>
       <form #form="ngForm">
         <ion-grid>
           <ion-row>
-            <ion-col>
-              <ion-input class="otp" type="tel" #otp1 ngModel name="otp1" required [(ngModel)]="otpInput1" maxLength="1" (input)="otpController($event, otp2, '')"></ion-input>
+            <ion-col size="10">
+              <ion-input class="otp" type="tel" [(ngModel)]="otp" name="otp" required maxLength="4" (input)="otpInputChange()"></ion-input>
             </ion-col>
-            <ion-col>
+            <!-- <ion-col>
               <ion-input class="otp" type="tel" #otp2 ngModel name="otp2" required [(ngModel)]="otpInput2" maxLength="1" (input)="otpController($event, otp3, otp1)"></ion-input>
             </ion-col>
             <ion-col>
@@ -30,19 +30,20 @@
             </ion-col>
             <ion-col>
               <ion-input class="otp" type="tel" #otp4 ngModel name="otp4" required [(ngModel)]="otpInput4" maxLength="1" (input)="otpController($event, null, otp3)"></ion-input>
-            </ion-col>
+            </ion-col> -->
           </ion-row>
         </ion-grid>
       </form>
     </div>
   </div>
   <ng-container *ngIf="requestType === 'user_signup'">
-    <ion-button fill="none" class="ion-no-border" (click)="signResend()">Resend OTP ?</ion-button>
+    <ion-button fill="none" class="ion-no-border res_btn" (click)="signResend()">Resend OTP ?</ion-button>
   </ng-container>
   <ng-container *ngIf="requestType === 'user_login'">
-    <ion-button fill="none" class="ion-no-border" (click)="Resend()">Resend OTP ?</ion-button>
+    <ion-button fill="none" class="ion-no-border res_btn" (click)="Resend()">Resend OTP ?</ion-button>
   </ng-container>
+  <ion-button expand="block" class="sub-btn" color="secondary" shape="round" (click)="signup_password()">Submit</ion-button>
 </ion-content>
-<ion-footer class="ion-no-border">
-  <ion-button expand="block" color="secondary" shape="round" (click)="signup_password(form)">Submit</ion-button>
-</ion-footer>
+<!-- <ion-footer class="ion-no-border">
+  
+</ion-footer> -->

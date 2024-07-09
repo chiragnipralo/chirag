@@ -59,7 +59,9 @@ export class EditPaidEventPage implements OnInit {
   cuisine_name: any;
   activity_name:any;
   activity_details:any;
-  contacts= [];
+  contacts = [];
+  isPaidEvent = false;
+  price!: number;
   paidEventBar: boolean | undefined;
   isToggled: boolean = true;
   isActivityAdded: boolean = false;
@@ -161,6 +163,8 @@ export class EditPaidEventPage implements OnInit {
       title: ['', [Validators.required]],
       description: [''],
       selectedAge: [''],
+      isPaidEvent: [false],
+      price: [null],
       category: ['', [Validators.required]],
       location_name: ['',[Validators.required]],
       food_name: [''],
@@ -785,6 +789,12 @@ export class EditPaidEventPage implements OnInit {
     return await modal.present();
   }
   
+  ionViewDidLeave() {
+    console.log("leaving", this.dataservice.events_form)
+    this.dataservice.events_form = [];
+    console.log("leaved", this.dataservice.events_form)
+  }
+  
   All_events() {
     let apidata = {
       user_token: this.dataservice.getUserData(),
@@ -959,6 +969,15 @@ export class EditPaidEventPage implements OnInit {
               })
             );
           });
+        }
+
+        if(eventData.price != 'Free Event'){
+          console.log("Paiddd..............")
+          this.isPaidEvent = true;
+          this.ionicForm.patchValue({
+            price: eventData.price,
+            isPaidEvent:true
+          })
         }
 
         this.tempEmergencyContact = eventEmergency.filter((econtact: { contact_name: string; contact_number: string; }) => econtact.contact_name.trim() !== '' && econtact.contact_number.trim() !== '');

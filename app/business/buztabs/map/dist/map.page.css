@@ -1,0 +1,275 @@
+ion-toolbar .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+ion-toolbar .top ion-img {
+  height: 60px;
+  width: 140px !important;
+}
+ion-toolbar .top .icon {
+  background: #c8d7bb;
+  border-radius: 20px;
+  margin-right: 5px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+ion-toolbar .top .icon ion-icon:nth-child(2) {
+  background: #014006;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+}
+ion-toolbar .top .icon ion-icon:nth-child(1) {
+  padding: 0px 6px;
+  font-size: 1.3rem;
+  color: white;
+}
+
+.avatar-label {
+  color: #469c27;
+}
+
+ion-menu {
+  --width:80%;
+}
+ion-menu .profile_des {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+ion-menu .profile_des div {
+  padding-left: 10px;
+}
+
+ion-avatar {
+  border: 2px solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+ion-avatar ion-label {
+  font-size: 30px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+ion-accordion ion-label, .accordi ion-label {
+  padding-left: 10px;
+}
+
+.container {
+  padding: 10px;
+  margin-bottom: 50px;
+}
+
+.segment_one {
+  margin-bottom: 10px;
+}
+.segment_one ion-segment-button {
+  background-color: var(--ion-color-secondary);
+  color: white;
+  --color-hover:white;
+}
+.segment_one .segment-button-checked {
+  background: #152c01;
+  --color: white;
+  --color-checked:white;
+  --indicator-color:#152c01;
+  font-weight: bold;
+}
+
+ion-segment.ios {
+  background: transparent;
+}
+
+.sub_container {
+  height: 86vh;
+  display: flex;
+  align-items: center;
+}
+.sub_container .no_events {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 15px 0;
+}
+
+ion-button.ios {
+  --padding-start: 20px;
+  --padding-end: 20px;
+}
+
+.seg-sec {
+  height: 33px;
+}
+.seg-sec ion-segment-button {
+  background-color: var(--ion-color-secondary);
+  position: relative;
+  top: -8px;
+  --color: #ffffff;
+  --color-checked: #ffffff;
+  --color-hover: #ffffff;
+  margin-right: 10px;
+}
+.seg-sec .segment-button-checked {
+  background: #152c01;
+  --color: #ffffff;
+  --color-checked:#ffffff;
+  --indicator-color:transparent;
+  font-weight: bold;
+}
+.seg-sec ion-segment-button.ios {
+  position: relative;
+  top: 0;
+  --color: #fff;
+  --color-checked: #fff;
+  --border-radius: 20px;
+  --background-checked:#152c01;
+  --indicator-color:#152c01;
+}
+
+h2 {
+  color: black;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+  text-transform: capitalize;
+}
+
+ion-card {
+  background: #f8f8f8;
+  margin: 15px 4px;
+  padding: 0;
+  box-shadow: 2px 4px 4px 0px #929191;
+  border-radius: 10px;
+  margin: 15px 5px;
+}
+ion-card ion-card-content {
+  margin: 0;
+  padding: 0;
+}
+ion-card ion-card-content ion-row ion-col:nth-child(1) {
+  cursor: pointer;
+  height: 160px;
+}
+ion-card ion-card-content ion-row ion-col:nth-child(1) ion-img {
+  height: 100%;
+}
+ion-card ion-card-content ion-row ion-img::part(image) {
+  border-radius: 10px;
+  object-fit: cover;
+}
+ion-card ion-card-content .head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+}
+ion-card ion-card-content .head h2 {
+  --color: black;
+  font-size: 13px;
+}
+ion-card ion-card-content .head ion-icon {
+  font-size: 20px;
+}
+ion-card ion-card-content .btnn {
+  display: flex;
+  bottom: 0;
+  position: fixed;
+  right: 2px;
+}
+ion-card ion-card-content .bookbtn {
+  display: flex;
+  position: absolute;
+  bottom: 2px;
+}
+ion-card ion-card-content .chatbox {
+  position: absolute;
+  bottom: 13px;
+  right: 20px;
+}
+ion-card ion-card-content .chatbox ion-icon {
+  font-size: 25px;
+}
+ion-card ion-card-content ion-list {
+  background: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+ion-card ion-card-content ion-list ion-icon {
+  color: black;
+  margin-right: 5px;
+}
+ion-card ion-card-content ion-list p {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+}
+ion-card .cancle {
+  background: linear-gradient(3deg, #b1b1b1 36%, #8d8d88 60%, #7a7a7a 100%);
+  bottom: 260px;
+  color: black;
+  height: 40px;
+  position: absolute;
+  top: 50px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 0;
+  text-align: center;
+  padding: 10px;
+}
+ion-card .foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+}
+ion-card .foot ion-icon {
+  font-size: 20px;
+}
+ion-card .foott ion-icon {
+  padding-right: 20px;
+  font-size: 20px;
+}
+ion-card .btn {
+  float: right;
+}
+
+.scan {
+  height: 65px;
+  width: 65px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  --border-radius: 50%;
+}
+.scan ion-icon {
+  font-size: 45px;
+}
+.scan .join-tag {
+  position: absolute;
+  top: 4px;
+  left: 5px;
+}
+.scan .category_style {
+  position: relative;
+  bottom: 25px;
+  right: 0;
+  border-radius: 0 0 7px 7px;
+  left: 0;
+  z-index: 0;
+  background: #469c27;
+  color: white;
+  padding: 2px 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

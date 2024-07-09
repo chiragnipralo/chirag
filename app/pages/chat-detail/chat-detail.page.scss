@@ -218,9 +218,14 @@ ion-footer {
     object-fit: cover;
 }
 .title-top{
-    width: 80%;
+    width: 100%;
     padding-left: 0;
     padding-right: 0;
     display: block;
-    margin: auto 0;
+    // margin: auto 0;
+    ion-title{
+        padding: 0;
+        text-align: left;
+        font-size: 13px;
+    }
 }

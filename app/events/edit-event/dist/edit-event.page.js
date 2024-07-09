@@ -96,6 +96,9 @@ var EditEventPage = /** @class */ (function () {
             'category': [
                 { type: 'required', message: 'Category is required.' },
             ],
+            'selectedAge': [
+                { type: 'required', message: 'Age is required.' },
+            ],
             'event_date': [
                 { type: 'required', message: 'Event date is required.' },
             ],
@@ -121,6 +124,9 @@ var EditEventPage = /** @class */ (function () {
         this.ionicForm = this.formBuilder.group({
             food_name: [[]]
         });
+        var today = new Date();
+        today.setDate(today.getDate() + 1);
+        this.currentDate = today.toISOString().split('T')[0];
     }
     EditEventPage.prototype.populateTextarea = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -176,7 +182,6 @@ var EditEventPage = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log("Event Draft or Not:", this._route.snapshot.params['event_draft']);
                         this.commonservice.show();
                         this.ionicForm = this.formBuilder.group({
                             title: ['', [forms_1.Validators.required]],
@@ -309,8 +314,6 @@ var EditEventPage = /** @class */ (function () {
             end_time: ['', [forms_1.Validators.required]]
         });
         this.getPiecesArray.push(piece);
-        console.log('After Add: ', this.ionicForm.value);
-        console.log(this.getPiecesArray.controls);
     };
     EditEventPage.prototype.deletePiece = function (i) {
         this.getPiecesArray.removeAt(i);
@@ -625,7 +628,6 @@ var EditEventPage = /** @class */ (function () {
                         else {
                             console.error("terms_and_conditions form control not found.");
                         }
-                        console.log(this.ionicForm.value);
                         userToken = this.dataservice.getUserData();
                         this.dataservice.event_cusine_type = this.LocalCusineItem.filter(function (item) { return _this.ionicForm.value.cuisine_name.indexOf(item.id) !== -1; });
                         this.dataservice.event_food_type = this.LocalFoodItem.filter(function (item) { return _this.ionicForm.value.food_name.indexOf(item.id) !== -1; });
@@ -718,7 +720,6 @@ var EditEventPage = /** @class */ (function () {
         });
     };
     EditEventPage.prototype.moveFocus = function (event) {
-        console.log("my evet --", event.target.value);
         this.dataservice.events_fooditems.forEach(function (item) {
             if (item.id === 0) {
                 item.name = event.target.value;
@@ -828,8 +829,9 @@ var EditEventPage = /** @class */ (function () {
                                         _this.chatconnect.postData(apidata, "event_operations").then(function (result) {
                                             // this.commonservice.hide();
                                             if (result.Response.status == 1) {
+                                                _this.PremenuImg.splice(params, 1);
                                                 _this.commonservice.presentToast("", result.Response.message);
-                                                _this.All_events();
+                                                // this.All_events();
                                             }
                                             else {
                                                 _this.commonservice.presentToast("Oops", result.Response.message);
@@ -870,6 +872,11 @@ var EditEventPage = /** @class */ (function () {
             });
         });
     };
+    EditEventPage.prototype.ionViewDidLeave = function () {
+        console.log("leaving", this.dataservice.events_form);
+        this.dataservice.events_form = [];
+        console.log("leaved", this.dataservice.events_form);
+    };
     EditEventPage.prototype.All_events = function () {
         var _this = this;
         var apidata = {
@@ -880,11 +887,9 @@ var EditEventPage = /** @class */ (function () {
             _this.commonservice.hide();
             if (result.Response.status == 1) {
                 var eventData_1 = result.Response.events_data;
-                console.log(eventData_1);
                 var ageGroupParts = eventData_1.age_group.split('-');
                 var ageGroupFrom = parseInt(ageGroupParts[0], 10);
                 var ageGroupTo = parseInt(ageGroupParts[1], 10);
-                console.log("This is age Group", eventData_1.age_group);
                 _this.imageUrls.push(eventData_1.event_images);
                 _this.prevImage = eventData_1.event_images,
                     _this.dataservice.prev_orginalImage = eventData_1.original_event_images;
@@ -905,7 +910,6 @@ var EditEventPage = /** @class */ (function () {
                 });
                 // handle event category
                 var selectedCategory = _this.dataservice.events_categories.find(function (category) { return category.name === eventData_1.event_category; });
-                console.log("This Is selected Categary:", selectedCategory);
                 _this.ionicForm.patchValue({
                     category: selectedCategory ? selectedCategory.id : null
                 });
@@ -941,7 +945,6 @@ var EditEventPage = /** @class */ (function () {
                 }
                 // handle food type
                 var food_name_ids_1 = [];
-                console.log("Food Type", eventData_1.event_food_type[0].food_type);
                 if (eventData_1.event_food_type[0].food_type) {
                     eventData_1.event_food_type[0].food_type.forEach(function (element) {
                         _this.dataservice.events_fooditems.forEach(function (apielement) {
@@ -991,7 +994,6 @@ var EditEventPage = /** @class */ (function () {
                 _this.ionicForm.patchValue({
                     cuisine_name: cusine_name_ids_1
                 });
-                console.log("This is Location:", eventData_1.event_venues);
                 // Handle activity data
                 var eventActivities = eventData_1.event_activities;
                 if (eventActivities && eventActivities.length > 0) {

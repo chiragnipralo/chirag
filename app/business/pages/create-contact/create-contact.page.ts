@@ -111,7 +111,7 @@ export class CreateContactPage implements OnInit {
     formData.append('type', '2');
     formData.append('account_id', id);
     formData.append('event_food_type', JSON.stringify(this.dataservice.event_food_type));
-
+    formData.append('event_cusine_type', JSON.stringify(this.dataservice.event_cusine_type));
     const eventImages = localStorage.getItem('event_images');
     if (eventImages !== null && !this.dataservice.isNullOrUndefined(eventImages)) {
       formData.append('event_images', this.dataservice.convertBase64ToBlob(eventImages));
@@ -193,7 +193,7 @@ export class CreateContactPage implements OnInit {
          var retrievedObject = JSON.parse(localStorage.getItem('cust_contacts') || 'null');
          console.log(retrievedObject)
          console.log("retrievedObject ===>",retrievedObject)
-         if(!this.dataservice.ValidateArray(retrievedObject)){
+         if(this.dataservice.ValidateArray(retrievedObject)){
           const projection = {
             name: true,
             phones: true,

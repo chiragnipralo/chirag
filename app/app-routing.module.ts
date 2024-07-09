@@ -310,6 +310,14 @@ const routes: Routes = [
     path: 'manage-community',
     loadChildren: () => import('./community/manage-community/manage-community.module').then( m => m.ManageCommunityPageModule)
   },
+  {
+    path: 'invited-member',
+    loadChildren: () => import('./community/invited-member/invited-member.module').then( m => m.InvitedMemberPageModule)
+  },
+  {
+    path: 'edit-profile',
+    loadChildren: () => import('./business/pages/edit-profile/edit-profile.module').then( m => m.EditProfilePageModule)
+  },
 ];
 
 @NgModule({

@@ -309,7 +309,6 @@ var EventDetailsPage = /** @class */ (function () {
         this.ionicForm = this.formBuilder.group({
             user_details: this.formBuilder.array([])
         });
-        this.All_events();
         this.addParticipant();
         this.updateAmount();
     };
@@ -391,15 +390,22 @@ var EventDetailsPage = /** @class */ (function () {
             event_id: this.dataservice.user_event_data.id
         };
         this.chatconnect.postData(apidata, "view_paid_events_by_id").then(function (result) {
-            var _a;
+            var _a, _b, _c;
             if (result.Response.status == 1) {
                 _this.dataservice.setEventData(result.Response.events_data);
                 _this.MultiMenuImgs = result.Response.events_data.menu_img_filename;
                 _this.listReview();
                 _this.loadMap();
                 _this.checkConditionforlive();
-                _this.eventDate = new Date((_a = _this.dataservice) === null || _a === void 0 ? void 0 : _a.user_event_data.event_dates[0]['event_date']);
+                _this.formatDescription((_b = (_a = _this.dataservice) === null || _a === void 0 ? void 0 : _a.user_event_data) === null || _b === void 0 ? void 0 : _b.description);
+                _this.eventDate = new Date((_c = _this.dataservice) === null || _c === void 0 ? void 0 : _c.user_event_data.event_dates[0]['event_date']);
                 _this.isEventDateValid();
+                // console.log("==>",this.dataservice?.user_event_data?.event_food_type)
+                // console.log("==>",this.dataservice.user_event_data.event_food_type[0].food_type.length == 0)
+                // console.log("==>",this.dataservice.user_event_data.event_food_type[0].cusine_food !== null)
+                // console.log("==>",this.dataservice?.user_event_data?.event_food_type[0]?.extra_food[0]?.extra_food_name == '')
+                // console.log("==>",this.dataservice?.user_event_data?.emergency_contact[0]?.contact_number == '')
+                // console.log("==>",this.dataservice?.user_event_data?.terms_condition == '')
             }
             else {
                 _this.commonservice.presentToast("Oops", result.Response.message);
@@ -407,6 +413,11 @@ var EventDetailsPage = /** @class */ (function () {
         }, function (err) {
             console.log("Connection failed Messge");
         });
+    };
+    EventDetailsPage.prototype.formatDescription = function (description) {
+        // const convertedDescription = description.replace(/\r\n/g, '<br>');
+        var convertedDescription = description.replace(/\n/g, '<br>');
+        this.EventDescription = this.sanitizer.bypassSecurityTrustHtml(convertedDescription);
     };
     EventDetailsPage.prototype.loadMap = function () {
         var _this = this;

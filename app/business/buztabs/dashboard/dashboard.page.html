@@ -31,7 +31,7 @@
 				  </ion-avatar>
 				  <div>
 					<h2>{{community_data?.account_name}}</h2>
-					<p>{{community_data?.email}}</p>
+					<p style="word-break: break-word;max-width: 175px;">{{community_data?.email}}</p>
 				  </div>
 				</div>
 				<div>
@@ -212,7 +212,15 @@
 						<ion-list class="about">
 							<ion-row class="about_header">
 								<div class="avatar_icon">
-									{{ community_data?.account_name[0] }}
+									<ion-avatar>
+										<ng-container *ngIf="community_data?.account_image !== null; else noImage">
+											<img [src]="community_data?.account_image" style="height: 100%;width: 100%;">
+										</ng-container>
+										<ng-template #noImage>
+											<ion-label class="avatar-label">{{community_data?.account_name[0]}}</ion-label>
+										</ng-template>
+									</ion-avatar>
+									<!-- {{ community_data?.account_name[0] }} -->
 								</div>
 								<h5>{{community_data?.account_name}}</h5>
 							</ion-row>

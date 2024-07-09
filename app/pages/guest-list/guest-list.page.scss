@@ -8,6 +8,11 @@ ion-toolbar{
     background:none;
 }
 
+.role {
+    font-weight: bold;
+    color: var(--ion-color-primary);
+  }
+  
 ion-item{
     --border-style: none;
     ion-searchbar{

@@ -83,6 +83,7 @@ var EditPaidEventPage = /** @class */ (function () {
         this.food_others = '';
         this.showSubmitButton = false;
         this.contacts = [];
+        this.isPaidEvent = false;
         this.isToggled = true;
         this.isActivityAdded = false;
         this.customOptionSelected = false;
@@ -174,6 +175,8 @@ var EditPaidEventPage = /** @class */ (function () {
                             title: ['', [forms_1.Validators.required]],
                             description: [''],
                             selectedAge: [''],
+                            isPaidEvent: [false],
+                            price: [null],
                             category: ['', [forms_1.Validators.required]],
                             location_name: ['', [forms_1.Validators.required]],
                             food_name: [''],
@@ -866,6 +869,11 @@ var EditPaidEventPage = /** @class */ (function () {
             });
         });
     };
+    EditPaidEventPage.prototype.ionViewDidLeave = function () {
+        console.log("leaving", this.dataservice.events_form);
+        this.dataservice.events_form = [];
+        console.log("leaved", this.dataservice.events_form);
+    };
     EditPaidEventPage.prototype.All_events = function () {
         var _this = this;
         var apidata = {
@@ -1005,6 +1013,14 @@ var EditPaidEventPage = /** @class */ (function () {
                             contact_role: contact.contact_role,
                             contact_number: contact.contact_number
                         }));
+                    });
+                }
+                if (eventData_1.price != 'Free Event') {
+                    console.log("Paiddd..............");
+                    _this.isPaidEvent = true;
+                    _this.ionicForm.patchValue({
+                        price: eventData_1.price,
+                        isPaidEvent: true
                     });
                 }
                 _this.tempEmergencyContact = eventEmergency.filter(function (econtact) { return econtact.contact_name.trim() !== '' && econtact.contact_number.trim() !== ''; });

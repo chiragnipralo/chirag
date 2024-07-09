@@ -113,10 +113,10 @@ var CreatePage = /** @class */ (function () {
                 { type: 'required', message: 'Date is required.' },
             ],
             'start_time': [
-                { type: 'required', message: 'Title is required.' },
+                { type: 'required', message: 'Start time is required.' },
             ],
             'end_time': [
-                { type: 'required', message: 'Title is required.' },
+                { type: 'required', message: 'End time is required.' },
             ],
             'location_name': [
                 { type: 'required', message: 'Venue location is required.' },
@@ -139,6 +139,9 @@ var CreatePage = /** @class */ (function () {
             activity_name: [''],
             activity_details: ['']
         });
+        var today = new Date();
+        today.setDate(today.getDate() + 1);
+        this.currentDate = today.toISOString().split('T')[0];
     }
     CreatePage.prototype.populateTextarea = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -228,6 +231,12 @@ var CreatePage = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        this.dataservice.events_form = [];
+                        this.dataservice.foodImages = [];
+                        this.dataservice.locationn = null;
+                        this.dataservice.emergency_contact = [];
+                        this.dataservice.event_cusine_type = null;
+                        this.dataservice.foodImages = [];
                         this.ionicForm = this.formBuilder.group({
                             title: ['', [forms_1.Validators.required]],
                             description: [''],
@@ -307,6 +316,7 @@ var CreatePage = /** @class */ (function () {
                     _this.dataservice.cusines_items = result.Response.cusinesitems;
                     _this.LocalFoodItem = result.Response.fooditems;
                     _this.LocalCusineItem = result.Response.cusinesitems;
+                    _this.sortedCategories = _this.dataservice.events_categories.sort(function (a, b) { return a.name.localeCompare(b.name); });
                     resolve(true);
                 }
                 else {
@@ -342,7 +352,7 @@ var CreatePage = /** @class */ (function () {
     CreatePage.prototype.Addacti = function () {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var updatedActivities, _loop_1, this_1, i;
+            var updatedActivities, _loop_1, this_1, i, _loop_2, this_2, i;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
@@ -359,19 +369,12 @@ var CreatePage = /** @class */ (function () {
                                         updatedActivities.push(this_1.tempActivities[existingActivityIndex]);
                                     }
                                     else {
-                                        var existingActivity = this_1.tempActivities.find(function (activity) { return activity.activity_name === activity_name_1; });
-                                        if (existingActivity) {
-                                            existingActivity.activity_details = activity_details || '';
-                                            updatedActivities.push(existingActivity);
-                                        }
-                                        else {
-                                            var activity = {
-                                                activity_name: activity_name_1,
-                                                activity_details: activity_details || ''
-                                            };
-                                            this_1.tempActivities.push(activity);
-                                            updatedActivities.push(activity);
-                                        }
+                                        var activity = {
+                                            activity_name: activity_name_1,
+                                            activity_details: activity_details || ''
+                                        };
+                                        this_1.tempActivities.push(activity);
+                                        updatedActivities.push(activity);
                                     }
                                 }
                             }
@@ -379,6 +382,17 @@ var CreatePage = /** @class */ (function () {
                         this_1 = this;
                         for (i = 0; i < this.getActivityArray.length; i++) {
                             _loop_1(i);
+                        }
+                        _loop_2 = function (i) {
+                            var activityName = this_2.tempActivities[i].activity_name;
+                            var exists = this_2.getActivityArray.controls.some(function (control) { var _a; return ((_a = control.get('activity_name')) === null || _a === void 0 ? void 0 : _a.value) === activityName; });
+                            if (!exists) {
+                                this_2.tempActivities.splice(i, 1);
+                            }
+                        };
+                        this_2 = this;
+                        for (i = this.tempActivities.length - 1; i >= 0; i--) {
+                            _loop_2(i);
                         }
                         return [4 /*yield*/, this.modalController.dismiss(updatedActivities)];
                     case 1:
@@ -402,23 +416,23 @@ var CreatePage = /** @class */ (function () {
     CreatePage.prototype.addEmergencyContact = function () {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var updatedEmergencyContacts, _loop_2, this_2, i;
+            var updatedEmergencyContacts, _loop_3, this_3, i, _loop_4, this_4, i;
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0:
                         updatedEmergencyContacts = [];
-                        _loop_2 = function (i) {
-                            var contactGroup = this_2.getEcontactArray.at(i);
+                        _loop_3 = function (i) {
+                            var contactGroup = this_3.getEcontactArray.at(i);
                             if (contactGroup) {
                                 var contact_name_1 = (_a = contactGroup.get('contact_name')) === null || _a === void 0 ? void 0 : _a.value;
                                 var contact_role = (_b = contactGroup.get('contact_role')) === null || _b === void 0 ? void 0 : _b.value;
                                 var contact_number = (_c = contactGroup.get('contact_number')) === null || _c === void 0 ? void 0 : _c.value;
                                 if (contact_name_1 && contact_number) {
-                                    var existingContactIndex = this_2.tempEmergencyContact.findIndex(function (econtact) { return econtact.contact_name === contact_name_1; });
+                                    var existingContactIndex = this_3.tempEmergencyContact.findIndex(function (econtact) { return econtact.contact_name === contact_name_1; });
                                     if (existingContactIndex !== -1) {
-                                        this_2.tempEmergencyContact[existingContactIndex].contact_role = contact_role || '';
-                                        this_2.tempEmergencyContact[existingContactIndex].contact_number = contact_number || '';
-                                        updatedEmergencyContacts.push(this_2.tempEmergencyContact[existingContactIndex]);
+                                        this_3.tempEmergencyContact[existingContactIndex].contact_role = contact_role || '';
+                                        this_3.tempEmergencyContact[existingContactIndex].contact_number = contact_number || '';
+                                        updatedEmergencyContacts.push(this_3.tempEmergencyContact[existingContactIndex]);
                                     }
                                     else {
                                         var econtact = {
@@ -426,15 +440,26 @@ var CreatePage = /** @class */ (function () {
                                             contact_role: contact_role || '',
                                             contact_number: contact_number || ''
                                         };
-                                        this_2.tempEmergencyContact.push(econtact);
+                                        this_3.tempEmergencyContact.push(econtact);
                                         updatedEmergencyContacts.push(econtact);
                                     }
                                 }
                             }
                         };
-                        this_2 = this;
+                        this_3 = this;
                         for (i = 0; i < this.getEcontactArray.length; i++) {
-                            _loop_2(i);
+                            _loop_3(i);
+                        }
+                        _loop_4 = function (i) {
+                            var contactName = this_4.tempEmergencyContact[i].contact_name;
+                            var exists = this_4.getEcontactArray.controls.some(function (control) { var _a; return ((_a = control.get('contact_name')) === null || _a === void 0 ? void 0 : _a.value) === contactName; });
+                            if (!exists) {
+                                this_4.tempEmergencyContact.splice(i, 1);
+                            }
+                        };
+                        this_4 = this;
+                        for (i = this.tempEmergencyContact.length - 1; i >= 0; i--) {
+                            _loop_4(i);
                         }
                         return [4 /*yield*/, this.modalController.dismiss(updatedEmergencyContacts)];
                     case 1:
@@ -457,26 +482,26 @@ var CreatePage = /** @class */ (function () {
     CreatePage.prototype.addPollSection = function () {
         var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function () {
-            var updatedPolls, _loop_3, this_3, i;
+            var updatedPolls, _loop_5, this_5, i, _loop_6, this_6, i;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
                         updatedPolls = [];
-                        _loop_3 = function (i) {
-                            var pollGroup = this_3.getPollArray.at(i);
+                        _loop_5 = function (i) {
+                            var pollGroup = this_5.getPollArray.at(i);
                             var poll_question = (_a = pollGroup.get('poll_question')) === null || _a === void 0 ? void 0 : _a.value;
                             var poll_option1 = (_b = pollGroup.get('poll_option1')) === null || _b === void 0 ? void 0 : _b.value;
                             var poll_option2 = (_c = pollGroup.get('poll_option2')) === null || _c === void 0 ? void 0 : _c.value;
                             var poll_option3 = (_d = pollGroup.get('poll_option3')) === null || _d === void 0 ? void 0 : _d.value;
                             var poll_option4 = (_e = pollGroup.get('poll_option4')) === null || _e === void 0 ? void 0 : _e.value;
                             if (poll_question && poll_option1) {
-                                var existingPollIndex = this_3.tempoll.findIndex(function (poll) { return poll.poll_question === poll_question; });
+                                var existingPollIndex = this_5.tempoll.findIndex(function (poll) { return poll.poll_question === poll_question; });
                                 if (existingPollIndex !== -1) {
-                                    this_3.tempoll[existingPollIndex].poll_option1 = poll_option1 || '';
-                                    this_3.tempoll[existingPollIndex].poll_option2 = poll_option2 || '';
-                                    this_3.tempoll[existingPollIndex].poll_option3 = poll_option3 || '';
-                                    this_3.tempoll[existingPollIndex].poll_option4 = poll_option4 || '';
-                                    updatedPolls.push(this_3.tempoll[existingPollIndex]);
+                                    this_5.tempoll[existingPollIndex].poll_option1 = poll_option1 || '';
+                                    this_5.tempoll[existingPollIndex].poll_option2 = poll_option2 || '';
+                                    this_5.tempoll[existingPollIndex].poll_option3 = poll_option3 || '';
+                                    this_5.tempoll[existingPollIndex].poll_option4 = poll_option4 || '';
+                                    updatedPolls.push(this_5.tempoll[existingPollIndex]);
                                 }
                                 else {
                                     var poll = {
@@ -486,14 +511,25 @@ var CreatePage = /** @class */ (function () {
                                         poll_option3: poll_option3 || '',
                                         poll_option4: poll_option4 || ''
                                     };
-                                    this_3.tempoll.push(poll);
+                                    this_5.tempoll.push(poll);
                                     updatedPolls.push(poll);
                                 }
                             }
                         };
-                        this_3 = this;
+                        this_5 = this;
                         for (i = 0; i < this.getPollArray.length; i++) {
-                            _loop_3(i);
+                            _loop_5(i);
+                        }
+                        _loop_6 = function (i) {
+                            var pollQuestion = this_6.tempoll[i].poll_question;
+                            var exists = this_6.getPollArray.controls.some(function (control) { var _a; return ((_a = control.get('poll_question')) === null || _a === void 0 ? void 0 : _a.value) === pollQuestion; });
+                            if (!exists) {
+                                this_6.tempoll.splice(i, 1);
+                            }
+                        };
+                        this_6 = this;
+                        for (i = this.tempoll.length - 1; i >= 0; i--) {
+                            _loop_6(i);
                         }
                         return [4 /*yield*/, this.modalController.dismiss(updatedPolls)];
                     case 1:
@@ -581,17 +617,17 @@ var CreatePage = /** @class */ (function () {
         var _this = this;
         var files = event.target.files;
         if (files && files.length > 0) {
-            var _loop_4 = function (i) {
+            var _loop_7 = function (i) {
                 var reader = new FileReader();
                 reader.onload = function () {
                     _this.menuUrls.push(reader.result);
                 };
                 reader.readAsDataURL(files[i]);
-                this_4.selectedFiles.push(files[i]);
+                this_7.selectedFiles.push(files[i]);
             };
-            var this_4 = this;
+            var this_7 = this;
             for (var i = 0; i < files.length; i++) {
-                _loop_4(i);
+                _loop_7(i);
             }
             this.dataservice.foodImages = this.selectedFiles;
         }
@@ -620,6 +656,7 @@ var CreatePage = /** @class */ (function () {
                         alert.present();
                         return [3 /*break*/, 3];
                     case 2:
+                        this.common.show("Please wait...");
                         termsAndConditionsValue = void 0;
                         termsAndConditionsControl = this.ionicForm.get('terms_and_conditions');
                         if (termsAndConditionsControl) {
@@ -635,6 +672,7 @@ var CreatePage = /** @class */ (function () {
                                 this.dataservice.event_food_type = this.LocalFoodItem.filter(function (item) { return _this.ionicForm.value.food_name.indexOf(item.id) !== -1; });
                                 this.dataservice.events_form.push(this.ionicForm.value);
                                 this.ContactPageModal();
+                                this.common.hide();
                             }
                             else {
                                 console.error("terms_and_conditions form control value is null.");

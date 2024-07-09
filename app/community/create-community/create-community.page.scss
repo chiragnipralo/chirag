@@ -1,6 +1,6 @@
 .error-message {
     color: red;
-    text-align: center;
+    text-align: left;
     padding-bottom:10px ;
 }
 
@@ -38,8 +38,8 @@ ion-toolbar{
     max-width: 800px;
 }
 
-ion-row{
-    height: 25vh;
+.main_img{
+    height: 233px;
     border-radius: 10px;
     margin-bottom: 10px;
     background: rgb(241, 241, 241);

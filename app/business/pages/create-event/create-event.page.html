@@ -4,7 +4,7 @@
       <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
     </ion-buttons>
     <ion-title>New Event</ion-title>
-    <ion-icon slot="end" name="close" routerLink="/buztabs/dashboard"></ion-icon>
+    <!-- <ion-icon slot="end" name="close" routerLink="/buztabs/dashboard"></ion-icon> -->
   </ion-toolbar>
 </ion-header>
 
@@ -30,7 +30,7 @@
         <div class="container">
           <p class="images">
             <ng-template ngFor let-imageUrl [ngForOf]="imageUrls">
-              <img [src]="imageUrl" class="image" />
+              <img [src]="imageUrl" class="image" style="border-radius: 10px;"/>
               <ion-icon name="add-circle" slot="end" (click)="fileInput.click()" style="font-size: 45px;color:seagreen;position: absolute;
               right: 0;"></ion-icon>
               <input type="file" style="display:none" #fileInput (change)="loadImageFromDevice($event,'event')" id="file-input" accept="image/png, image/jpg, image/jpeg">
@@ -39,7 +39,10 @@
 
           <ng-container *ngIf="!imageUrls.length">
             <ion-row class="main_img">
-              <ion-input type="file" (change)="loadImageFromDevice($event,'event')" class="custom-file-input" id="file-input" accept="image/png, image/jpeg" class="custom-file-input"></ion-input>
+              <div class="down_icon" (click)="fileInput.click()">
+                <ion-icon name="download-outline"></ion-icon>
+              </div>
+              <input type="file" style="display:none" #fileInput (change)="loadImageFromDevice($event,'event')" id="file-input" accept="image/png, image/jpeg">
               <h5 align="center">Upload Event Image <span class="asct">*</span></h5>
             </ion-row>
           </ng-container>
@@ -68,12 +71,6 @@
 
           <ng-container *ngFor="let error of error_messages.description">
             <div class="error-message" *ngIf="ionicForm.get('description').hasError(error.type) && (ionicForm.get('description').dirty || ionicForm.get('description').touched)">
-              {{ error.message }}
-            </div>
-          </ng-container>
-
-          <ng-container *ngFor="let error of error_messages.language">
-            <div class="error-message" *ngIf="ionicForm.get('language').hasError(error.type) && (ionicForm.get('language').dirty || ionicForm.get('language').touched)">
               {{ error.message }}
             </div>
           </ng-container>
@@ -117,8 +114,9 @@
             </div>
           </div>          
 
-          <ng-container *ngFor="let error of error_messages.age_group">
-            <div class="error-message" *ngIf="ionicForm.get('age_group').hasError(error.type) && (ionicForm.get('age_group').dirty || ionicForm.get('age_group').touched)">
+          <ng-container *ngFor="let error of error_messages.selectedAge">
+            <div class="error-message"
+              *ngIf="ionicForm.get('selectedAge').hasError(error.type) && (ionicForm.get('selectedAge').dirty || ionicForm.get('selectedAge').touched)">
               {{ error.message }}
             </div>
           </ng-container>
@@ -151,17 +149,35 @@
                   <ion-icon (click)="deletePiece(i)" name="remove-circle-outline"></ion-icon>
                 </ng-container>
               </div>
-              <ion-input formControlName="event_date" type="date"></ion-input>
+              <ion-input formControlName="event_date" type="date" [min]="currentDate"></ion-input>
             </div>
+            <ng-container *ngFor="let error of error_messages.event_date">
+              <div class="error-message"
+                *ngIf="piece.get('event_date')?.hasError(error.type) && (piece.get('event_date')?.dirty || piece.get('event_date')?.touched)">
+                {{ error.message }}
+              </div>
+            </ng-container>
             <div class="form-input">
               <div class="time">
                 <ion-col style="padding-left: 0;">
-                  <h4>Start Time</h4>
+                  <h4>Start Time <span class="asct">*</span></h4>
                   <ion-input formControlName="start_time" type="time"></ion-input>
+                  <ng-container *ngFor="let error of error_messages.start_time">
+                    <div class="error-message"
+                      *ngIf="piece.get('start_time')?.hasError(error.type) && (piece.get('start_time')?.dirty || piece.get('start_time')?.touched)">
+                      {{ error.message }}
+                    </div>
+                  </ng-container>
                 </ion-col>
                 <ion-col style="padding-right: 0;">
-                  <h4>End Time</h4>
+                  <h4>End Time <span class="asct">*</span></h4>
                   <ion-input formControlName="end_time" type="time"></ion-input>
+                  <ng-container *ngFor="let error of error_messages.end_time">
+                    <div class="error-message"
+                      *ngIf="piece.get('end_time')?.hasError(error.type) && (piece.get('end_time')?.dirty || piece.get('end_time')?.touched)">
+                      {{ error.message }}
+                    </div>
+                  </ng-container>
                 </ion-col>
               </div>
             </div>
@@ -314,7 +330,10 @@
                 <div class="thrid_container">
                   <h4>Upload Images</h4>
                   <ion-row class="main_img">
-                    <input type="file" (change)="loadImagesFromDeviceMulti($event)" class="custom-file-input" multiple
+                    <div class="down_icon" (click)="fileInputMulti.click()">
+                      <ion-icon name="download-outline"></ion-icon>
+                    </div>
+                    <input type="file" style="display:none" #fileInputMulti (change)="loadImagesFromDeviceMulti($event)" multiple
                       accept="image/png, image/jpeg" />
                   </ion-row>
                 
@@ -491,6 +510,7 @@
         </div>
       </div>
     </ion-list>
+
     <ion-footer class="ion-no-border"> 
       <div style="display: flex; justify-content: space-between;">
         <ion-button *ngIf="segment == '1'" fill="none"></ion-button>
@@ -499,5 +519,6 @@
         <ion-button *ngIf="segment === '3'" shape="round" type="submit" color="secondary">Submit</ion-button>
       </div>
     </ion-footer>
+
   </form> 
 </ion-content>

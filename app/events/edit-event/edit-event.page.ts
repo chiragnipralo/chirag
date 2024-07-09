@@ -1,15 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormArray,FormBuilder, Validators, FormControl } from "@angular/forms";
-import { NavController,LoadingController,ModalController,AlertController, IonTextarea } from '@ionic/angular';
+import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from "@angular/forms";
+import { NavController, LoadingController, ModalController, AlertController, IonTextarea } from '@ionic/angular';
 import { DomSanitizer } from "@angular/platform-browser";
 import { SafeUrl } from "@angular/platform-browser";
 import { CommonService } from '../../services/common.service';
 import { ImgcropperComponent } from '../../components/imgcropper/imgcropper.component';
 import { DataService } from '../../services/data.service';
 import { HttpService } from '../../services/http.service';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { ImageModalComponent } from 'src/app/components/image-modal/image-modal.component';
 
 declare var google: any;
@@ -20,7 +19,7 @@ declare var google: any;
   styleUrls: ['./edit-event.page.scss'],
 })
 
-export class EditEventPage implements OnInit { 
+export class EditEventPage implements OnInit {
 
   tempActivities: any[] = [];
   tempEmergencyContact: any[] = [];
@@ -34,19 +33,20 @@ export class EditEventPage implements OnInit {
   selectedFiles: File[] = [];
   PremenuImg: any = [];
 
-  public showMoreBar : boolean = false;
-  public is_custom_food_show : boolean = false;
-  public is_event_permission_skipped : boolean = false;
+  public showMoreBar: boolean = false;
+  public is_custom_food_show: boolean = false;
+  public is_event_permission_skipped: boolean = false;
   private sanitizer: DomSanitizer;
   public imageUrls: SafeUrl[];
   public mapsUrls: SafeUrl[];
   public menuUrls: SafeUrl[];
-  public Blobimage:any = [];
+  public Blobimage: any = [];
   public LocalFoodItem = [];
-  public LocalCusineItem=[];
+  public LocalCusineItem = [];
   public localAgeGroup = [];
- 
-  @ViewChild('moreBar') moreBar: { setFocus: () => void; } | undefined ;
+  currentDate: string;
+
+  @ViewChild('moreBar') moreBar: { setFocus: () => void; } | undefined;
   age_group: FormGroup<{ age_group_to: FormControl<string>; age_group_from: FormControl<string>; }> | undefined;
 
   segment = '1';
@@ -54,14 +54,14 @@ export class EditEventPage implements OnInit {
   showSubmitButton = false;
   extra_food_name: any;
   drinks_name: any;
-  contact_name:any;
-  contact_role:any;
-  contact_number:any;
+  contact_name: any;
+  contact_role: any;
+  contact_number: any;
   food_name: any;
   cuisine_name: any;
-  activity_name:any;
-  activity_details:any;
-  contacts= [];
+  activity_name: any;
+  activity_details: any;
+  contacts = [];
   paidEventBar: boolean | undefined;
   isToggled: boolean = true;
   isActivityAdded: boolean = false;
@@ -69,36 +69,39 @@ export class EditEventPage implements OnInit {
   termsAndConditionsList: any;
 
   error_messages = {
-    'title':[
+    'title': [
       { type: 'required', message: 'Title is required.' },
-      ],
-    'description':[
+    ],
+    'description': [
       { type: 'required', message: 'Description is required.' },
-      ],
-    'category':[
+    ],
+    'category': [
       { type: 'required', message: 'Category is required.' },
-      ],
-    'event_date':[
+    ],
+    'selectedAge': [
+      { type: 'required', message: 'Age is required.' },
+    ],
+    'event_date': [
       { type: 'required', message: 'Event date is required.' },
-      ],
-    'start_time':[
+    ],
+    'start_time': [
       { type: 'required', message: 'Start time is required.' },
-      ],
-    'end_time':[
+    ],
+    'end_time': [
       { type: 'required', message: 'End time is required.' },
-      ],
-    'location_name':[
+    ],
+    'location_name': [
       { type: 'required', message: 'Venue location is required.' },
-      ],  
-    'event_typecate':[
+    ],
+    'event_typecate': [
       { type: 'required', message: 'Event type is required.' },
-      ],  
+    ],
   }
 
   constructor(sanitizer: DomSanitizer,
-    public commonservice:CommonService,
+    public commonservice: CommonService,
     public formBuilder: FormBuilder,
-    public common:CommonService,
+    public common: CommonService,
     public dataservice: DataService,
     public navCtrl: NavController,
     public chatconnect: HttpService,
@@ -109,7 +112,7 @@ export class EditEventPage implements OnInit {
     public router: Router,
     private _route: ActivatedRoute,
     private location: Location,
-    public alertController: AlertController){
+    public alertController: AlertController) {
     this.sanitizer = sanitizer;
     this.segment = "1";
     this.imageUrls = [];
@@ -118,7 +121,12 @@ export class EditEventPage implements OnInit {
     this.ionicForm = this.formBuilder.group({
       food_name: [[]],
     });
-  }  
+
+    const today = new Date();
+    today.setDate(today.getDate() + 1);
+    this.currentDate = today.toISOString().split('T')[0];
+
+  }
 
   @ViewChild(IonTextarea)
   textarea!: IonTextarea;
@@ -128,7 +136,7 @@ export class EditEventPage implements OnInit {
       const selectedItems = this.termsAndConditionsList
         .filter((item: { selected: any; }) => item.selected)
         .map((item: { text: any; }) => item.text);
-   
+
       const termsAndConditionsControl = this.ionicForm.get('terms_and_conditions');
       if (termsAndConditionsControl) {
         termsAndConditionsControl.setValue(selectedItems.join('\n'));
@@ -161,13 +169,12 @@ export class EditEventPage implements OnInit {
           locationNameControl.setValue(locationn);
         }
 
-        this.dataservice.events_form.push({maps_coordinates:[{"latitude": latitude, "longitude": longitude}]});
+        this.dataservice.events_form.push({ maps_coordinates: [{ "latitude": latitude, "longitude": longitude }] });
       }
     });
   }
 
-  async ngOnInit() {    
-    console.log("Event Draft or Not:",this._route.snapshot.params['event_draft']);
+  async ngOnInit() {
     this.commonservice.show();
     this.ionicForm = this.formBuilder.group({
       title: ['', [Validators.required]],
@@ -175,9 +182,9 @@ export class EditEventPage implements OnInit {
       selectedAge: [''],
       category: ['', [Validators.required]],
       event_typecate: ['', [Validators.required]],
-      location_name: ['',[Validators.required]],
+      location_name: ['', [Validators.required]],
       food_name: [''],
-      cuisine_name:[''],
+      cuisine_name: [''],
       terms_and_conditions: [''],
       event_activities: this.formBuilder.array([]),
       emergency_contact: this.formBuilder.array([]),
@@ -186,26 +193,26 @@ export class EditEventPage implements OnInit {
       drink_section: this.formBuilder.array([]),
       event_dates: this.formBuilder.array([]),
       age_group: this.formBuilder.group({
-        age_group_from: [''],  
+        age_group_from: [''],
         age_group_to: ['']
       })
     })
 
     const piece = this.formBuilder.group({
-     event_date: ['', [Validators.required]],
-     start_time: ['', [Validators.required]],
-     end_time: ['', [Validators.required]],
+      event_date: ['', [Validators.required]],
+      start_time: ['', [Validators.required]],
+      end_time: ['', [Validators.required]],
     });
 
     const activity = this.formBuilder.group({
-     activity_name: [''],
-     activity_details: [''],
+      activity_name: [''],
+      activity_details: [''],
     });
 
     const econtact = this.formBuilder.group({
-     contact_name: [''],
-     contact_role: [''],
-     contact_number: [''],
+      contact_name: [''],
+      contact_role: [''],
+      contact_number: [''],
     });
 
     const mulfood = this.formBuilder.group({
@@ -267,15 +274,15 @@ export class EditEventPage implements OnInit {
     });
   }
 
-  GetDashboard(){    
+  GetDashboard() {
     return new Promise<any>((resolve, reject) => {
-      let apidata={
-        user_token:this.dataservice.getUserData()
+      let apidata = {
+        user_token: this.dataservice.getUserData()
       }
-      this.chatconnect.postData(apidata,"user_dashboard").then((result:any)=>{
-        if(result.Response.status ==1){
-          this.dataservice.events_categories =result.Response.all_categories;
-          this.dataservice.events_languages =result.Response.languages;
+      this.chatconnect.postData(apidata, "user_dashboard").then((result: any) => {
+        if (result.Response.status == 1) {
+          this.dataservice.events_categories = result.Response.all_categories;
+          this.dataservice.events_languages = result.Response.languages;
           this.dataservice.events_fooditems = result.Response.fooditems;
           this.dataservice.cusines_items = result.Response.cusinesitems;
           this.dataservice.age_groups = result.Response.age_group;
@@ -283,13 +290,13 @@ export class EditEventPage implements OnInit {
           this.LocalFoodItem = result.Response.fooditems;
           this.LocalCusineItem = result.Response.cusinesitems;
           resolve(true);
-        }else{
-          this.common.presentToast("Oops",result.Response.message)
+        } else {
+          this.common.presentToast("Oops", result.Response.message)
         }
-      },(err)=>{
+      }, (err) => {
         console.log("Connection failed Messge");
         reject(err);
-      });    
+      });
     });
   }
 
@@ -300,8 +307,6 @@ export class EditEventPage implements OnInit {
       end_time: ['', [Validators.required]],
     });
     this.getPiecesArray.push(piece);
-    console.log('After Add: ', this.ionicForm.value);
-    console.log(this.getPiecesArray.controls)
   }
 
   deletePiece(i: number) {
@@ -322,19 +327,19 @@ export class EditEventPage implements OnInit {
 
   async Addacti() {
     const updatedActivities = [];
-  
+
     for (let i = 0; i < this.getActivityArray.length; i++) {
       const activityGroup = this.getActivityArray.at(i) as FormGroup;
       const activityNameControl = activityGroup.get('activity_name');
       const activityDetailsControl = activityGroup.get('activity_details');
-  
+
       if (activityNameControl && activityDetailsControl) {
         const activity_name = activityNameControl.value;
         const activity_details = activityDetailsControl.value;
-  
+
         if (activity_name) {
           const existingActivityIndex = this.tempActivities.findIndex(activity => activity.activity_name === activity_name);
-  
+
           if (existingActivityIndex !== -1) {
             // Update existing activity if found
             this.tempActivities[existingActivityIndex].activity_details = activity_details || '';
@@ -351,16 +356,16 @@ export class EditEventPage implements OnInit {
         }
       }
     }
-  
+
     await this.modalController.dismiss(updatedActivities);
   }
-  
+
   addContact() {
     const econtact = this.formBuilder.group({
-     contact_name: [''],
-     contact_role: [''],
-     contact_number: [''],
-   });
+      contact_name: [''],
+      contact_role: [''],
+      contact_number: [''],
+    });
     this.getEcontactArray.push(econtact);
   }
 
@@ -370,21 +375,21 @@ export class EditEventPage implements OnInit {
 
   async addEmegenctyContact() {
     const updatedEmergencyContacts = [];
-  
+
     for (let i = 0; i < this.getEcontactArray.length; i++) {
       const contactGroup = this.getEcontactArray.at(i) as FormGroup;
-  
+
       const contactNameControl = contactGroup.get('contact_name');
       const contactRoleControl = contactGroup.get('contact_role');
       const contactNumberControl = contactGroup.get('contact_number');
-  
+
       if (contactNameControl && contactNumberControl) {
         const contact_name = contactNameControl.value;
         const contact_role = contactRoleControl?.value || '';
         const contact_number = contactNumberControl.value;
-  
+
         const existingContactIndex = this.tempEmergencyContact.findIndex(econtact => econtact.contact_name === contact_name);
-  
+
         if (existingContactIndex !== -1) {
           this.tempEmergencyContact[existingContactIndex].contact_role = contact_role;
           this.tempEmergencyContact[existingContactIndex].contact_number = contact_number || '';
@@ -402,7 +407,7 @@ export class EditEventPage implements OnInit {
     }
     await this.modalController.dismiss(updatedEmergencyContacts);
   }
-  
+
   addPoll() {
     const poll = this.formBuilder.group({
       poll_question: [''],
@@ -410,7 +415,7 @@ export class EditEventPage implements OnInit {
       poll_option2: [''],
       poll_option3: [''],
       poll_option4: [''],
-   });
+    });
     this.getPollArray.push(poll);
   }
 
@@ -420,23 +425,23 @@ export class EditEventPage implements OnInit {
 
   async addPollSection() {
     const updatedPollSections = [];
-  
+
     for (let i = 0; i < this.getPollArray.length; i++) {
       const pollGroup = this.getPollArray.at(i) as FormGroup;
-  
+
       const pollQuestionControl = pollGroup.get('poll_question');
       const pollOption1Control = pollGroup.get('poll_option1');
-  
+
       if (pollQuestionControl && pollOption1Control) {
         const poll_question = pollQuestionControl.value;
         const poll_option1 = pollOption1Control.value;
         const poll_option2 = pollGroup.get('poll_option2')?.value || '';
         const poll_option3 = pollGroup.get('poll_option3')?.value || '';
         const poll_option4 = pollGroup.get('poll_option4')?.value || '';
-  
+
         if (poll_question && poll_option1) {
           const existingPollIndex = this.tempoll.findIndex(poll => poll.poll_question === poll_question);
-  
+
           if (existingPollIndex !== -1) {
             this.tempoll[existingPollIndex].poll_option1 = poll_option1;
             this.tempoll[existingPollIndex].poll_option2 = poll_option2;
@@ -457,15 +462,15 @@ export class EditEventPage implements OnInit {
         }
       }
     }
-  
+
     await this.modalController.dismiss(updatedPollSections);
   }
-  
+
   addfood() {
     const mulfood = this.formBuilder.group({
       extra_food_name: [''],
     });
-     this.getfoodArray.push(mulfood);
+    this.getfoodArray.push(mulfood);
   }
 
   removefood(i: number) {
@@ -476,7 +481,7 @@ export class EditEventPage implements OnInit {
     const drinks = this.formBuilder.group({
       drinks_name: [''],
     });
-     this.getdrinkArray.push(drinks);
+    this.getdrinkArray.push(drinks);
   }
 
   removeDrink(i: number) {
@@ -489,54 +494,54 @@ export class EditEventPage implements OnInit {
     this.modalController.dismiss(this.foodItems);
   }
 
-  get   getPiecesArray() {
+  get getPiecesArray() {
     return (<FormArray>this.ionicForm.get('event_dates'));
   }
 
-  get   getActivityArray() {
+  get getActivityArray() {
     return (<FormArray>this.ionicForm.get('event_activities'));
   }
 
-  get   getEcontactArray() {
+  get getEcontactArray() {
     return (<FormArray>this.ionicForm.get('emergency_contact'));
   }
 
-  get   getfoodArray() {
+  get getfoodArray() {
     return (<FormArray>this.ionicForm.get('food_section'));
   }
 
-  get   getdrinkArray() {
+  get getdrinkArray() {
     return (<FormArray>this.ionicForm.get('drink_section'));
   }
 
-  get   getPollArray() {
+  get getPollArray() {
     return (<FormArray>this.ionicForm.get('poll_section'));
   }
 
   loadImagesFromDeviceMulti(event: any) {
     const files: File[] = event.target.files;
     if (files && files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.menuUrls.push(reader.result as string);
-            };
-            reader.readAsDataURL(files[i]);
-            this.selectedFiles.push(files[i]);
-        }
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.menuUrls.push(reader.result as string);
+        };
+        reader.readAsDataURL(files[i]);
+        this.selectedFiles.push(files[i]);
+      }
     }
   }
-  
+
   removeImage(index: number) {
     this.menuUrls.splice(index, 1);
     this.selectedFiles.splice(index, 1);
   }
 
 
-  async submit(){
+  async submit() {
     this.isSubmitted = true;
     this.ionicForm.markAllAsTouched();
-    if (!this.ionicForm.valid){
+    if (!this.ionicForm.valid) {
       let alert = await this.alertController.create({
         header: 'Error',
         subHeader: '* Please fill the required fields',
@@ -549,25 +554,24 @@ export class EditEventPage implements OnInit {
       const termsAndConditionsControl = this.ionicForm.get('terms_and_conditions');
       if (termsAndConditionsControl) {
         termsAndConditionsValue = this.ionicForm.value.terms_and_conditions
-        .split('\n')
-        .map((line: string) => `<li>${line}</li>`)
-        .join('\n');
+          .split('\n')
+          .map((line: string) => `<li>${line}</li>`)
+          .join('\n');
         if (termsAndConditionsControl.value !== null) {
           if (termsAndConditionsValue != '<li></li>') {
             termsAndConditionsControl.setValue(`<ul>${termsAndConditionsValue}</ul>`);
           }
           //termsAndConditionsControl.setValue(`<ul>${termsAndConditionsValue}</ul>`);
         } else {
-            console.error("terms_and_conditions form control value is null.");
+          console.error("terms_and_conditions form control value is null.");
         }
       } else {
         console.error("terms_and_conditions form control not found.");
       }
-      
-      console.log(this.ionicForm.value);
+
       const userToken = this.dataservice.getUserData();
-      this.dataservice.event_cusine_type=this.LocalCusineItem.filter((item:any)=> { return   this.ionicForm.value.cuisine_name.indexOf(item.id) !== -1 });
-      this.dataservice.event_food_type=this.LocalFoodItem.filter((item:any)=> { return   this.ionicForm.value.food_name.indexOf(item.id) !== -1 });
+      this.dataservice.event_cusine_type = this.LocalCusineItem.filter((item: any) => { return this.ionicForm.value.cuisine_name.indexOf(item.id) !== -1 });
+      this.dataservice.event_food_type = this.LocalFoodItem.filter((item: any) => { return this.ionicForm.value.food_name.indexOf(item.id) !== -1 });
 
       this.dataservice.events_form.push(this.ionicForm.value);
       this.common.show("Please Wait");
@@ -579,8 +583,8 @@ export class EditEventPage implements OnInit {
       formData.append('location', this.dataservice.locationn);
       formData.append('event_cusine_type', JSON.stringify(this.dataservice.event_cusine_type));
       formData.append('event_food_type', JSON.stringify(this.dataservice.event_food_type));
-      formData.append('prev_original_event_images',this.dataservice.prev_orginalImage);
-      formData.append('original_event_images',this.dataservice.orginalImage);
+      formData.append('prev_original_event_images', this.dataservice.prev_orginalImage);
+      formData.append('original_event_images', this.dataservice.orginalImage);
       formData.append('previous_img', this.dataservice.previous_img);
       formData.append('draft_event_or_not', this._route.snapshot.params['event_draft']);
 
@@ -591,26 +595,26 @@ export class EditEventPage implements OnInit {
 
       this.selectedFiles.forEach((file: File) => {
         formData.append('menu_imgData[]', file);
-      });  
+      });
 
       formData.append('events_data', JSON.stringify(this.dataservice.events_form));
-      this.chatconnect.postFormData(formData,"edit_event").then((result:any)=>{
+      this.chatconnect.postFormData(formData, "edit_event").then((result: any) => {
         this.common.hide();
-        if(result.Response.status ==1){
+        if (result.Response.status == 1) {
           this.common.presentToast("", result.Response.message)
           localStorage.removeItem('event_images');
           this.location.back();
-        }else{
-          this.common.presentToast("Oops",result.Response.message)
+        } else {
+          this.common.presentToast("Oops", result.Response.message)
         }
-      },(err)=>{
+      }, (err) => {
         this.common.hide();
         console.log("Connection failed Messge");
-      });    
+      });
     }
   }
 
-  async view(img: any,showflag: string) {
+  async view(img: any, showflag: string) {
     const modal = await this.modalController.create({
       component: ImgcropperComponent,
       cssClass: 'my-menubar',
@@ -619,17 +623,17 @@ export class EditEventPage implements OnInit {
       if (data.data != undefined) {
         if (data.data.cropped_image) {
           this.dataservice.convertBase64ToBlob(data.data.cropped_image)
-          if (showflag == "event"){
-            this.imageUrls=[]
+          if (showflag == "event") {
+            this.imageUrls = []
             this.imageUrls.unshift(data.data.cropped_image);
             localStorage.setItem("event_images", data.data.cropped_image);
-          }else{
-            this.menuUrls=[]
+          } else {
+            this.menuUrls = []
             this.menuUrls.unshift(data.data.cropped_image);
             localStorage.setItem("menu_imgData", data.data.cropped_image);
           }
         }
-      }else {
+      } else {
         if (showflag == "event") {
           if (this.prevImage !== null) {
             this.imageUrls = [];
@@ -643,35 +647,34 @@ export class EditEventPage implements OnInit {
     return await modal.present();
   }
 
-  moveFocus(event: { target: { value: any; }; }){
-    console.log("my evet --",event.target.value)
+  moveFocus(event: { target: { value: any; }; }) {
     this.dataservice.events_fooditems.forEach((item: { id: number; name: any; }) => {
-      if(item.id ===0){
-        item.name=event.target.value
+      if (item.id === 0) {
+        item.name = event.target.value
       }
     });
   }
 
-  ChangeFood(event: { detail: { value: any[]; }; }){
+  ChangeFood(event: { detail: { value: any[]; }; }) {
     event.detail.value.forEach(item => {
-      if(item ==0){
-        this.is_custom_food_show=true;
+      if (item == 0) {
+        this.is_custom_food_show = true;
       }
     });
   }
 
-  loadImageFromDevice(event: { target: { files: any[]; }; },showflag: string) {
+  loadImageFromDevice(event: { target: { files: any[]; }; }, showflag: string) {
     const photo = event.target.files[0];
     this.dataservice.orginalImage = photo;
-    this.file_uploaddata=photo;
+    this.file_uploaddata = photo;
     let formData = new FormData();
 
     // Add the file that was just added to the form data
     formData.append("photo", photo, photo.name);
     this.Blobimage.push(photo);
-    this.dataservice.blobToBase64(photo).then((res:any) => {
-      this.dataservice.event_base64img=res
-      this.view(res,showflag)
+    this.dataservice.blobToBase64(photo).then((res: any) => {
+      this.dataservice.event_base64img = res
+      this.view(res, showflag)
     });
     // const file = event.target.files[0];
     const reader = new FileReader();
@@ -683,7 +686,7 @@ export class EditEventPage implements OnInit {
         this.imageUrls.unshift(
           this.sanitizer.bypassSecurityTrustUrl(blobURL)
         );
-      }else{
+      } else {
         this.menuUrls.unshift(
           this.sanitizer.bypassSecurityTrustUrl(blobURL)
         );
@@ -692,12 +695,12 @@ export class EditEventPage implements OnInit {
     reader.onerror = (error) => { };
   };
 
-  goToNextSegment(){
+  goToNextSegment() {
     const segments = ['1', '2', '3', '4'];
     const currentIndex = segments.indexOf(this.segment);
     if (currentIndex < segments.length - 1) {
       this.segment = segments[currentIndex + 1];
-    } else if (currentIndex === segments.length - 1){
+    } else if (currentIndex === segments.length - 1) {
       this.segment = segments[currentIndex];
     }
   }
@@ -712,23 +715,23 @@ export class EditEventPage implements OnInit {
 
   values: any[] = [];
 
-  removevalue(i: number){
-    this.values.splice(i,1);
+  removevalue(i: number) {
+    this.values.splice(i, 1);
   }
 
-  addvalue(){
-    this.values.push({value: ""});
+  addvalue() {
+    this.values.push({ value: "" });
   }
 
   onAgeChange() {
     const selectedAgeControl = this.ionicForm.get('selectedAge');
     const ageGroupForm = this.ionicForm.get('age_group');
-  
+
     if (selectedAgeControl && ageGroupForm) {
       if (selectedAgeControl.value === '0') {
         const ageGroupFromControl = ageGroupForm.get('age_group_from');
         const ageGroupToControl = ageGroupForm.get('age_group_to');
-  
+
         if (ageGroupFromControl && ageGroupToControl) {
           ageGroupFromControl.setValue(null);
           ageGroupToControl.setValue(null);
@@ -737,7 +740,7 @@ export class EditEventPage implements OnInit {
     }
   }
 
-  async removePrevImage(params:any) {
+  async removePrevImage(params: any) {
     const alert = await this.alertController.create({
       header: 'Confirm',
       message: 'Are you sure you want to delete this Image?',
@@ -749,21 +752,22 @@ export class EditEventPage implements OnInit {
         },
         {
           text: 'Yes',
-          handler: () => {                    
+          handler: () => {
             let apidata = {
               user_token: this.dataservice.getUserData(),
-              event_id:  this.dataservice.user_event_data.id,
-              row_id:params,
+              event_id: this.dataservice.user_event_data.id,
+              row_id: params,
               command: "food_img",
               premium: 0,
               command_Type: "delete"
             }
-      
+
             this.chatconnect.postData(apidata, "event_operations").then((result: any) => {
               // this.commonservice.hide();
               if (result.Response.status == 1) {
+                this.PremenuImg.splice(params, 1);
                 this.commonservice.presentToast("", result.Response.message);
-                this.All_events();
+                // this.All_events();
               } else {
                 this.commonservice.presentToast("Oops", result.Response.message)
               }
@@ -786,7 +790,13 @@ export class EditEventPage implements OnInit {
     });
     return await modal.present();
   }
-  
+
+  ionViewDidLeave() {
+    console.log("leaving", this.dataservice.events_form)
+    this.dataservice.events_form = [];
+    console.log("leaved", this.dataservice.events_form)
+  }
+
   All_events() {
     let apidata = {
       user_token: this.dataservice.getUserData(),
@@ -797,23 +807,20 @@ export class EditEventPage implements OnInit {
       this.commonservice.hide();
       if (result.Response.status == 1) {
         const eventData = result.Response.events_data;
-        console.log(eventData);
 
         const ageGroupParts = eventData.age_group.split('-');
         const ageGroupFrom = parseInt(ageGroupParts[0], 10);
         const ageGroupTo = parseInt(ageGroupParts[1], 10);
-
-        console.log("This is age Group",eventData.age_group)
 
         this.imageUrls.push(
           eventData.event_images
         )
         this.prevImage = eventData.event_images,
 
-        this.dataservice.prev_orginalImage = eventData.original_event_images;
+          this.dataservice.prev_orginalImage = eventData.original_event_images;
         this.dataservice.previous_img = eventData.event_images;
-        
-        
+
+
         function removeHtmlTags(input: string): string {
           return input.replace(/<[^>]*>/g, '');
         }
@@ -829,10 +836,9 @@ export class EditEventPage implements OnInit {
           },
           location_name: eventData.event_venues
         });
-        
+
         // handle event category
         const selectedCategory = this.dataservice.events_categories.find((category: any) => category.name === eventData.event_category);
-        console.log("This Is selected Categary:",selectedCategory);
         this.ionicForm.patchValue({
           category: selectedCategory ? selectedCategory.id : null,
         });
@@ -878,27 +884,26 @@ export class EditEventPage implements OnInit {
 
         // handle food type
         let food_name_ids: any[] = []
-        console.log("Food Type",eventData.event_food_type[0].food_type);
-        if(eventData.event_food_type[0].food_type){      
+        if (eventData.event_food_type[0].food_type) {
           eventData.event_food_type[0].food_type.forEach((element: { id: any; }) => {
             this.dataservice.events_fooditems.forEach((apielement: { id: any; }) => {
-              if(element.id === apielement.id){
+              if (element.id === apielement.id) {
                 food_name_ids.push(apielement.id)
               }
             });
           });
         }
-        
+
         if (eventData && eventData.event_food_type && eventData.event_food_type[0] && eventData.event_food_type[0].food_type) {
           this.foodItems = eventData.event_food_type[0].food_type.filter((food: { name: string; }) => food.name.trim() !== '');
         }
 
         let cusine_name_ids: any[] = []
 
-        if(eventData.event_food_type[0].cusine_food){      
-          eventData.event_food_type[0].cusine_food.forEach((element:any) => {
-            this.dataservice.cusines_items.forEach((apielement:any) => {
-              if(element.id === apielement.id){
+        if (eventData.event_food_type[0].cusine_food) {
+          eventData.event_food_type[0].cusine_food.forEach((element: any) => {
+            this.dataservice.cusines_items.forEach((apielement: any) => {
+              if (element.id === apielement.id) {
                 cusine_name_ids.push(apielement.id)
               }
             });
@@ -933,14 +938,13 @@ export class EditEventPage implements OnInit {
 
         this.ionicForm.patchValue({
           //food_name: selectedFood ? selectedFood.id : null,
-          food_name:food_name_ids,
+          food_name: food_name_ids,
         });
 
         this.ionicForm.patchValue({
-          cuisine_name:cusine_name_ids,
+          cuisine_name: cusine_name_ids,
         });
 
-        console.log("This is Location:",eventData.event_venues)
         // Handle activity data
         const eventActivities = eventData.event_activities;
         if (eventActivities && eventActivities.length > 0) {
@@ -955,7 +959,7 @@ export class EditEventPage implements OnInit {
             );
           });
         }
- 
+
         this.tempActivities = eventActivities.filter((activity: { activity_name: string; }) => activity.activity_name.trim() !== '');
 
         // Handle contact data
@@ -996,7 +1000,7 @@ export class EditEventPage implements OnInit {
 
         this.tempoll = eventpoll.filter((poll: { poll_question: string; poll_option1: string; }) => poll.poll_question.trim() !== '' && poll.poll_option1.trim() !== '');
 
-        this.PremenuImg = eventData.menu_img_filename.map((item:any) => item.img);
+        this.PremenuImg = eventData.menu_img_filename.map((item: any) => item.img);
       } else {
         this.common.presentToast("Oops", result.Response.message);
       }

@@ -1,32 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest, HttpEvent } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { tap, map,catchError } from 'rxjs/operators';
-import { Subject } from 'rxjs';  
+import { tap, map, catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { CommonService } from '../services/common.service';
 import { DataService } from '../services/data.service';
 import { Network } from '@capacitor/network';
 
 // let apiUrl = "http://localhost/soeasyapi/";
 //let apiUrl = "https://slimapi.webinovator.com/soeasyapi/";
-//let apiUrl = "https://betaapi.soeasyapp.com/";
+// let apiUrl = "https://betaapi.soeasyapp.com/";
 
 let apiUrl = "https://api.soeasyapp.com/";
 let paymentUrl = "https://admin.payomatix.com/payment/merchant/";
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 
 export class HttpService {
 
   constructor(private http: HttpClient,
     public dataservice: DataService,
-    public common:CommonService) {
+    public common: CommonService) {
+
     this.checkInternetConnection();
   }
 
-  initiatePayment(credentials: object, type: string){
+  initiatePayment(credentials: object, type: string) {
     const header = {
       headers: new HttpHeaders()
         .set('Content-Type', 'application/json')
@@ -34,48 +33,48 @@ export class HttpService {
     };
 
     return new Promise((resolve, reject) => {
-      this.http.post(paymentUrl+type, JSON.stringify(credentials),header).subscribe(res => {
+      this.http.post(paymentUrl + type, JSON.stringify(credentials), header).subscribe(res => {
         resolve(res);
-      }, (err) =>{
+      }, (err) => {
         reject(err);
-        if(err.name=="HttpErrorResponse"){
-          if(err.statusText == "Unknown Error"){
+        if (err.name == "HttpErrorResponse") {
+          if (err.statusText == "Unknown Error") {
             this.checkInternetConnection();
-          }else if(err.statusText == "OK"){
-            this.common.presentToast("","Something Went Wrong...")
-          }else{
-            this.common.presentToast("",err.statusText)
+          } else if (err.statusText == "OK") {
+            this.common.presentToast("", "Something Went Wrong...")
+          } else {
+            this.common.presentToast("", err.statusText)
           }
         }
-       console.log("In Chatconnect provider : Error",err);
-     });
-   });
-  } 
+        console.log("In Chatconnect provider : Error", err);
+      });
+    });
+  }
 
-  postData(credentials: object, type: string){
+  postData(credentials: object, type: string) {
     const header = {
       headers: new HttpHeaders()
-      .set('Content-Type', 'application/json')
+        .set('Content-Type', 'application/json')
     };
     return new Promise((resolve, reject) => {
-      this.http.post(apiUrl+type, JSON.stringify(credentials),header).subscribe(res => {
+      this.http.post(apiUrl + type, JSON.stringify(credentials), header).subscribe(res => {
         resolve(res);
-      }, (err) =>{
+      }, (err) => {
         reject(err);
-        if(err.name=="HttpErrorResponse"){
-          if(err.statusText == "Unknown Error"){
-                this.checkInternetConnection();
-          }else if(err.statusText == "OK"){
-            this.common.presentToast("","Something Went Wrong...")
-          }else{
-            this.common.presentToast("",err.statusText)
+        if (err.name == "HttpErrorResponse") {
+          if (err.statusText == "Unknown Error") {
+            this.checkInternetConnection();
+          } else if (err.statusText == "OK") {
+            this.common.presentToast("", "Something Went Wrong...")
+          } else {
+            this.common.presentToast("", err.statusText)
           }
           // this.dataservice.clearUserData();
         }
-        console.log("In Chatconnect provider : Error",err);
+        console.log("In Chatconnect provider : Error", err);
       });
     });
-  } 
+  }
 
   async checkInternetConnection() {
     const networkStatus = await Network.getStatus();
@@ -90,34 +89,32 @@ export class HttpService {
       // You can set an error message or take other actions here
     }
   }
-  
-
- public postFormData(formData: FormData, url: string): Promise<any> {
-  return new Promise<any>((resolve, reject) => {
-    const headers = new HttpHeaders()
-      .set('Accept', 'application/json'); // No need to specify 'Content-Type' for FormData
-
-    this.http.post(apiUrl + url, formData, { headers }).subscribe(
-      (data) => {
-        resolve(data);
-      },
-      (error) => {
-        reject(error);
-      }
-    );
-  });
-}
 
 
+  public postFormData(formData: FormData, url: string): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      const headers = new HttpHeaders()
+        .set('Accept', 'application/json'); // No need to specify 'Content-Type' for FormData
 
-//  postFormData(formData: string, type: string) {
-//   return new Promise((resolve, reject) => {
-//     this.http.post(apiUrl+type, formData).subscribe(res => {                                          
-//       resolve(res);
-//     }, (err) =>{
-//       reject(err);
-//       console.log("In Chatconnect provider : Error");
-//     });
-//   });
-// }
+      this.http.post(apiUrl + url, formData, { headers }).subscribe(
+        (data) => {
+          resolve(data);
+        },
+        (error) => {
+          reject(error);
+        }
+      );
+    });
+  }
+
+  //  postFormData(formData: string, type: string) {
+  //   return new Promise((resolve, reject) => {
+  //     this.http.post(apiUrl+type, formData).subscribe(res => {                                          
+  //       resolve(res);
+  //     }, (err) =>{
+  //       reject(err);
+  //       console.log("In Chatconnect provider : Error");
+  //     });
+  //   });
+  // }
 }

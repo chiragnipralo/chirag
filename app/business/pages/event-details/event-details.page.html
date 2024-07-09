@@ -225,7 +225,7 @@
                   <ion-list>
                      <h4 style="float: left;">Description</h4>
                   </ion-list>
-                  <p> {{dataservice?.user_event_data?.description}}</p>
+                  <p [innerHTML]="EventDescription"></p>
                </ion-list>
                <ion-list style="height: 250px;">
                   <div #map id="map" style="height: 100%;"></div>
@@ -247,13 +247,13 @@
 
          <ion-slide>
             <div class="mi" style="overflow: auto;">
-               <div class="message-wrap">
+               <div class="message-wrap" [class.message11]="dataservice?.user_event_data?.admin_post?.length === 0">
                   <div class="message" style="max-width: 100%;">
-                     <!-- <ng-container *ngIf="!dataservice?.user_event_data?.user_joined_event">
+                     <ng-container *ngIf="dataservice?.user_event_data?.admin_post?.length === 0">
                         <div class="if_not_joined">
-                           <h3>Join Event to See Admin Post..</h3>
+                           <h3>No any post...</h3>
                         </div>
-                     </ng-container> -->
+                     </ng-container>
                      <ng-container *ngFor="let admin of dataservice?.user_event_data?.admin_post; let i = index;">
                         <div class="msg-detail">
                            <div *ngIf="admin.msg != null">
@@ -326,7 +326,16 @@
 
          <ion-slide>
             <div class="rev">
-               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type[0]?.food_type && dataservice?.user_event_data?.event_food_type[0]?.food_type.length > 0 && dataservice?.user_event_data?.event_food_type[0]?.food_type[0]?.name !== ''">
+               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type &&
+               dataservice.user_event_data.event_food_type[0].food_type.length == 0 &&
+               dataservice.user_event_data.event_food_type[0]?.cusine_food !== null &&
+               dataservice.user_event_data.event_food_type[0]?.cusine_food !== ''
+                && dataservice?.user_event_data?.event_food_type[0]?.extra_food[0]?.extra_food_name == '' && dataservice?.user_event_data?.emergency_contact[0]?.contact_number == '' && dataservice?.user_event_data?.terms_condition == ''">
+                  <div class="if_not_joined">
+                      <h3>No Information</h3>
+                  </div>
+               </ng-container>
+               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type[0]?.food_type && dataservice?.user_event_data?.event_food_type[0]?.food_type.length > 0 && dataservice?.user_event_data?.event_food_type[0]?.food_type[0]?.name != ''">
                   <ion-accordion-group color="tertiary" expand="inset">
                     <ion-accordion value="third">
                       <ion-item slot="header" color="tertiary">
@@ -343,9 +352,8 @@
                   </ion-accordion-group>
                </ng-container>
 
-               <!-- <ng-container *ngIf="dataservice?.user_event_data?.event_food_type[0].cusine_food?.length !== 0 || dataservice?.user_event_data?.event_food_type[0].cusine_ids?.length != null"> -->
-               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type &&
-               dataservice.user_event_data.event_food_type.length > 0 && this.dataservice.user_event_data.event_food_type[0].cusine_food && this.dataservice.user_event_data.event_food_type[0]?.cusine_food.length > 0">
+               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type && dataservice.user_event_data.event_food_type[0]?.cusine_food !== null &&
+               dataservice.user_event_data.event_food_type[0]?.cusine_food !== ''">
                   <ion-accordion-group color="tertiary" expand="inset">
                     <ion-accordion value="third">
                       <ion-item slot="header" color="tertiary">
@@ -355,6 +363,25 @@
                         <ng-container *ngFor="let food of dataservice?.user_event_data?.event_food_type[0].cusine_food let i = index;">
                           <div class="cate">
                             <ion-label>{{i+1}} - {{food.name | titlecase}}</ion-label>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ion-accordion>
+                  </ion-accordion-group>
+               </ng-container>
+
+               <ng-container *ngIf="dataservice?.user_event_data?.event_food_type &&
+               dataservice.user_event_data.event_food_type[0]?.drink.length > 0 && dataservice.user_event_data.event_food_type[0]?.drink[0].drinks_name != ''">
+
+                  <ion-accordion-group color="tertiary" expand="inset">
+                    <ion-accordion value="third">
+                      <ion-item slot="header" color="tertiary">
+                        <ion-label>Drinks</ion-label>
+                      </ion-item>
+                      <div class="ion-padding" slot="content">
+                        <ng-container *ngFor="let food of dataservice?.user_event_data?.event_food_type[0].drink let i = index;">
+                          <div class="cate">
+                            <ion-label>{{i+1}} - {{food.drinks_name | titlecase}}</ion-label>
                           </div>
                         </ng-container>
                       </div>

@@ -115,7 +115,7 @@ export class ReinvitePage implements OnInit {
           res.present();
           var retrievedObject = JSON.parse(localStorage.getItem('cust_contacts') || 'null');
           
-          if(!this.dataservice.ValidateArray(retrievedObject)){
+          if(this.dataservice.ValidateArray(retrievedObject)){
             const projection = {
               name: true,
               phones: true,

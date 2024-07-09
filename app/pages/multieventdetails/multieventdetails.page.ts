@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AlertController, IonSlides, PopoverController } from '@ionic/angular';
+import { AlertController, IonSlides, PopoverController, NavController } from '@ionic/angular';
 import { CommonService } from 'src/app/services/common.service';
 import { DataService } from '../../services/data.service';
 import { HttpService } from '../../services/http.service';
@@ -31,6 +31,7 @@ export class MultieventdetailsPage implements OnInit {
     private alertController: AlertController,
     public popoverController: PopoverController,
     private _route: ActivatedRoute,
+    private navCtrl: NavController,
 		private datePipe: DatePipe
   ) { }
 
@@ -74,6 +75,10 @@ export class MultieventdetailsPage implements OnInit {
   
   ngOnInit() {
     this.All_events();
+  }
+
+  goBack() {
+    this.navCtrl.pop();
   }
 
   create_event(){

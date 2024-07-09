@@ -10,6 +10,17 @@ ion-toolbar{
     }
 }
 
+  .time {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+ion-input{
+    text-transform: capitalize; 
+}
+.date-input{
+    text-transform: uppercase;
+}
 .error-message {
     color: red;
     text-align: center;
@@ -70,30 +81,50 @@ ion-toolbar{
 }
 
 .main_img{
-    height: 25vh;
+    position:relative;
+    height: 200px;
     border-radius: 10px;
     margin-bottom: 10px;
     background: rgb(241, 241, 241);
     border: 1px solid #285500;
 
+    .down_icon{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 33px;
+    }
+
     h5 {
         position: absolute;
-            font-size: 14px;
-            left: 0;
-            z-index: 1;
-            right: 0;
-            top: 43px;
-            color: rgb(0, 0, 0);
+        font-size: 14px;
+        left: 0;
+        z-index: 1;
+        right: 0;
+        top: 43px;
+        color: rgb(0, 0, 0);
     }
 }
 
 //Plus button
 .btn{
-    ion-icon{
+    ion-icon.md{
         padding: 7px;
         border-radius: 50%;
         position: absolute;
-        top: 15px;
+        top: 18px;
+        right: 1px;
+        color: white !important;
+        border: 1px solid;
+    }
+
+    ion-icon.ios{
+        padding: 7px;
+        border-radius: 50%;
+        position: absolute;
+        top: 9px;
         right: 1px;
         color: white !important;
         border: 1px solid;
@@ -312,9 +343,14 @@ ion-select{
 .img_container {
     padding: 5px;
 
+    ion-col{
+        height: 200px !important;
+    }
+
     img {
         border-radius: 10px;
         height: 100%;
+        width: 100%;
         object-fit: cover;
     }
 

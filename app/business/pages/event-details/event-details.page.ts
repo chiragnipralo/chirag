@@ -6,7 +6,7 @@ import { DataService } from '../../../services/data.service';
 import { HttpService } from '../../../services/http.service';
 import { Share } from '@capacitor/share';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { DatePipe, Location } from '@angular/common';
 import { ViewstatsPage } from 'src/app/pages/viewstats/viewstats.page';
 import { ImageModalComponent } from 'src/app/components/image-modal/image-modal.component';
@@ -52,6 +52,7 @@ export class EventDetailsPage implements OnInit {
   isValid!: boolean;
   isModalOpen = false;
   user_data: any;
+  EventDescription!: SafeHtml;
 
   //razor_key: string = 'rzp_test_Gfm35q8J327oH6';
   razor_key: string = 'rzp_live_G3jYxHdfoo5gQR';
@@ -253,7 +254,6 @@ export class EventDetailsPage implements OnInit {
     this.ionicForm = this.formBuilder.group({
       user_details: this.formBuilder.array([]),
     })
-    this.All_events();
     this.addParticipant();
     this.updateAmount();
   }
@@ -333,15 +333,29 @@ export class EventDetailsPage implements OnInit {
         this.listReview();
         this.loadMap();
         this.checkConditionforlive();
-
+        this.formatDescription(this.dataservice?.user_event_data?.description)
         this.eventDate = new Date(this.dataservice?.user_event_data.event_dates[0]['event_date']);
         this.isEventDateValid();
+
+        // console.log("==>",this.dataservice?.user_event_data?.event_food_type)
+        // console.log("==>",this.dataservice.user_event_data.event_food_type[0].food_type.length == 0)
+        // console.log("==>",this.dataservice.user_event_data.event_food_type[0].cusine_food !== null)
+        // console.log("==>",this.dataservice?.user_event_data?.event_food_type[0]?.extra_food[0]?.extra_food_name == '')
+        // console.log("==>",this.dataservice?.user_event_data?.emergency_contact[0]?.contact_number == '')
+        // console.log("==>",this.dataservice?.user_event_data?.terms_condition == '')
+
       } else {
         this.commonservice.presentToast("Oops", result.Response.message);
       }
     }, (err) => {
       console.log("Connection failed Messge");
     });
+  }
+
+  formatDescription(description: string) {
+    // const convertedDescription = description.replace(/\r\n/g, '<br>');
+    const convertedDescription = description.replace(/\n/g, '<br>');
+    this.EventDescription =  this.sanitizer.bypassSecurityTrustHtml(convertedDescription);
   }
 
   loadMap() {
@@ -995,6 +1009,7 @@ export class EventDetailsPage implements OnInit {
     });
     await alert.present();
   }
+  
   ionViewDidEnter() {
     console.log("Enter in Page..")
     this.listReview();

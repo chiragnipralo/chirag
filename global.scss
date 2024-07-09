@@ -132,3 +132,206 @@ ion-segment-button{
 ion-button{
     text-transform: none;
 }
+
+ion-alert.loginAlert{
+    .alert-wrapper.sc-ion-alert-md{
+        max-width: 333px;
+    }
+
+    .alert-wrapper.sc-ion-alert-ios{
+        max-width: 322px;
+        height: 150px;
+    }
+
+    .alert-button-group {
+        justify-content: space-around !important;
+        padding: 10px;
+    }
+    
+    .alert-message.sc-ion-alert-md {
+        font-size: 15px;
+    }
+
+    .alert-wrapper.sc-ion-alert-ios{
+        .alert-button-confirm{
+            margin-right: 10px;
+            min-width: 0;
+        }
+    }
+
+    .alert-button-confirm{
+        border: 2px solid var(--ion-color-success) !important;
+        border-radius: 25px !important;
+        height: 33px;
+    }
+    
+    .alert-button-cancel{
+        border: 2px solid var(--ion-color-success) !important;
+        border-radius: 25px !important;
+        height: 33px;
+    }
+}
+
+ngx-intl-tel-input input {
+	height: 44px;
+    width: 100%;
+	margin-bottom: 20px;
+	padding: 10px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #c7cace;
+	border-radius: 4px;
+	font-size: 18px;
+}
+
+ngx-intl-tel-input .iti {
+    width: 100% !important;
+}
+
+ngx-intl-tel-input .iti input{
+    height: 50px !important;
+    background: rgb(241 241 241 / 79%);
+}
+
+ngx-intl-tel-input.ng-invalid.ng-touched input {
+	border: 1px solid #c0392b;
+}
+
+ngx-intl-tel-input input:hover {
+	box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.24);
+}
+
+ngx-intl-tel-input input:focus {
+	outline: none !important;
+	border-color: #3498db;
+	box-shadow: 0 0 0 0 #000;
+}
+
+ngx-intl-tel-input input::-webkit-input-placeholder {
+	color: #bac2c7;
+}
+
+ngx-intl-tel-input input:-ms-input-placeholder {
+	color: #bac2c7;
+}
+
+ngx-intl-tel-input input::-ms-input-placeholder {
+	color: #bac2c7;
+}
+
+ngx-intl-tel-input input::placeholder {
+	color: #bac2c7;
+}
+
+ngx-intl-tel-input input[disabled] {
+	background-color: #e5eaf1;
+}
+
+.error-message {
+    font-size: 14px;
+}
+.share-options-alert .alert-wrapper{
+    background-color: #424242 !important;
+    
+}
+.share-options-alert .alert-title{
+color:#f4f5f8 !important;
+}
+.share-options-alert .alert-message{
+    color: #d9d9d9 !important;
+    font-size: 14px !important;
+    line-height: 18px !important;
+
+}
+.share-options-alert .alert-button-group {
+    display: flex;
+    gap: 10px;
+    justify-items: start;
+    align-items: center;
+    justify-content: space-between;
+    align-content: center;
+    row-gap: 20px;
+    flex-direction: row;
+    padding-bottom: 26px;
+    position: relative;
+
+  }
+  
+  .share-options-alert .alert-button {
+    flex: 0 0 auto;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .share-options-alert .alert-button .icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+  }
+  
+  .icon-whatsapp {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg');
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .icon-linkedin {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png');
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .icon-twitter {
+    background-image: url('https://static.vecteezy.com/system/resources/previews/042/148/611/non_2x/new-twitter-x-logo-twitter-icon-x-social-media-icon-free-png.png');
+    background-size: contain;
+    width: 48px;
+    height: 48px;
+  }
+  
+  .icon-facebook {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .icon-instagram {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png');
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .icon-snapchat {
+    background-image: url('https://static.vecteezy.com/system/resources/previews/018/930/694/non_2x/snapchat-logo-snapchat-icon-transparent-free-png.png');
+    background-size: contain;
+    width: 48px;
+    height: 48px;
+  }
+  
+  .icon-copy {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/1/1b/Font_Awesome_5_solid_link.svg');
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .icon-email {
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/Envelope_font_awesome.svg');
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+  }
+  .icon-cancel{
+    background-image: url('https://www.citypng.com/public/uploads/preview/hd-white-round-close-x-logo-icon-png-701751695038896dcclikg3gj.png');
+    background-size: contain;
+    width: 40px;
+    height: 40px;
+    position: absolute !important;
+    top: -132px;
+    right: -6px;
+  }
+  

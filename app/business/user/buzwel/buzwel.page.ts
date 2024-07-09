@@ -29,8 +29,13 @@ export class BuzwelPage implements OnInit {
   ionViewWillEnter() {
     this.GetUserAccount();
   }
+
+  goBack(){
+    this.navCtrl.pop();
+  }
+  
   // backbuttom(){
-    //this.navCtrl.back();
+  //this.navCtrl.back();
   //   this._router.navigate(['/tabs/dashboard'])
   // }
 

@@ -55,7 +55,8 @@ ion-card {
 ion-footer{
     display: flex;
     justify-content: center;
- 
+    position: relative;
+    top: -40px;
     ion-button{
         width: 150px;
     }

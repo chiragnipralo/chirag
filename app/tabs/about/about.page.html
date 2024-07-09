@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content scroll="false">
 	<ion-refresher (ionRefresh)="doRefresh($event)" slot="fixed">
 		<ion-refresher-content
 			pullingIcon="arrow-down"
@@ -62,10 +62,10 @@
 		</ion-item>
 		<ion-item routerLink="/pages/notification">
 			<ion-icon name="notifications"></ion-icon>
-			<ion-label>Notification</ion-label>
+			<ion-label>Notifications</ion-label>
 			<ion-badge color="primary">{{notifyCount}}</ion-badge>
 		</ion-item>
-		<!-- <ion-item (click)="payment()">
+		<!-- <ion-item (click)="paymenthistory()">
 			<ion-icon name="checkbox"></ion-icon>
 			<ion-label>Purchased Plan</ion-label>
 		</ion-item> -->
@@ -73,15 +73,15 @@
 			<ion-icon name="card"></ion-icon>
 			<ion-label>Digital Card</ion-label>
 		</ion-item>
-		<ion-item (click)="ManageEvent()"> 
+		<ion-item routerLink="/managevent"> 
 			<ion-icon name="pricetags"></ion-icon>
 			<ion-label>Manage Event</ion-label>
 		</ion-item>
-		<ion-item (click)="InviteEvent()">
+		<ion-item routerLink="/inviteevent">
 			<ion-icon name="share-social"></ion-icon>
 			<ion-label>Invited Event</ion-label>
 		</ion-item>
-		<ion-item (click)="paymenthistory()">
+		<ion-item routerLink="/pages/paydemo">
 			<ion-icon name="card"></ion-icon>
 			<ion-label>Payment History</ion-label>
 		</ion-item>

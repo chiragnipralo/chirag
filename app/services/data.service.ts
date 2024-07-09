@@ -12,9 +12,10 @@ import { AuthenticationService } from './authentication.service';
 export class DataService {
   private storageKey = 'activityData';
   initialHref = window.location.href;
-  
+  public notifyCount: number;
   show_branch_view = new BehaviorSubject<any>(false);
   
+  mobile_number:any;
   all_contacts: any[] = [];
   shareable_event_url:any;
   is_user_login_or_signup: any;
@@ -125,8 +126,7 @@ getItem(key: string) {
     return localStorage.getItem(key);
   });
 }
- 
- 
+
 getInitials(x: string){
   if(x){
     var seperateWords = x.split(" ");
@@ -137,8 +137,6 @@ getInitials(x: string){
     return acronym;
   }
 }
- 
- 
  
 /**
  * Convert BASE64 to BLOB

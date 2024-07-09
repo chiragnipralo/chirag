@@ -21,14 +21,14 @@
       <ion-row>
          <ion-col class="user-profile">
 
-            <ng-template ngFor let-imageUrl [ngForOf]="imageUrls">
+            <ng-template ngFor let-imageUrl [ngForOf]="imageUrls" *ngIf="imageUrls[0] != null && imageUrls[0] != ''">
                <ion-avatar class="ion-align-items-center">
                   <img [src]="imageUrl" class="image"/>
                   <ion-icon name="add-circle" (click)="fileInput.click()" style="font-size: 45px; color: var(--ion-color-primary)"></ion-icon>
                   <input type="file" style="display: none" #fileInput (change)="loadImageFromDevice($event,'event')" accept="image/png, image/jpg, image/jpeg">
                </ion-avatar>
             </ng-template>
-            <ng-container *ngIf="!imageUrls.length">
+            <ng-container *ngIf="!imageUrls.length || imageUrls[0] == null || imageUrls[0] == '' ">
                <ion-avatar class="ion-align-items-center">
                   <img [src]="'assets/images/prof.jfif'" alt="Profile Image">
                   <ion-icon name="add-circle" (click)="fileInput.click()" style="font-size: 45px; color: var(--ion-color-primary)"></ion-icon>

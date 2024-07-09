@@ -1,15 +1,26 @@
-.register{
-    ion-input,ion-select{
+.selected-dial-code{
+    margin-left: 20px !important;
+
+    margin-bottom: -34px;
+    margin-top: 22px;
+    z-index: 99;
+    position: relative;    
+}
+  
+.register {
+
+    ion-input,
+    ion-select {
         background: rgb(241, 241, 241);
         border: 1px solid #285500;
-        border-radius: 5px;  
+        border-radius: 5px;
         height: 50px;
-        padding-left: 30px !important;
+        padding-left: 20px !important;
         font-size: 14px;
         margin-bottom: 10px;
     }
-
-    ion-icon{
+    
+    ion-icon {
         font-size: 20px;
         position: absolute;
         color: #00000b;
@@ -18,73 +29,131 @@
         font-weight: bolder;
     }
 }
-.header-md::after {
-    background:none;
+
+.regheader {
+    margin-top: 3.5rem;
 }
-h5{
+
+.header-md::after {
+    background: none;
+}
+
+h5 {
     font-size: 16px;
 }
-h4{
+
+h4 {
     font-size: 14px;
     font-weight: bold;
 }
 
-.main_flex{
+.main_flex {
     display: flex;
 }
 
-.center{
+.center {
     text-align: center;
 
-    ion-icon{
+    ion-icon {
         font-size: 1.6rem;
         background-color: rgb(162, 180, 170);
         padding: 6px;
-        margin:10px;
+        margin: 10px;
         border-radius: 25px;
     }
 }
 
 .error-message {
     color: red;
-    text-align: center;
-    padding-bottom:10px ;
+    text-align: left;
+    padding-bottom: 10px;
+    font-size: 14px;
 }
 
-.ion-invalid.ion-touched{
+.ion-invalid.ion-touched {
     border: 1px solid red !important;
 }
 
-.condition{
+ion-checkbox[mode='ios'].ion-invalid.ion-touched {
+    border: 1px solid red !important;
+    border-radius: 50%;
+}
+
+.asct {
+    font-size: 16px;
+    color: #d60a0a;
+}
+
+.condition {
     //margin: 30px 0;
 
-    p{
-        text-align:justify !important;
+    .sc-ion-label-ios-h {
+        text-align: justify !important;
         position: relative;
-        top: -33px;
-        margin-left: 6px;
+        top: -28px;
+        margin-left: 20px;
+        display: block;
         font-size: 12px;
-        b{
-            color:rgba(37, 128, 233, 0.849);
+
+        b {
+            color: rgba(37, 128, 233, 0.849);
+            font-family: 'Montserrat-Bold' !important;
+        }
+    }
+
+    .sc-ion-label-md-h {
+        text-align: justify !important;
+        position: relative;
+        top: -27px;
+        margin-left: 20px;
+        display: block;
+        font-size: 12px;
+
+        b {
+            color: rgba(37, 128, 233, 0.849);
             font-family: 'Montserrat-Bold' !important;
         }
     }
 }
 
-ion-button{
+ion-button {
     margin-bottom: 20px;
     padding: auto;
     height: 45px;
 }
 
-.modal{
+.modal {
     display: flex;
     align-items: center;
 
-    ion-icon{
+    ion-icon {
         color: black;
         position: absolute;
-        top:10px;
+        top: 10px;
         font-size: 1.4rem;
     }
+
+    ion-button {
+        margin: 0px 12px 0 0;
+    }
+}
+
+.modal_title {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+}
+
+.username_msg {
+    font-size: 13px;
+    color: red;
+    letter-spacing: 1px;
+    padding-bottom: 5px;
+}
+
+.isvalid {
+    color: green;
 }

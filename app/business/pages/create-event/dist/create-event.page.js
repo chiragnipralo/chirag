@@ -132,6 +132,9 @@ var CreateEventPage = /** @class */ (function () {
             activity_name: [''],
             activity_details: ['']
         });
+        var today = new Date();
+        today.setDate(today.getDate() + 1);
+        this.currentDate = today.toISOString().split('T')[0];
     }
     CreateEventPage.prototype.populateTextarea = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -147,7 +150,6 @@ var CreateEventPage = /** @class */ (function () {
                         if (termsAndConditionsControl) {
                             termsAndConditionsControl.setValue(selectedItems.join('\n'));
                         }
-                        console.log("This is Selected", selectedItems);
                         return [4 /*yield*/, this.modalController.dismiss()];
                     case 1:
                         _a.sent();
@@ -165,16 +167,12 @@ var CreateEventPage = /** @class */ (function () {
     };
     CreateEventPage.prototype.onCategoryChange = function (event) {
         var _this = this;
-        console.log("This is selected Category", event.detail.value);
         var apidata = {
             user_token: this.dataservice.getUserData(),
             category_id: event.detail.value
         };
-        console.log(apidata);
         this.chatconnect.postData(apidata, "get_terms_by_categoryId").then(function (result) {
-            console.log(result);
             if (result.Response.status === 1) {
-                //this.dataservice.termsCondition = result.Response.terms;
                 if (result.Response.terms && result.Response.terms.length > 0) {
                     _this.termsAndConditionsList = result.Response.terms[0].terms.map(function (term) { return ({
                         text: term.text,
@@ -206,10 +204,8 @@ var CreateEventPage = /** @class */ (function () {
         var inputElement = document.querySelector("#autocomplete input");
         var autocomplete = new google.maps.places.Autocomplete(inputElement);
         autocomplete.addListener('place_changed', function () {
-            console.log(autocomplete.getPlace());
             var selectedPlace = autocomplete.getPlace();
             if (selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location) {
-                console.log("IF ENTER");
                 var latitude = selectedPlace.geometry.location.lat();
                 var longitude = selectedPlace.geometry.location.lng();
                 var locationn = selectedPlace.formatted_address;
@@ -219,10 +215,6 @@ var CreateEventPage = /** @class */ (function () {
                     locationNameControl.setValue(locationn);
                 }
                 _this.dataservice.events_form.push({ maps_coordinates: [{ "latitude": latitude, "longitude": longitude }] });
-                console.log("Latitude:", latitude);
-                console.log("Longitude:", longitude);
-                console.log("Location:", locationn);
-                console.log("Longitude:", _this.dataservice.events_form);
             }
         });
     };
@@ -233,7 +225,12 @@ var CreateEventPage = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         this.dataservice.community_event_or_not = this._route.snapshot.params['event_for'];
-                        console.log("This is Community Checkings=>", this.dataservice.community_event_or_not);
+                        this.dataservice.events_form = [];
+                        this.dataservice.foodImages = [];
+                        this.dataservice.locationn = null;
+                        this.dataservice.emergency_contact = [];
+                        this.dataservice.event_cusine_type = null;
+                        this.dataservice.foodImages = [];
                         this.ionicForm = this.formBuilder.group({
                             title: ['', [forms_1.Validators.required]],
                             description: [''],
@@ -304,7 +301,6 @@ var CreateEventPage = /** @class */ (function () {
                 user_token: _this.dataservice.getUserData()
             };
             _this.chatconnect.postData(apidata, "user_dashboard").then(function (result) {
-                console.log(result);
                 if (result.Response.status == 1) {
                     _this.dataservice.events_categories = result.Response.all_categories;
                     _this.dataservice.events_languages = result.Response.languages;
@@ -331,12 +327,9 @@ var CreateEventPage = /** @class */ (function () {
             end_time: ['', [forms_1.Validators.required]]
         });
         this.getPiecesArray.push(piece);
-        console.log('After Add: ', this.ionicForm.value);
-        console.log(this.getPiecesArray.controls);
     };
     CreateEventPage.prototype.deletePiece = function (i) {
         this.getPiecesArray.removeAt(i);
-        console.log(this.getPiecesArray.controls);
     };
     CreateEventPage.prototype.addActivity = function () {
         var activity = this.formBuilder.group({
@@ -344,24 +337,20 @@ var CreateEventPage = /** @class */ (function () {
             activity_details: ['', [forms_1.Validators.required]]
         });
         this.getActivityArray.push(activity);
-        console.log('After Add: ', this.ionicForm.value);
-        console.log(this.getActivityArray.controls);
     };
     CreateEventPage.prototype.deleteActivity = function (i) {
         this.getActivityArray.removeAt(i);
-        console.log(this.getActivityArray.controls);
     };
     CreateEventPage.prototype.Addacti = function () {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var updatedActivities, _loop_1, this_1, i;
+            var updatedActivities, _loop_1, this_1, i, _loop_2, this_2, i;
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
                         updatedActivities = [];
                         _loop_1 = function (i) {
                             var activityGroup = this_1.getActivityArray.at(i);
-                            // Perform null check on activityGroup
                             if (activityGroup) {
                                 var activity_name_1 = (_a = activityGroup.get('activity_name')) === null || _a === void 0 ? void 0 : _a.value;
                                 var activity_details = (_b = activityGroup.get('activity_details')) === null || _b === void 0 ? void 0 : _b.value;
@@ -372,19 +361,12 @@ var CreateEventPage = /** @class */ (function () {
                                         updatedActivities.push(this_1.tempActivities[existingActivityIndex]);
                                     }
                                     else {
-                                        var existingActivity = this_1.tempActivities.find(function (activity) { return activity.activity_name === activity_name_1; });
-                                        if (existingActivity) {
-                                            existingActivity.activity_details = activity_details || '';
-                                            updatedActivities.push(existingActivity);
-                                        }
-                                        else {
-                                            var activity = {
-                                                activity_name: activity_name_1,
-                                                activity_details: activity_details || ''
-                                            };
-                                            this_1.tempActivities.push(activity);
-                                            updatedActivities.push(activity);
-                                        }
+                                        var activity = {
+                                            activity_name: activity_name_1,
+                                            activity_details: activity_details || ''
+                                        };
+                                        this_1.tempActivities.push(activity);
+                                        updatedActivities.push(activity);
                                     }
                                 }
                             }
@@ -393,7 +375,17 @@ var CreateEventPage = /** @class */ (function () {
                         for (i = 0; i < this.getActivityArray.length; i++) {
                             _loop_1(i);
                         }
-                        console.log("Updated activities:", updatedActivities);
+                        _loop_2 = function (i) {
+                            var activityName = this_2.tempActivities[i].activity_name;
+                            var exists = this_2.getActivityArray.controls.some(function (control) { var _a; return ((_a = control.get('activity_name')) === null || _a === void 0 ? void 0 : _a.value) === activityName; });
+                            if (!exists) {
+                                this_2.tempActivities.splice(i, 1);
+                            }
+                        };
+                        this_2 = this;
+                        for (i = this.tempActivities.length - 1; i >= 0; i--) {
+                            _loop_2(i);
+                        }
                         return [4 /*yield*/, this.modalController.dismiss(updatedActivities)];
                     case 1:
                         _c.sent();
@@ -409,54 +401,58 @@ var CreateEventPage = /** @class */ (function () {
             contact_number: ['', [forms_1.Validators.required, forms_1.Validators.minLength(10), forms_1.Validators.pattern('^[0-9]+$')]]
         });
         this.getEcontactArray.push(econtact);
-        console.log('After Add: ', this.ionicForm.value);
-        console.log(this.getEcontactArray.controls);
     };
     CreateEventPage.prototype.deleteContact = function (i) {
         this.getEcontactArray.removeAt(i);
-        console.log(this.getEcontactArray.controls);
     };
     CreateEventPage.prototype.addEmergencyContact = function () {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function () {
-            var updatedEmergencyContacts, _loop_2, this_2, i;
+            var updatedEmergencyContacts, _loop_3, this_3, i, _loop_4, this_4, i;
             return __generator(this, function (_d) {
                 switch (_d.label) {
                     case 0:
                         updatedEmergencyContacts = [];
-                        _loop_2 = function (i) {
-                            var contactGroup = this_2.getEcontactArray.at(i);
-                            // Perform null check on contactGroup
+                        _loop_3 = function (i) {
+                            var contactGroup = this_3.getEcontactArray.at(i);
                             if (contactGroup) {
                                 var contact_name_1 = (_a = contactGroup.get('contact_name')) === null || _a === void 0 ? void 0 : _a.value;
                                 var contact_role = (_b = contactGroup.get('contact_role')) === null || _b === void 0 ? void 0 : _b.value;
                                 var contact_number = (_c = contactGroup.get('contact_number')) === null || _c === void 0 ? void 0 : _c.value;
                                 if (contact_name_1 && contact_number) {
-                                    var existingContactIndex = this_2.tempEmergencyContact.findIndex(function (econtact) { return econtact.contact_name === contact_name_1; });
+                                    var existingContactIndex = this_3.tempEmergencyContact.findIndex(function (econtact) { return econtact.contact_name === contact_name_1; });
                                     if (existingContactIndex !== -1) {
-                                        // Update existing emergency contact if found
-                                        this_2.tempEmergencyContact[existingContactIndex].contact_role = contact_role || '';
-                                        this_2.tempEmergencyContact[existingContactIndex].contact_number = contact_number || '';
-                                        updatedEmergencyContacts.push(this_2.tempEmergencyContact[existingContactIndex]);
+                                        this_3.tempEmergencyContact[existingContactIndex].contact_role = contact_role || '';
+                                        this_3.tempEmergencyContact[existingContactIndex].contact_number = contact_number || '';
+                                        updatedEmergencyContacts.push(this_3.tempEmergencyContact[existingContactIndex]);
                                     }
                                     else {
-                                        // Add new emergency contact if not found
                                         var econtact = {
                                             contact_name: contact_name_1,
                                             contact_role: contact_role || '',
                                             contact_number: contact_number || ''
                                         };
-                                        this_2.tempEmergencyContact.push(econtact);
+                                        this_3.tempEmergencyContact.push(econtact);
                                         updatedEmergencyContacts.push(econtact);
                                     }
                                 }
                             }
                         };
-                        this_2 = this;
+                        this_3 = this;
                         for (i = 0; i < this.getEcontactArray.length; i++) {
-                            _loop_2(i);
+                            _loop_3(i);
                         }
-                        console.log("Updated emergency contacts:", updatedEmergencyContacts);
+                        _loop_4 = function (i) {
+                            var contactName = this_4.tempEmergencyContact[i].contact_name;
+                            var exists = this_4.getEcontactArray.controls.some(function (control) { var _a; return ((_a = control.get('contact_name')) === null || _a === void 0 ? void 0 : _a.value) === contactName; });
+                            if (!exists) {
+                                this_4.tempEmergencyContact.splice(i, 1);
+                            }
+                        };
+                        this_4 = this;
+                        for (i = this.tempEmergencyContact.length - 1; i >= 0; i--) {
+                            _loop_4(i);
+                        }
                         return [4 /*yield*/, this.modalController.dismiss(updatedEmergencyContacts)];
                     case 1:
                         _d.sent();
@@ -474,36 +470,32 @@ var CreateEventPage = /** @class */ (function () {
             poll_option4: ['']
         });
         this.getPollArray.push(poll);
-        console.log('After Add: ', this.ionicForm.value);
-        console.log(this.getPollArray.controls);
     };
     CreateEventPage.prototype.addPollSection = function () {
         var _a, _b, _c, _d, _e;
         return __awaiter(this, void 0, void 0, function () {
-            var updatedPolls, _loop_3, this_3, i;
+            var updatedPolls, _loop_5, this_5, i, _loop_6, this_6, i;
             return __generator(this, function (_f) {
                 switch (_f.label) {
                     case 0:
                         updatedPolls = [];
-                        _loop_3 = function (i) {
-                            var pollGroup = this_3.getPollArray.at(i);
+                        _loop_5 = function (i) {
+                            var pollGroup = this_5.getPollArray.at(i);
                             var poll_question = (_a = pollGroup.get('poll_question')) === null || _a === void 0 ? void 0 : _a.value;
                             var poll_option1 = (_b = pollGroup.get('poll_option1')) === null || _b === void 0 ? void 0 : _b.value;
                             var poll_option2 = (_c = pollGroup.get('poll_option2')) === null || _c === void 0 ? void 0 : _c.value;
                             var poll_option3 = (_d = pollGroup.get('poll_option3')) === null || _d === void 0 ? void 0 : _d.value;
                             var poll_option4 = (_e = pollGroup.get('poll_option4')) === null || _e === void 0 ? void 0 : _e.value;
                             if (poll_question && poll_option1) {
-                                var existingPollIndex = this_3.tempoll.findIndex(function (poll) { return poll.poll_question === poll_question; });
+                                var existingPollIndex = this_5.tempoll.findIndex(function (poll) { return poll.poll_question === poll_question; });
                                 if (existingPollIndex !== -1) {
-                                    // Update existing poll section if found
-                                    this_3.tempoll[existingPollIndex].poll_option1 = poll_option1 || '';
-                                    this_3.tempoll[existingPollIndex].poll_option2 = poll_option2 || '';
-                                    this_3.tempoll[existingPollIndex].poll_option3 = poll_option3 || '';
-                                    this_3.tempoll[existingPollIndex].poll_option4 = poll_option4 || '';
-                                    updatedPolls.push(this_3.tempoll[existingPollIndex]);
+                                    this_5.tempoll[existingPollIndex].poll_option1 = poll_option1 || '';
+                                    this_5.tempoll[existingPollIndex].poll_option2 = poll_option2 || '';
+                                    this_5.tempoll[existingPollIndex].poll_option3 = poll_option3 || '';
+                                    this_5.tempoll[existingPollIndex].poll_option4 = poll_option4 || '';
+                                    updatedPolls.push(this_5.tempoll[existingPollIndex]);
                                 }
                                 else {
-                                    // Add new poll section if not found
                                     var poll = {
                                         poll_question: poll_question,
                                         poll_option1: poll_option1 || '',
@@ -511,16 +503,26 @@ var CreateEventPage = /** @class */ (function () {
                                         poll_option3: poll_option3 || '',
                                         poll_option4: poll_option4 || ''
                                     };
-                                    this_3.tempoll.push(poll);
+                                    this_5.tempoll.push(poll);
                                     updatedPolls.push(poll);
                                 }
                             }
                         };
-                        this_3 = this;
+                        this_5 = this;
                         for (i = 0; i < this.getPollArray.length; i++) {
-                            _loop_3(i);
+                            _loop_5(i);
                         }
-                        console.log("Updated poll sections:", updatedPolls);
+                        _loop_6 = function (i) {
+                            var pollQuestion = this_6.tempoll[i].poll_question;
+                            var exists = this_6.getPollArray.controls.some(function (control) { var _a; return ((_a = control.get('poll_question')) === null || _a === void 0 ? void 0 : _a.value) === pollQuestion; });
+                            if (!exists) {
+                                this_6.tempoll.splice(i, 1);
+                            }
+                        };
+                        this_6 = this;
+                        for (i = this.tempoll.length - 1; i >= 0; i--) {
+                            _loop_6(i);
+                        }
                         return [4 /*yield*/, this.modalController.dismiss(updatedPolls)];
                     case 1:
                         _f.sent();
@@ -531,30 +533,24 @@ var CreateEventPage = /** @class */ (function () {
     };
     CreateEventPage.prototype.deletePoll = function (i) {
         this.getPollArray.removeAt(i);
-        console.log(this.getPollArray.controls);
     };
     CreateEventPage.prototype.addfood = function () {
         var mulfood = this.formBuilder.group({
             extra_food_name: ['', [forms_1.Validators.required]]
         });
         this.getfoodArray.push(mulfood);
-        console.log('After Add: ', this.ionicForm.value);
-        console.log(this.getPollArray.controls);
     };
     CreateEventPage.prototype.removefood = function (i) {
         this.getfoodArray.removeAt(i);
-        console.log(this.getPollArray.controls);
     };
     CreateEventPage.prototype.addDrink = function () {
         var drinks = this.formBuilder.group({
             drinks_name: ['']
         });
         this.getdrinkArray.push(drinks);
-        console.log('After Add: ', this.ionicForm.value);
     };
     CreateEventPage.prototype.removeDrink = function (i) {
         this.getdrinkArray.removeAt(i);
-        console.log(this.getPollArray.controls);
     };
     CreateEventPage.prototype.saveFoodItems = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -562,7 +558,6 @@ var CreateEventPage = /** @class */ (function () {
             return __generator(this, function (_a) {
                 foodItemId = this.ionicForm.value.food_name;
                 this.foodItems.push(foodItemId);
-                console.log("This is Food:", this.foodItems);
                 this.modalController.dismiss(this.foodItems);
                 return [2 /*return*/];
             });
@@ -614,17 +609,17 @@ var CreateEventPage = /** @class */ (function () {
         var _this = this;
         var files = event.target.files;
         if (files && files.length > 0) {
-            var _loop_4 = function (i) {
+            var _loop_7 = function (i) {
                 var reader = new FileReader();
                 reader.onload = function () {
                     _this.menuUrls.push(reader.result);
                 };
                 reader.readAsDataURL(files[i]);
-                this_4.selectedFiles.push(files[i]);
+                this_7.selectedFiles.push(files[i]);
             };
-            var this_4 = this;
+            var this_7 = this;
             for (var i = 0; i < files.length; i++) {
-                _loop_4(i);
+                _loop_7(i);
             }
             this.dataservice.foodImages = this.selectedFiles;
         }
@@ -643,7 +638,6 @@ var CreateEventPage = /** @class */ (function () {
                     case 0:
                         this.isSubmitted = true;
                         this.ionicForm.markAllAsTouched();
-                        console.log(this.ionicForm);
                         if (!(!this.ionicForm.valid || this.imageUrls.length == 0)) return [3 /*break*/, 2];
                         return [4 /*yield*/, this.alertController.create({
                                 header: 'Please Enter',
@@ -668,10 +662,8 @@ var CreateEventPage = /** @class */ (function () {
                                 if (termsAndConditionsValue != '<li></li>') {
                                     termsAndConditionsControl.setValue("<ul>" + termsAndConditionsValue + "</ul>");
                                 }
-                                console.log(this.ionicForm.value);
                                 this.dataservice.event_food_type = this.LocalFoodItem.filter(function (item) { return _this.ionicForm.value.food_name.indexOf(item.id) !== -1; });
                                 this.dataservice.events_form.push(this.ionicForm.value);
-                                console.log("Event Form ==> ", this.dataservice.events_form);
                                 this.ContactPageModal();
                             }
                             else {
@@ -736,7 +728,6 @@ var CreateEventPage = /** @class */ (function () {
         });
     };
     CreateEventPage.prototype.moveFocus = function (event) {
-        console.log("my evet --", event.target.value);
         this.dataservice.events_fooditems.forEach(function (item) {
             if (item.id === 0) {
                 item.name = event.target.value;
@@ -745,11 +736,8 @@ var CreateEventPage = /** @class */ (function () {
     };
     CreateEventPage.prototype.ChangeFood = function (event) {
         var _this = this;
-        console.log("my evet --", event.detail.value);
-        console.log("my evet --", this.ionicForm.value.food_name);
         // this.LocalFoodItem.filter((item)=> { return this.ionicForm.value.food_name.indexOf(item.id) === 1 });
         event.detail.value.forEach(function (item) {
-            console.log("sel item -->", item);
             if (item == 0) {
                 _this.is_custom_food_show = true;
             }
@@ -757,11 +745,8 @@ var CreateEventPage = /** @class */ (function () {
     };
     CreateEventPage.prototype.loadImageFromDevice = function (event, showflag) {
         var _this = this;
-        console.log(event);
         var photo = event.target.files[0];
-        console.log(photo);
         this.file_uploaddata = photo;
-        console.log(photo);
         var formData = new FormData();
         // Add the file that was just added to the form data
         formData.append("photo", photo, photo.name);
@@ -778,7 +763,6 @@ var CreateEventPage = /** @class */ (function () {
             var blob = new Blob([new Uint8Array(reader.result)]);
             // create blobURL, such that we could use it in an image element:
             var blobURL = URL.createObjectURL(blob);
-            // console.log(blob);
             if (showflag == "eventmap") {
                 _this.mapsUrls.unshift(_this.sanitizer.bypassSecurityTrustUrl(blobURL));
             }
@@ -789,24 +773,20 @@ var CreateEventPage = /** @class */ (function () {
                 _this.menuUrls.unshift(_this.sanitizer.bypassSecurityTrustUrl(blobURL));
             }
         };
-        console.log(this.Blobimage);
         reader.onerror = function (error) { };
     };
     ;
     CreateEventPage.prototype.goToNextSegment = function () {
         var segments = ['1', '2', '3', '4'];
         var currentIndex = segments.indexOf(this.segment);
-        console.log(currentIndex, "cur idx ");
         if (currentIndex < segments.length - 1) {
             this.segment = segments[currentIndex + 1];
         }
         else if (currentIndex === segments.length - 1) {
             this.segment = segments[currentIndex];
         }
-        console.log(this.segment);
     };
     CreateEventPage.prototype.updatePage = function (homeSegment) {
-        console.log("homeSegment ", homeSegment);
     };
     CreateEventPage.prototype.goToPreviousSegment = function () {
         var segments = ['1', '2', '3', '4'];
@@ -835,15 +815,10 @@ var CreateEventPage = /** @class */ (function () {
                     case 1:
                         modal = _a.sent();
                         modal.onDidDismiss().then(function (data) {
-                            console.log("DATA HERE --->", data);
                             if (data.data != undefined) {
                                 _this.is_event_permission_skipped = true;
-                                // this.common.show("Please Wait");
-                                // this.dataservice.emergency_contact=this.ionicForm.value.emergency_contact
-                                // this.dataservice.event_food_type=this.ionicForm.value.food_name
                                 _this.dataservice.event_food_type = _this.LocalFoodItem.filter(function (item) { return _this.ionicForm.value.food_name.indexOf(item.id) !== -1; });
                                 _this.dataservice.events_form.push(_this.ionicForm.value);
-                                console.log(_this.dataservice.events_form, "kaleem");
                                 _this.ContactPageModal();
                             }
                         });
@@ -871,7 +846,6 @@ var CreateEventPage = /** @class */ (function () {
                     case 1:
                         modal = _a.sent();
                         modal.onDidDismiss().then(function (data) {
-                            console.log("DATA HERE --->", data);
                             if (data.data != undefined) {
                             }
                         });
@@ -930,7 +904,6 @@ var CreateEventPage = /** @class */ (function () {
                                                 formData.append('menu_imgData[]', file);
                                             });
                                             formData.append('events_data', JSON.stringify(_this.dataservice.events_form));
-                                            console.log(formData);
                                             _this.chatconnect.postFormData(formData, "draft_event").then(function (result) {
                                                 _this.common.hide();
                                                 if (result.Response.status == 1) {

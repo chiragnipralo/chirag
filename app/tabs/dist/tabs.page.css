@@ -1,0 +1,155 @@
+ion-tab-bar.md {
+  border-style: none;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding-top: 30px;
+  background: transparent;
+}
+
+ion-fab > ion-fab-button {
+  bottom: 30px;
+  left: -8px;
+  position: relative;
+  height: 4.5rem;
+  width: 4.5rem;
+  --background: var(--ion-color-secondary);
+}
+ion-fab > ion-fab-button img {
+  padding: 15px;
+}
+
+ion-fab.ios > ion-fab-button.ios {
+  bottom: 1px;
+  left: 0px;
+  position: relative;
+  height: 4.5rem;
+  width: 4.5rem;
+  --background: var(--ion-color-secondary);
+}
+ion-fab.ios > ion-fab-button.ios img {
+  padding: 15px;
+}
+
+ion-fab.md > ion-fab-button.md {
+  bottom: 12px;
+  left: 0;
+  position: fixed;
+  height: 4.5rem;
+  width: 4.5rem;
+  --background: var(--ion-color-secondary);
+  right: 0;
+  margin: auto;
+}
+ion-fab.md > ion-fab-button.md img {
+  padding: 15px;
+}
+
+ion-tab-bar.ios {
+  bottom: 0px;
+}
+
+ion-tab-button.ios img {
+  width: 75%;
+}
+
+ion-icon {
+  font-size: 1.6rem;
+}
+
+ion-tab-button {
+  background: white;
+}
+
+.scan.md {
+  position: absolute;
+  bottom: 10px;
+  z-index: 100;
+  color: white;
+  border: 5px solid rgba(255, 255, 255, 0);
+  width: 67px;
+  height: 67px;
+  border-radius: 50%;
+  background: var(--ion-color-secondary);
+}
+.scan.md ion-icon {
+  font-size: 1.8rem;
+}
+
+.scan.ios {
+  position: absolute;
+  bottom: 35px;
+  z-index: 100;
+  color: white;
+  border: 5px solid rgba(255, 255, 255, 0);
+  width: 67px;
+  height: 67px;
+  border-radius: 50%;
+  background: var(--ion-color-secondary);
+}
+.scan.ios ion-icon {
+  font-size: 1.8rem;
+}
+
+.favi {
+  filter: drop-shadow(1px 1px 2px black);
+}
+
+ion-modal {
+  --height: 65%;
+  --border-radius: 25px 25px 0 0;
+  --background: linear-gradient(to bottom, #ffffff, #e2fbcc);
+  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  align-items: end;
+}
+@media (max-width: 480px) {
+  ion-modal {
+    --height: 35%!important;
+    --width: 100%;
+  }
+}
+@media (max-width: 400px) and (max-height: 668px) {
+  ion-modal {
+    --height: 40%!important;
+    --width: 100%;
+  }
+}
+
+.dash_line {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.dash_line ion-icon {
+  font-size: 6rem;
+  color: grey;
+  position: absolute;
+  top: -54px;
+}
+
+ion-modal::part(backdrop) {
+  background: #747576;
+  opacity: 1;
+}
+
+ion-modal ion-toolbar {
+  --background: rgb(14 116 144);
+  --color: white;
+}
+
+.topbar_tab {
+  margin: 21px 10px 0 10px;
+  height: 100%;
+}
+.topbar_tab .second_tab {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 0px 10px 0px;
+}
+.topbar_tab .second_tab .section_one {
+  width: 80px;
+  text-align: center;
+}
+.topbar_tab .second_tab .section_one img {
+  height: 30px;
+}
