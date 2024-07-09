@@ -175,14 +175,14 @@
         </div>
 
         <ion-list class="act_design">
-          <h4>Activity</h4> 
+          <h4>Activity</h4>
           <ion-item id="act-open-modal">
             <ion-icon slot="start" name="folder-open"></ion-icon>
             <h4> Add Activities</h4>
             <ion-icon slot="end" name="add"></ion-icon>
           </ion-item>
         </ion-list>
-
+      
         <ion-accordion-group class="draft_accrodian">
           <ng-container *ngFor="let activity of tempActivities; let i = index">
             <ion-accordion value="activity-{{i}}">
@@ -197,12 +197,12 @@
             </ion-accordion>
           </ng-container>
         </ion-accordion-group>
-
-        <ion-modal #modal trigger="act-open-modal" [initialBreakpoint]="0.75" [breakpoints]="[0.75]" style="overflow: scroll;">
+      
+        <ion-modal #modal trigger="act-open-modal" [initialBreakpoint]="0.75" [breakpoints]="[0,0.75,1]">
           <ng-template>
-            <ion-list class="modalcss" style="overflow: scroll;">
-              <h4 style="text-align: left;">Activity</h4>
-              <div class="btn">
+            <ion-list class="modalcss" style="overflow: auto;">
+              <div class="main_modal_header">
+                <h4 style="text-align: left;padding-left: 10;">Activity</h4>
                 <ion-icon name="add" (click)="addActivity()" color="secondary"></ion-icon>
               </div>
               <div formArrayName="event_activities">
@@ -221,7 +221,7 @@
                   </div>
                 </ng-container>
               </div>
-              <ion-button (click)="Addacti()" shape="round">Save</ion-button>
+              <ion-button (click)="Addacti()" shape="round" color="secondary">Save</ion-button>
             </ion-list>
           </ng-template>
         </ion-modal>
@@ -240,7 +240,7 @@
           </ion-list>
           <ion-modal #modal trigger="open-modalf" [initialBreakpoint]="0.75" [breakpoints]="[0.75]" style="overflow: scroll;">
             <ng-template>
-              <ion-list class="modalcss" style="overflow: scroll;">
+              <ion-list class="modalcss foodpop" style="overflow: scroll;">
                 <h4 style="text-align: left;">Select Food Type</h4>
 
                 <div class="form-input">

@@ -9,13 +9,19 @@ ion-toolbar{
         padding: 10px;
     }
 }
-
+.main_modal_header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 .error-message {
     color: red;
     text-align: center;
     padding-bottom:10px ;
 }
-
+.foodpop{
+    padding-bottom: 150px;
+}
 .custom-file-input{
     text-indent: -9999px;
     z-index: 1;
