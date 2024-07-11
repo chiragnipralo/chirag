@@ -30,12 +30,12 @@ export class BuzwelPage implements OnInit {
     this.GetUserAccount();
   }
 
-  goBack(){
-    this.navCtrl.pop();
+  goBack() {
+    this.navCtrl.back();
+this._router.navigate(['/tabs/dashboard'])
   }
-  
   // backbuttom(){
-  //this.navCtrl.back();
+    //this.navCtrl.back();
   //   this._router.navigate(['/tabs/dashboard'])
   // }
 

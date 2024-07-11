@@ -1,9 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <div class="top">
-      <ion-buttons slot="start">
-        <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
-      </ion-buttons>
+      <ion-fab>
+        <ion-fab-button  class="ionfab" (click)="goBack()">
+           <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-fab-button>
+     </ion-fab>
       <ion-title>Manage Events</ion-title>
         <ion-icon name="search-outline" class="search_icon" (click)="toggleSearchBar()"></ion-icon>
       </div>
@@ -23,6 +25,7 @@
 
   <div class="container">
     <h2>Events to Manage</h2>
+    <ng-container *ngIf="filterData.length > 0; else noEvents">
 
     <ng-container  *ngFor="let ui of filterData; let i = index;" >
       <ion-card (click)="view_details(ui)">
@@ -48,5 +51,11 @@
         </ion-card-content>
       </ion-card>
     </ng-container>
+  </ng-container>
+
+  <!-- display message if no events -->
+  <ng-template #noEvents>
+    <p>No events to manage.</p>
+  </ng-template>
   </div>
 </ion-content>

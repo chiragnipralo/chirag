@@ -6,7 +6,7 @@ import { HttpService } from "../../services/http.service";
 import { Router, ActivatedRoute } from "@angular/router";
 import {Component,EventEmitter,NgZone,Input,OnInit,Output,ViewChild} from "@angular/core";
 import { AddMoreGuestPage } from "../add-more-guest/add-more-guest.page";
- 
+ import { NavController } from "@ionic/angular";
 @Component({
   selector: "app-guest-list",
   templateUrl: "./guest-list.page.html",
@@ -31,7 +31,9 @@ export class GuestListPage implements OnInit {
     public loadingController: LoadingController,
     public navParams: NavParams,
     public chatconnect: HttpService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    public navCtrl: NavController,
+
   ) {
     this.segment = "coming";
   }
@@ -70,7 +72,9 @@ export class GuestListPage implements OnInit {
   getRepeatCount(scanCount: number): number[] {
     return Array.from({ length: scanCount }, (_, i) => i + 1);
   }
- 
+  goBack() {
+    this.navCtrl.back();
+  }
   ngOnInit() {
     console.log("Refreshing page...")
   }
@@ -261,6 +265,6 @@ export class GuestListPage implements OnInit {
   // }
   
   closeModal() {
-    this._router.navigate(["tabs/dashboard"]);
+    this.navCtrl.back();
   }
 }

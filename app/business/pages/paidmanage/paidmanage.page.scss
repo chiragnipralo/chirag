@@ -1,12 +1,17 @@
 .top{
     display: flex;
     align-items: center;
+    justify-content: space-between;
+
     ion-title{
         text-align: center;
     }
     ion-icon{
         padding-right: 10px;
     }
+}
+.ionfab{
+    padding: 5px;
 }
 
 // .header-md::after {

@@ -1,10 +1,11 @@
-import { AlertController,ModalController } from '@ionic/angular';
+import { AlertController,ModalController,NavController } from '@ionic/angular';
 import { CommonService } from '../../../services/common.service';
 import { DataService } from '../../../services/data.service';
 import { HttpService } from '../../../services/http.service';
 import { Router,ActivatedRoute } from '@angular/router';
 import { GuestListPage } from 'src/app/pages/guest-list/guest-list.page';
 import { Component, EventEmitter,NgZone, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-paidmanage',
@@ -46,7 +47,10 @@ export class PaidmanagePage implements OnInit {
     public modalController: ModalController,
     public dataservice: DataService,
     public chatconnect: HttpService,
-    private alertController: AlertController) { }
+    private alertController: AlertController,
+    private location: Location,
+    private navCtrl: NavController // Add this
+  ) { }
 
   ngOnInit() {
     this.GetUserEvents();
@@ -75,7 +79,15 @@ export class PaidmanagePage implements OnInit {
 		this._router.navigate(['/event-details'])
 		// this._router.navigate(['/detailseve',{event_id:params.id}])
 	}
-
+  goBack() {
+    if (window.history.length > 1) {
+      // This ensures there's a history to go back to
+      this.location.back();
+    } else {
+      // Otherwise, navigate to the desired route
+      this._router.navigate(['buztabs/map']);
+    }
+  }
 
   async manage_event(params:any){
     this.dataservice.events_guests=params;

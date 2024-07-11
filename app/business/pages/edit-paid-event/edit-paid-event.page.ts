@@ -355,55 +355,64 @@ export class EditPaidEventPage implements OnInit {
   
   addContact() {
     const econtact = this.formBuilder.group({
-     contact_name: [''],
-     contact_role: [''],
-     contact_number: [''],
-   });
+      contact_name: ['', [Validators.required]],
+      contact_role: ['', [Validators.required]],
+      contact_number: ['', [Validators.required, Validators.minLength(10), Validators.pattern('^[0-9]+$')]],
+    });
     this.getEcontactArray.push(econtact);
   }
 
+
   deleteContact(i: number) {
     this.getEcontactArray.removeAt(i);
+    this.tempEmergencyContact.splice(i, 1);
   }
 
-  async addEmegenctyContact() {
+  async addEmergencyContact() {
     const updatedEmergencyContacts = [];
-  
+
     for (let i = 0; i < this.getEcontactArray.length; i++) {
       const contactGroup = this.getEcontactArray.at(i) as FormGroup;
-  
-      // Perform null checks on controls
-      const contactNameControl = contactGroup.get('contact_name');
-      const contactRoleControl = contactGroup.get('contact_role');
-      const contactNumberControl = contactGroup.get('contact_number');
-  
-      if (contactNameControl && contactNumberControl) {
-        const contact_name = contactNameControl.value;
-        const contact_role = contactRoleControl?.value || ''; // Use optional chaining to handle possible null or undefined
-        const contact_number = contactNumberControl.value;
-  
-        const existingContactIndex = this.tempEmergencyContact.findIndex(econtact => econtact.contact_name === contact_name);
-  
-        if (existingContactIndex !== -1) {
-          // Update existing emergency contact if found
-          this.tempEmergencyContact[existingContactIndex].contact_role = contact_role;
-          this.tempEmergencyContact[existingContactIndex].contact_number = contact_number || '';
-          updatedEmergencyContacts.push(this.tempEmergencyContact[existingContactIndex]);
-        } else {
-          // Add new emergency contact if not found
-          const econtact = {
-            contact_name,
-            contact_role,
-            contact_number: contact_number || ''
-          };
-          this.tempEmergencyContact.push(econtact);
-          updatedEmergencyContacts.push(econtact);
+
+      if (contactGroup) {
+        const contact_name = contactGroup.get('contact_name')?.value;
+        const contact_role = contactGroup.get('contact_role')?.value;
+        const contact_number = contactGroup.get('contact_number')?.value;
+
+        if (contact_name && contact_number) {
+          const existingContactIndex = this.tempEmergencyContact.findIndex(econtact => econtact.contact_name === contact_name);
+
+          if (existingContactIndex !== -1) {
+            this.tempEmergencyContact[existingContactIndex].contact_role = contact_role || '';
+            this.tempEmergencyContact[existingContactIndex].contact_number = contact_number || '';
+            updatedEmergencyContacts.push(this.tempEmergencyContact[existingContactIndex]);
+          } else {
+            const econtact = {
+              contact_name,
+              contact_role: contact_role || '',
+              contact_number: contact_number || ''
+            };
+            this.tempEmergencyContact.push(econtact);
+            updatedEmergencyContacts.push(econtact);
+          }
         }
       }
     }
-  
+
+    for (let i = this.tempEmergencyContact.length - 1; i >= 0; i--) {
+      const contactName = this.tempEmergencyContact[i].contact_name;
+      const exists = this.getEcontactArray.controls.some(control => control.get('contact_name')?.value === contactName);
+      if (!exists) {
+        this.tempEmergencyContact.splice(i, 1);
+      }
+    }
+
     await this.modalController.dismiss(updatedEmergencyContacts);
   }
+  
+  
+ 
+  
   
   addPoll() {
     const poll = this.formBuilder.group({
@@ -412,59 +421,58 @@ export class EditPaidEventPage implements OnInit {
       poll_option2: [''],
       poll_option3: [''],
       poll_option4: [''],
-   });
-
+    });
     this.getPollArray.push(poll);
   }
 
   deletePoll(i: number) {
     this.getPollArray.removeAt(i);
+    this.tempoll.splice(i, 1);
   }
+  
 
   async addPollSection() {
-    const updatedPollSections = [];
-  
+    const updatedPolls = [];
+
     for (let i = 0; i < this.getPollArray.length; i++) {
       const pollGroup = this.getPollArray.at(i) as FormGroup;
-  
-      // Perform null checks on controls
-      const pollQuestionControl = pollGroup.get('poll_question');
-      const pollOption1Control = pollGroup.get('poll_option1');
-  
-      if (pollQuestionControl && pollOption1Control) {
-        const poll_question = pollQuestionControl.value;
-        const poll_option1 = pollOption1Control.value;
-        const poll_option2 = pollGroup.get('poll_option2')?.value || ''; // Use optional chaining
-        const poll_option3 = pollGroup.get('poll_option3')?.value || ''; // Use optional chaining
-        const poll_option4 = pollGroup.get('poll_option4')?.value || ''; // Use optional chaining
-  
-        if (poll_question && poll_option1) {
-          const existingPollIndex = this.tempoll.findIndex(poll => poll.poll_question === poll_question);
-  
-          if (existingPollIndex !== -1) {
-            // Update existing poll section if found
-            this.tempoll[existingPollIndex].poll_option1 = poll_option1;
-            this.tempoll[existingPollIndex].poll_option2 = poll_option2;
-            this.tempoll[existingPollIndex].poll_option3 = poll_option3;
-            this.tempoll[existingPollIndex].poll_option4 = poll_option4;
-            updatedPollSections.push(this.tempoll[existingPollIndex]);
-          } else {
-            // Add new poll section if not found
-            const poll = {
-              poll_question,
-              poll_option1,
-              poll_option2,
-              poll_option3,
-              poll_option4
-            };
-            this.tempoll.push(poll);
-            updatedPollSections.push(poll);
-          }
+      const poll_question = pollGroup.get('poll_question')?.value;
+      const poll_option1 = pollGroup.get('poll_option1')?.value;
+      const poll_option2 = pollGroup.get('poll_option2')?.value;
+      const poll_option3 = pollGroup.get('poll_option3')?.value;
+      const poll_option4 = pollGroup.get('poll_option4')?.value;
+
+      if (poll_question && poll_option1) {
+        const existingPollIndex = this.tempoll.findIndex(poll => poll.poll_question === poll_question);
+
+        if (existingPollIndex !== -1) {
+          this.tempoll[existingPollIndex].poll_option1 = poll_option1 || '';
+          this.tempoll[existingPollIndex].poll_option2 = poll_option2 || '';
+          this.tempoll[existingPollIndex].poll_option3 = poll_option3 || '';
+          this.tempoll[existingPollIndex].poll_option4 = poll_option4 || '';
+          updatedPolls.push(this.tempoll[existingPollIndex]);
+        } else {
+          const poll = {
+            poll_question,
+            poll_option1: poll_option1 || '',
+            poll_option2: poll_option2 || '',
+            poll_option3: poll_option3 || '',
+            poll_option4: poll_option4 || ''
+          };
+          this.tempoll.push(poll);
+          updatedPolls.push(poll);
         }
       }
     }
-  
-    await this.modalController.dismiss(updatedPollSections);
+
+    for (let i = this.tempoll.length - 1; i >= 0; i--) {
+      const pollQuestion = this.tempoll[i].poll_question;
+      const exists = this.getPollArray.controls.some(control => control.get('poll_question')?.value === pollQuestion);
+      if (!exists) {
+        this.tempoll.splice(i, 1);
+      }
+    }
+    await this.modalController.dismiss(updatedPolls);
   }
   
   addfood() {

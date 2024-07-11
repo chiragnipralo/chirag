@@ -90,13 +90,20 @@ export class MapPage implements OnInit {
     this.chatconnect.postData(apidata, 'paid_user_dashboard').then(
       (result: any) => {
         if (result.Response.status == 1) {
+          // Ensure these variables hold the correct data
           this.my_completed_events = result.Response.my_completed_events;
-          this.my_cancel_events = result.Response.my_cancel_events;
           this.my_upcoming_events = result.Response.my_upcoming_events;
-          this.my_draft_events = result.Response.my_draft_events;
           this.user_data = result.Response.user_data;
-
+  
+          // Filter events based on event_flag
+          this.my_cancel_events = result.Response.my_cancel_events.filter((event: any) => event.event_flag === 0);
+          this.my_draft_events = result.Response.my_cancel_events.filter((event: any) => event.event_flag === 2);
+  
           console.log('Upcoming Events:', this.my_upcoming_events); // Log the data
+          console.log('Completed Events:', this.my_completed_events); // Log the data
+          console.log('Canceled Events:', this.my_cancel_events); // Log the data
+          console.log('Drafted Events:', this.my_draft_events); // Log the data
+  
         } else {
           this.commonservice.presentToast('Oops', result.Response.message);
         }
@@ -106,6 +113,7 @@ export class MapPage implements OnInit {
       }
     );
   }
+  
 
   async view_details(params: any) {
     this.dataservice.events_guests = params;

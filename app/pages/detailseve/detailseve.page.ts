@@ -818,36 +818,27 @@ formatTime(time: string): string {
   }
 
   sendMessage() {
-    if (this.senderMsg.trim() === '') {
-      this.commonservice.presentToast("Oops", "Enter some message");
-      return;
-    }
-  
-    const apidata = {
-      user_token: this.dataservice.getUserData(),
-      event_id: this.dataservice?.user_event_data.id,
-      review: this.senderMsg,
-      event_type: 1,
-    };
-  
-    this.chatconnect.postData(apidata, "event_feedback").then((result: any) => {
-      if (result.Response.status === 1) {
-        const newReview = result.Response.review;
-  
-        // Update the local message list immediately
-        this.jData.push(newReview);
-        this.senderMsg = ''; // Clear the input after sending the message
-  
-        // Manually trigger change detection
-        this.cd.detectChanges();
-      } else {
-        this.commonservice.presentToast("Oops", result.Response.message);
+    if (this.senderMsg === '') {
+      let smsg = "Enter Some Message";
+      this.commonservice.presentToast("Oops", smsg);
+    } else {
+      if (!this.jData) {
+        this.jData = [];
       }
-    }, (err) => {
-      console.log("Connection failed Message");
-    });
+      //this.jData.push({ "request": "admin","user_name": "You", "review": this.senderMsg });
+      let apidata = {
+        user_token: this.dataservice.getUserData(),
+        event_id: this.dataservice?.user_event_data.id,
+        review: this.senderMsg,
+        event_type: 1,
+      };
+      this.chatconnect.postData(apidata, "event_feedback").then((result: any) => {
+        this.ionViewDidEnter();
+      }, (err) => {
+      });
+      this.senderMsg = '';
+    }
   }
-  
   
 
   onFileSelectedAdminPost(event: any) {

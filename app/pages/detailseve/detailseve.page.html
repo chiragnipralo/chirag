@@ -521,36 +521,36 @@
             </ion-slide>
 
 
+          
             <ion-slide>
                <div class="mi" style="overflow:auto;">
-                 <div class="message-wrap">
-                   <div class="message">
-                     <ng-container *ngFor="let review of jData; let i = index;">
-                       <div class="msg-detail">
-                         <div class="msg-content" style="color:#606060; background: #e0fcd6;">
-                           <p class="cap_txt"><b>{{review.user_name}}</b></p>
-                           <span class="triangle"></span>
-                           <p style="user-select: auto !important" class="line-breaker" [innerHTML]="sanitizer.bypassSecurityTrustHtml(review.review)" #content></p>
-                           <p class="rdate">{{formatIndianDate(review.datetime)}}</p>
-                           <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
-                             <ion-icon name="close-circle" class="trash_photos_icon" (click)="deleteEventReviews(i)"></ion-icon>
-                           </ng-container>
-                         </div>
-                       </div>
-                     </ng-container>
-                   </div>
-                 </div>
+               <div class="message-wrap">
+               <div class="message">
+               <ng-container *ngFor="let review of jData; let i = index;">
+               <div class="msg-detail">
+               <div class="msg-content" style="color:#606060; background: #e0fcd6;">
+               <p class="cap_txt"><b>{{review.user_name}}</b></p>
+               <span class="triangle"></span>
+               <p style="user-select: auto !important" class="line-breaker" [innerHTML]="sanitizer.bypassSecurityTrustHtml(review.review)" #content></p>
+               <p class="rdate">{{formatIndianDate(review.datetime)}}</p>
+               <ng-container *ngIf="dataservice?.user_event_data?.same_user_created_event || dataservice?.user_event_data?.is_user_manager">
+               <ion-icon name="close-circle" class="trash_photos_icon" (click)="deleteEventReviews(i)"></ion-icon>
+               </ng-container>
+               </div>
+               </div>
+               </ng-container>
+               </div>
+               </div>
                </div>
                <div class="chat-container">
-                 <div class="chat-input-container">
-                   <ion-input #chat_input class="chat-input-box" placeholder="Write your review here..." [(ngModel)]="senderMsg" (keyup.enter)="sendMessage()"></ion-input>
-                   <ion-button class="chat-button" fill="clear" slot="end" (click)="sendMessage()">
-                     <ion-icon name="send"></ion-icon>
-                   </ion-button>
-                 </div>
+               <div class="chat-input-container">
+               <ion-input #chat_input class="chat-input-box" placeholder="Write your review here..." [(ngModel)]="senderMsg" (keyup.enter)="sendMessage()"></ion-input>
+               <ion-button class="chat-button" fill="clear" slot="end" (click)="sendMessage()">
+               <ion-icon name="send"></ion-icon>
+               </ion-button>
                </div>
-             </ion-slide>
-             
+               </div>
+               </ion-slide>
              
              
             <!-- <ion-slide>
