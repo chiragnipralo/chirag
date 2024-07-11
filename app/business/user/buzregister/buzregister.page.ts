@@ -79,47 +79,51 @@ export class BuzregisterPage implements OnInit {
 		this.GetDashboard();
 	}
 
-  	async submit(){
+	async submit() {
 		this.isSubmitted = true;
-		this.ionicForm.markAllAsTouched(); 
-		console.log(this.ionicForm)
-		if (!this.ionicForm.valid){
-			let alert = await this.alertController.create({
+		this.ionicForm.markAllAsTouched();
+		console.log(this.ionicForm);
+		if (!this.ionicForm.valid) {
+		  let alert = await this.alertController.create({
 			header: 'Please Enter',
 			subHeader: 'Please Enter all details',
 			buttons: ['Dismiss']
-			});
-			alert.present();
+		  });
+		  alert.present();
 		} else {
-			this.common.show("Please Wait");
-			let apidata={
-				user_token: this.dataservice.getUserData(),
-				type:this.selectedValue,
-				account_type:this.ionicForm.value.account_type,
-				account_name:this.ionicForm.value.account_name,
-				email:this.ionicForm.value.email,
-				category:this.ionicForm.value.category,
-				contact:this.ionicForm.value.contact,
-				address:this.ionicForm.value.address,
-			}
-
-			this.chatconnect.postData(apidata, "account_register").then((result: any) => {
-			console.log(result);
+		  this.common.show("Please Wait");
+		  let apidata = {
+			user_token: this.dataservice.getUserData(),
+			type: this.selectedValue,
+			account_type: this.ionicForm.value.account_type,
+			account_name: this.ionicForm.value.account_name,
+			email: this.ionicForm.value.email,
+			category: this.ionicForm.value.category,
+			contact: this.ionicForm.value.contact,
+			address: this.ionicForm.value.address,
+		  }
+	  
+		  console.log('API Data:', apidata);  // Log API data
+	  
+		  this.chatconnect.postData(apidata, "account_register").then((result: any) => {
+			console.log('API Result:', result);  // Log API result
 			this.common.hide();
 			if (result.Response.status == 1) {
-				console.log("Type", this.selectedValue)
-				this.dataservice.setAccountuser(result.Response.account_id);
-				console.log("Type1", this.selectedValue);
-				this.ionicForm.reset();
-				this._router.navigate(['/choose-plan', { select_type: this.selectedValue }]);
-			}else{
-				// Display error message if registration failed
-				this.common.presentToast("",result.Response.message)
+			  console.log("Type", this.selectedValue);
+			  this.dataservice.setAccountuser(result.Response.account_id);
+			  console.log("Type1", this.selectedValue);
+			  this.ionicForm.reset();
+			  this.router.navigate(['/choose-plan', { select_type: this.selectedValue }]);
+			} else {
+			  // Display error message if registration failed
+			  this.common.presentToast("", result.Response.message);
 			}
-			},(err)=>{
+		  }, (err) => {
 			this.common.hide();
-			console.log("Connection failed Messge");
-			});
-	  	}
-	}
+			console.log("Connection failed Message");
+		  });
+		}
+	  }
+	  
+	  
 }

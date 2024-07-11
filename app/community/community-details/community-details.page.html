@@ -140,7 +140,7 @@
           </ion-list>
           <ion-list class="prof" style="justify-content: space-between;">
             <h4 style="color: var(--ion-color-secondary)" (click)="Viewmember()">
-              View Member
+              View Members
             </h4>
             <ng-container *ngIf="dataservice?.user_community_data?.same_user_created_community">
             <h4 style="color: var(--ion-color-secondary)" (click)="ViewInvites()">
@@ -175,7 +175,8 @@
                   <ion-row>
                     <ion-col size="6" class="eventcol">
                       <ion-img [src]="ui.event_images"></ion-img>
-                        <ion-button shape="round" size="small" color="danger" style="position: absolute;top: 3px;left: 5px;font-size: 9px;">
+
+                        <ion-button shape="round" size="small" color="danger" style="position: absolute;top: 3px;left: 5px;font-size: 9px; width: 85px;">
                           <!-- <ion-icon slot="start" name="checkmark-done-circle-outline"></ion-icon> -->
                             {{ui.event_mark}}
                         </ion-button>

@@ -1,57 +1,53 @@
-ion-buttons{
-    width: 0%;
-}
-
-.container{
+ion-toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ion-buttons {
+      position: absolute;
+      left: 0;
+    }
+    ion-img.logo {
+      height: 40px;
+    }
+  }
+  
+  .container {
     text-align: center;
-
-    ion-img{
-        height: 25vh;
+    padding: 20px;
+  }
+  
+  .otp-image {
+    height: 25vh;
+    margin: 20px auto;
+  }
+  
+  .otpsec {
+    margin-top: 10px;
+    ion-grid {
+      display: flex;
+      justify-content: center;
     }
-    .otpsec{
-        margin-top: 10px;
-        margin: auto;
-    
-        ion-grid{
-            display: flex;
-            justify-content: center;
-        }
-
-        ion-row{
-            margin: auto;
-            padding: 0;
-        }
-
-        ion-input{
-            // background: rgb(241, 241, 241);
-            border-bottom: 1px solid #285500;
-            height: 50px;
-            width: 200px;
-            font-size: 1.5rem;
-            text-align: center;
-            border-radius: 5px;
-        }
-
-        h5{
-            padding: 0 10px;
-        }
+    ion-row {
+      margin: auto;
+      padding: 0;
     }
-}
-.sub-btn{
+    ion-input.otp {
+      border-bottom: 1px solid #285500;
+      height: 50px;
+      width: 200px;
+      font-size: 1.5rem;
+      text-align: center;
+      border-radius: 5px;
+    }
+  }
+  
+  .sub-btn {
     width: 55%;
-    margin: auto;
-}
-.res_btn{
+    margin: 20px auto;
+  }
+  
+  .res-btn {
     color: orange !important;
     margin: 15px 0;
-}
-// ion-footer{
-//     position: relative;
-//     bottom: 11px;
-
-//     ion-button{
-//         margin: auto;
-//         height: 40px;
-//         max-width: 222px;
-//     }
-// }
+  }
+  

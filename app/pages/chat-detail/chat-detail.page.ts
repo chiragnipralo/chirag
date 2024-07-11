@@ -16,6 +16,7 @@ import { ImageModalComponent } from '../../components/image-modal/image-modal.co
 export class ChatDetailPage implements OnInit {
   // @ViewChild(IonContent, { static: true }) content: IonContent;
   public canInfinite = false;
+  public isSendingMessage = false;
 
   chat_events=[];
   imageBg = 'chat-bg';
@@ -82,33 +83,40 @@ export class ChatDetailPage implements OnInit {
    * @name sendMsg
    */
   sendMsg() {
-    if (!this.editorMsg.trim()) return;
-    console.log("IM HERE ") 
-    let apidata={
+    if (this.isSendingMessage || !this.editorMsg.trim()) return; // Prevent sending if already in progress or message is empty
+  
+    this.isSendingMessage = true; // Set sending flag to true
+  
+    let apidata = {
       "user_id": this.dataservice.user_event_chat_data.user_id,
       "event_id": this.dataservice.user_event_chat_data.event_id,
       "chat_message": this.editorMsg,
       "chat_type": this.dataservice.user_event_chat_data.chat_type,
       "is_premium": this.dataservice.user_event_chat_data.is_premium
-    }
-
-    this.chatconnect.postData(apidata, "add_events_chats").then((result:any) => {
-      console.log(result)
-      this.chat_events_messages.push({"user_id": this.current_user_id,
-        "event_id": this.dataservice.user_event_chat_data.event_id,
-        "message": this.editorMsg,
-        "user_initials": this.dataservice.getInitials(this.dataservice.user_profile_data.user_name),
-        "chat_type": this.dataservice.user_event_chat_data.chat_type,
-        "is_premium": this.dataservice.user_event_chat_data.is_premium
+    };
+  
+    this.chatconnect.postData(apidata, "add_events_chats")
+      .then((result: any) => {
+        this.chat_events_messages.push({
+          "user_id": this.current_user_id,
+          "event_id": this.dataservice.user_event_chat_data.event_id,
+          "message": this.editorMsg,
+          "user_initials": this.dataservice.getInitials(this.dataservice.user_profile_data.user_name),
+          "chat_type": this.dataservice.user_event_chat_data.chat_type,
+          "is_premium": this.dataservice.user_event_chat_data.is_premium
+        });
+        this.editorMsg = ''; // Clear the input only after the message is sent successfully
+        this.scrollToBottom();
+        this.listChats();
+      })
+      .catch((err) => {
+        console.log("Connection failed Message");
+      })
+      .finally(() => {
+        this.isSendingMessage = false; // Reset sending flag
       });
-      console.log(this.chat_events_messages)
-      this.editorMsg = '';
-      this.scrollToBottom();
-      this.listChats();
-    }, (err) => {
-      console.log("Connection failed Messge");
-    });
   }
+  
 
   scrollToBottom(){
     setTimeout(() => {

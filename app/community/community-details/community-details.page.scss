@@ -11,63 +11,6 @@ ion-fab.ios{
 }
 
 
-
-  
-  .icon-whatsapp::before {
-    content: url('https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg');
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-  }
-  
-  .icon-linkedin::before {
-    content: url('https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png');
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-  }
-  
-  .icon-twitter::before {
-    content: url('https://upload.wikimedia.org/wikipedia/en/6/60/Twitter_Logo_as_of_2021.svg');
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-  }
-  
-  .icon-facebook::before {
-    content: url('https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg');
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-  }
-  
-  .icon-instagram::before {
-    content: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png');
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-  }
-  
-  .icon-snapchat::before {
-    content: url('https://upload.wikimedia.org/wikipedia/en/a/ad/Snapchat_logo.svg');
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-  }
-  
-  .icon-copy::before {
-    content: url('https://upload.wikimedia.org/wikipedia/commons/1/1b/Font_Awesome_5_solid_link.svg');
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-  }
-  
-  .icon-email::before {
-    content: url('https://upload.wikimedia.org/wikipedia/commons/4/4e/Envelope_font_awesome.svg');
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-  }
   
   
   
@@ -78,7 +21,6 @@ ion-fab.ios{
     width: 30px;
     height: 30px;
     visibility: hidden;
-
     ion-toolbar{
         height: 100%;
         border-radius: 50%;
@@ -471,7 +413,9 @@ a {
 }
 .message-wrap .message .msg-detail {
     width: 100%;
-    display: inline-block;
+   display: inline-block;
+    background-repeat: no-repeat;
+
 }
 .message-wrap .message .msg-detail p {
     font-size: 16px;

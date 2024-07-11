@@ -272,9 +272,12 @@ color:#f4f5f8 !important;
   
   .icon-whatsapp {
     background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg');
+
     background-size: contain;
     width: 40px;
     height: 40px;
+       background-repeat: no-repeat;
+    min-width: 40px !important;
   }
   
   .icon-linkedin {
@@ -282,6 +285,8 @@ color:#f4f5f8 !important;
     background-size: contain;
     width: 40px;
     height: 40px;
+       background-repeat: no-repeat;
+    min-width: 40px !important;
   }
   
   .icon-twitter {
@@ -289,6 +294,8 @@ color:#f4f5f8 !important;
     background-size: contain;
     width: 48px;
     height: 48px;
+    background-repeat: no-repeat;
+    min-width: 40px !important;
   }
   
   .icon-facebook {
@@ -296,6 +303,8 @@ color:#f4f5f8 !important;
     background-size: contain;
     width: 40px;
     height: 40px;
+       background-repeat: no-repeat;
+    min-width: 40px !important;
   }
   
   .icon-instagram {
@@ -303,6 +312,8 @@ color:#f4f5f8 !important;
     background-size: contain;
     width: 40px;
     height: 40px;
+       background-repeat: no-repeat;
+    min-width: 40px !important;
   }
   
   .icon-snapchat {
@@ -310,6 +321,8 @@ color:#f4f5f8 !important;
     background-size: contain;
     width: 48px;
     height: 48px;
+    background-repeat: no-repeat;
+    min-width: 40px !important;
   }
   
   .icon-copy {
@@ -317,6 +330,8 @@ color:#f4f5f8 !important;
     background-size: contain;
     width: 40px;
     height: 40px;
+       background-repeat: no-repeat;
+    min-width: 40px !important;
   }
   
   .icon-email {
@@ -324,14 +339,18 @@ color:#f4f5f8 !important;
     background-size: contain;
     width: 40px;
     height: 40px;
+       background-repeat: no-repeat;
+    min-width: 40px !important;
   }
   .icon-cancel{
     background-image: url('https://www.citypng.com/public/uploads/preview/hd-white-round-close-x-logo-icon-png-701751695038896dcclikg3gj.png');
     background-size: contain;
     width: 40px;
     height: 40px;
+       background-repeat: no-repeat;
+    min-width: 40px !important;
     position: absolute !important;
-    top: -132px;
-    right: -6px;
+    top: -122px;
+    right: 1px;
   }
   

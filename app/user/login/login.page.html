@@ -1,3 +1,12 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="arrow-back-outline"></ion-back-button>
+    </ion-buttons>
+    <ion-img src="assets/images/logo.png"></ion-img>
+  </ion-toolbar>
+</ion-header> -->
+
 <ion-content scroll-y="true">
   <div class="container ion-padding">
     <div class="img_box">
@@ -10,12 +19,28 @@
     <form (ngSubmit)="submit()" [formGroup]="ionicForm">
       <div class="login">
         <div class="form-input">
-          <ion-input
+          <!-- <ion-icon name="call"></ion-icon> -->
+          <ngx-intl-tel-input 
+            [cssClass]="'customInputForMobileNumber'" 
+            [preferredCountries]="preferredCountries"
+            [enableAutoCountrySelect]="true" 
+            [enablePlaceholder]="true" 
+            [searchCountryFlag]="true" 
+            [searchCountryField]="[
+              SearchCountryField.Iso2,
+              SearchCountryField.Name
+            ]" 
+            [selectFirstCountry]="false" 
+            [selectedCountryISO]="CountryISO.India" 
+            [maxLength]="15"
+            [phoneValidation]="true" 
+            [separateDialCode]="separateDialCode" 
+            [numberFormat]="PhoneNumberFormat.National"
+            name="phone" 
             formControlName="mobile_number"
-            type="number"
-            placeholder="Please enter phone number"
-            clearInput
-          ></ion-input>
+            customPlaceholder="Phone Number">
+          </ngx-intl-tel-input>
+          <!-- <ion-input formControlName="mobile_number" pattern="[0-9]*" maxlength="10" class="ion-padding-start" type="tel" placeholder="Mobile Number"></ion-input> -->
         </div>
         <ng-container *ngFor="let error of error_messages.mobile_number">
           <div class="error-message"
